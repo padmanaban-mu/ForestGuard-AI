@@ -1,7 +1,37 @@
+# Dependencies
 node_modules/
+.pnp/
+.pnp.js
+
+# Build outputs
 dist/
+build/
+*.local
+
+# Python & Virtual Environments
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+.venv/
+venv/
+ENV/
+.pytest_cache/
+
+# Environment secrets
 .env
 .env.*
 !.env.example
+
+# ML & large raw data
+ml/data/raw/
+ml/data/downloads/
+*.parquet
+*.tar.gz
 *.zip
+
+# Operating system & IDEs
 .DS_Store
+Thumbs.db
+.vscode/
+.idea/

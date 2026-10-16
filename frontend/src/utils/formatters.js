@@ -29,14 +29,15 @@ export const fireDateTime = (fire) => {
   return `${dateLabel(fire.acqDate)}${time ? ` · ${time} UTC` : ''}`;
 };
 export const severityClass = (level) => ({
+  Extreme: 'bg-red-50 text-red-700 ring-red-200 dark:bg-red-950/50 dark:text-red-300 dark:ring-red-900',
   Critical: 'bg-red-50 text-red-700 ring-red-200 dark:bg-red-950/50 dark:text-red-300 dark:ring-red-900',
   High: 'bg-orange-50 text-orange-700 ring-orange-200 dark:bg-orange-950/50 dark:text-orange-300 dark:ring-orange-900',
   Moderate: 'bg-amber-50 text-amber-800 ring-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:ring-amber-900',
   Medium: 'bg-amber-50 text-amber-800 ring-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:ring-amber-900',
   Low: 'bg-emerald-50 text-emerald-700 ring-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:ring-emerald-900',
-});
+}[level]);
 export const riskColor = (score) => score == null ? '#94a3b8' : score >= 75 ? '#dc2626' : score >= 50 ? '#ea580c' : score >= 25 ? '#f59e0b' : '#16a34a';
-export const riskLabel = (score) => score == null ? 'Unavailable' : score >= 75 ? 'Critical' : score >= 50 ? 'High' : score >= 25 ? 'Moderate' : 'Low';
+export const riskLabel = (score) => score == null ? 'Unavailable' : score >= 75 ? 'Extreme' : score >= 50 ? 'High' : score >= 25 ? 'Medium' : 'Low';
 export const confidenceLabel = (code) => {
   if (code == null || code === '') return 'Not reported';
   const value = String(code).trim().toLowerCase();
