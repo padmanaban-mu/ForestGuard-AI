@@ -1,0 +1,15 @@
+{
+  "routes": [
+    { "path": "/login", "title": "Project overview" },
+    { "path": "/dashboard", "title": "Dashboard" },
+    { "path": "/fire-engine", "title": "Fire engine" },
+    { "path": "/forest-health", "title": "Forest health" },
+    { "path": "/vulnerable-areas", "title": "Vulnerable areas" },
+    { "path": "/simulation", "title": "Hotspot simulation" },
+    { "path": "/change-detection", "title": "Risk change detection" },
+    { "path": "/alerts", "title": "Alert center" },
+    { "path": "/analytics", "title": "Analytics" },
+    { "path": "/history", "title": "History" },
+    { "path": "/audit-settings", "title": "Audit log & settings" }
+  ]
+}
