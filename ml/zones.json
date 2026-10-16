@@ -1,0 +1,184 @@
+[
+  {
+    "name": "Almora",
+    "district": "Almora",
+    "state": "Uttarakhand",
+    "latitude": 29.6952,
+    "longitude": 79.489,
+    "elevation": 1489.0,
+    "bbox": [
+      79.0241,
+      29.4321,
+      80.0597,
+      29.9885
+    ]
+  },
+  {
+    "name": "Bageshwar",
+    "district": "Bageshwar",
+    "state": "Uttarakhand",
+    "latitude": 29.997,
+    "longitude": 79.846,
+    "elevation": 2448.0,
+    "bbox": [
+      79.4568,
+      29.6907,
+      80.147,
+      30.3208
+    ]
+  },
+  {
+    "name": "Chamoli",
+    "district": "Chamoli",
+    "state": "Uttarakhand",
+    "latitude": 30.4985,
+    "longitude": 79.5583,
+    "elevation": 3016.0,
+    "bbox": [
+      79.0165,
+      29.9322,
+      80.0901,
+      31.0803
+    ]
+  },
+  {
+    "name": "Champawat",
+    "district": "Champawat",
+    "state": "Uttarakhand",
+    "latitude": 29.3031,
+    "longitude": 80.0617,
+    "elevation": 1449.0,
+    "bbox": [
+      79.7863,
+      29.058,
+      80.3201,
+      29.5262
+    ]
+  },
+  {
+    "name": "Dehradun",
+    "district": "Dehradun",
+    "state": "Uttarakhand",
+    "latitude": 30.4686,
+    "longitude": 77.9598,
+    "elevation": 2040.0,
+    "bbox": [
+      77.5622,
+      29.9479,
+      78.299,
+      30.9799
+    ]
+  },
+  {
+    "name": "Haridwar",
+    "district": "Haridwar",
+    "state": "Uttarakhand",
+    "latitude": 29.8773,
+    "longitude": 77.9887,
+    "elevation": 256.0,
+    "bbox": [
+      77.702,
+      29.5459,
+      78.3317,
+      30.2507
+    ]
+  },
+  {
+    "name": "Nainital",
+    "district": "Nainital",
+    "state": "Uttarakhand",
+    "latitude": 29.3168,
+    "longitude": 79.455,
+    "elevation": 1271.0,
+    "bbox": [
+      78.8319,
+      28.9881,
+      79.9679,
+      29.6149
+    ]
+  },
+  {
+    "name": "Pauri Garhwal",
+    "district": "Pauri Garhwal",
+    "state": "Uttarakhand",
+    "latitude": 29.8987,
+    "longitude": 78.7567,
+    "elevation": 909.0,
+    "bbox": [
+      78.1811,
+      29.4562,
+      79.2211,
+      30.3168
+    ]
+  },
+  {
+    "name": "Pithoragarh",
+    "district": "Pithoragarh",
+    "state": "Uttarakhand",
+    "latitude": 30.1119,
+    "longitude": 80.3336,
+    "elevation": 2322.0,
+    "bbox": [
+      79.8087,
+      29.4384,
+      81.02,
+      30.8134
+    ]
+  },
+  {
+    "name": "Rudraprayag",
+    "district": "Rudraprayag",
+    "state": "Uttarakhand",
+    "latitude": 30.5948,
+    "longitude": 79.0985,
+    "elevation": 2262.0,
+    "bbox": [
+      78.896,
+      30.2945,
+      79.3423,
+      30.8121
+    ]
+  },
+  {
+    "name": "Tehri Garhwal",
+    "district": "Tehri Garhwal",
+    "state": "Uttarakhand",
+    "latitude": 30.4429,
+    "longitude": 78.5698,
+    "elevation": 1368.0,
+    "bbox": [
+      77.9263,
+      30.0591,
+      79.0468,
+      30.8842
+    ]
+  },
+  {
+    "name": "Udham Singh Nagar",
+    "district": "Udham Singh Nagar",
+    "state": "Uttarakhand",
+    "latitude": 29.043,
+    "longitude": 79.4992,
+    "elevation": 246.0,
+    "bbox": [
+      78.7139,
+      28.7156,
+      80.1599,
+      29.3853
+    ]
+  },
+  {
+    "name": "Uttarkashi",
+    "district": "Uttarkashi",
+    "state": "Uttarakhand",
+    "latitude": 30.9782,
+    "longitude": 78.5892,
+    "elevation": 5023.0,
+    "bbox": [
+      77.7333,
+      30.474,
+      79.3924,
+      31.4723
+    ]
+  }
+]

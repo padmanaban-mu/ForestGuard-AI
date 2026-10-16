@@ -1,0 +1,537 @@
+{
+  "served_model": {
+    "name": "Gradient Boosting",
+    "architecture": "CalibratedClassifierCV(HistGradientBoostingClassifier, method='sigmoid')",
+    "calibrated": true,
+    "features_count": 33,
+    "feature_list": [
+      "temp_max",
+      "humidity_mean",
+      "wind_speed_max",
+      "rain_sum",
+      "et0",
+      "soil_moisture_mean",
+      "rain_3d",
+      "rain_7d",
+      "rain_30d",
+      "days_since_rain",
+      "temp_mean_7d",
+      "humidity_mean_7d",
+      "month",
+      "vpd_proxy",
+      "latitude",
+      "longitude",
+      "elevation",
+      "dist_almora",
+      "dist_bageshwar",
+      "dist_chamoli",
+      "dist_champawat",
+      "dist_dehradun",
+      "dist_haridwar",
+      "dist_nainital",
+      "dist_pauri_garhwal",
+      "dist_pithoragarh",
+      "dist_rudraprayag",
+      "dist_tehri_garhwal",
+      "dist_udham_singh_nagar",
+      "dist_uttarkashi",
+      "temp_anomaly",
+      "humidity_anomaly",
+      "rain_30d_anomaly"
+    ],
+    "decision_threshold_tau": 0.33,
+    "metadata": {
+      "trained_at": "2026-10-16T07:19:41.317101+00:00",
+      "train_years": "2018-2022",
+      "val_year": "2023",
+      "test_year": "2024",
+      "features_count": 33,
+      "python_version": "3.13.7",
+      "sklearn_version": "1.8.0",
+      "numpy_version": "2.4.1",
+      "pandas_version": "3.0.2",
+      "joblib_version": "1.5.3"
+    }
+  },
+  "selection_record": {
+    "selection_criterion": "Validation PR-AUC on held-out 2023 validation set",
+    "validation_pr_auc": 0.6436,
+    "validation_roc_auc": 0.8524,
+    "validation_f1": 0.6496,
+    "training_years": "2018-2022",
+    "validation_year": 2023,
+    "test_year": 2024,
+    "leakage_audit": "PASSED (Zero test leakage; calibration and tau* tuned strictly on 2023 validation)"
+  },
+  "gain_reconciliation": {
+    "headline_test_gain": 0.0567,
+    "walk_forward_fold_gain": 0.0567,
+    "bootstrap_mean_gain": 0.0585,
+    "bootstrap_ci_95": [
+      -0.0277,
+      0.1368
+    ],
+    "statistically_significant": false
+  },
+  "vegetation_representation": {
+    "satellite_ndvi": false,
+    "description": "Vegetation dryness is represented strictly by topsoil volumetric moisture (soil_moisture_0_to_7cm_mean in m3/m3) and FAO-56 Penman-Monteith reference evapotranspiration (et0) proxies from ERA5-Land/Open-Meteo. Satellite NDVI is not ingested."
+  },
+  "confusion_matrix_verification": {
+    "note": "Confusion matrix comparison between Climatology Lookup and Served Gradient Boosting on 2024 test set (N=4,745)",
+    "climatology_lookup": {
+      "threshold": 0.22,
+      "tn": 2165,
+      "fp": 1106,
+      "fn": 123,
+      "tp": 1351,
+      "total_correct": 3516,
+      "accuracy": 0.740991,
+      "precision": 0.549858
+    },
+    "served_gradient_boosting": {
+      "threshold": 0.33,
+      "tn": 2303,
+      "fp": 968,
+      "fn": 176,
+      "tp": 1298,
+      "total_correct": 3601,
+      "accuracy": 0.758904,
+      "precision": 0.572816
+    }
+  },
+  "fair_metrics_2024": {
+    "Rule-Based FWI / Drought Proxy": {
+      "threshold": 0.0017,
+      "accuracy": 0.6461538461538462,
+      "precision": 0.4597565763643502,
+      "recall": 0.7944369063772049,
+      "f1_score": 0.5824421785625467,
+      "roc_auc": 0.7224847525248608,
+      "pr_auc": 0.5302591416877052,
+      "val_tau": 0.0017,
+      "val_f1": 0.5452,
+      "chosen_quantile_pct": 50,
+      "test_predicted_positive_rate": 0.5368
+    },
+    "Climatology (Month Only)": {
+      "threshold": 0.21,
+      "accuracy": 0.6510010537407798,
+      "precision": 0.4669811320754717,
+      "recall": 0.8731343283582089,
+      "f1_score": 0.6085106382978723,
+      "roc_auc": 0.7907360518217118,
+      "pr_auc": 0.5719915270975661,
+      "val_tau": 0.21,
+      "val_f1": 0.5664
+    },
+    "Climatology (District + Month)": {
+      "threshold": 0.22,
+      "accuracy": 0.7409905163329821,
+      "precision": 0.5498575498575499,
+      "recall": 0.9165535956580733,
+      "f1_score": 0.687356906639532,
+      "roc_auc": 0.8464736985979748,
+      "pr_auc": 0.6526432531584376,
+      "val_tau": 0.22,
+      "val_f1": 0.6028
+    },
+    "Logistic Regression (Baseline)": {
+      "threshold": 0.42,
+      "accuracy": 0.7277133825079031,
+      "precision": 0.5362549800796813,
+      "recall": 0.9131614654002713,
+      "f1_score": 0.6757028112449799,
+      "roc_auc": 0.8552772669821178,
+      "pr_auc": 0.6767738882498735,
+      "val_tau": 0.42,
+      "val_f1": 0.6406
+    },
+    "ForestGuard Random Forest (Weather-Only Baseline)": {
+      "threshold": 0.21,
+      "accuracy": 0.7022128556375131,
+      "precision": 0.51120088138083,
+      "recall": 0.9443690637720489,
+      "f1_score": 0.6633309506790565,
+      "roc_auc": 0.8559704188819389,
+      "pr_auc": 0.6954216395993963,
+      "val_tau": 0.21,
+      "val_f1": 0.6237
+    },
+    "ForestGuard Random Forest (Full Location & Soil - Comparison)": {
+      "threshold": 0.26,
+      "accuracy": 0.7247629083245521,
+      "precision": 0.5337620578778135,
+      "recall": 0.9009497964721845,
+      "f1_score": 0.6703685007571933,
+      "roc_auc": 0.8652828586563306,
+      "pr_auc": 0.7152214200847015,
+      "val_tau": 0.26,
+      "val_f1": 0.6371
+    },
+    "ForestGuard Served Model (Calibrated Gradient Boosting)": {
+      "threshold": 0.33,
+      "accuracy": 0.7589041095890411,
+      "precision": 0.5728155339805825,
+      "recall": 0.8805970149253731,
+      "f1_score": 0.6941176470588235,
+      "roc_auc": 0.8731377505623823,
+      "pr_auc": 0.7093886534588529,
+      "val_tau": 0.33,
+      "val_f1": 0.6486
+    },
+    "ForestGuard (Deep Non-Seasonal Weather Ablation)": {
+      "threshold": 0.33,
+      "accuracy": 0.7013698630136986,
+      "precision": 0.5116184264166327,
+      "recall": 0.8514246947082768,
+      "f1_score": 0.6391647568118156,
+      "roc_auc": 0.8143524754150926,
+      "pr_auc": 0.6163502070123649,
+      "val_tau": 0.33,
+      "val_f1": 0.6008
+    }
+  },
+  "rolling_origin_summary": {
+    "years": [
+      2021,
+      2022,
+      2023,
+      2024
+    ],
+    "by_year": {
+      "2021": {
+        "test_year": 2021,
+        "train_years": "2018-2019 (2 yrs)",
+        "n_train_years": 2,
+        "val_year": 2020,
+        "test_samples": 4745,
+        "fire_prevalence": 0.2769,
+        "served_model_pr_auc": 0.7901,
+        "served_model_roc_auc": 0.9203,
+        "clim_pr_auc": 0.5064,
+        "clim_roc_auc": 0.8128,
+        "delta_pr_auc": 0.2837,
+        "delta_roc_auc": 0.1075
+      },
+      "2022": {
+        "test_year": 2022,
+        "train_years": "2018-2020 (3 yrs)",
+        "n_train_years": 3,
+        "val_year": 2021,
+        "test_samples": 4745,
+        "fire_prevalence": 0.2603,
+        "served_model_pr_auc": 0.7487,
+        "served_model_roc_auc": 0.896,
+        "clim_pr_auc": 0.5297,
+        "clim_roc_auc": 0.7983,
+        "delta_pr_auc": 0.219,
+        "delta_roc_auc": 0.0976
+      },
+      "2023": {
+        "test_year": 2023,
+        "train_years": "2018-2021 (4 yrs)",
+        "n_train_years": 4,
+        "val_year": 2022,
+        "test_samples": 4745,
+        "fire_prevalence": 0.2784,
+        "served_model_pr_auc": 0.6468,
+        "served_model_roc_auc": 0.8479,
+        "clim_pr_auc": 0.5248,
+        "clim_roc_auc": 0.7909,
+        "delta_pr_auc": 0.122,
+        "delta_roc_auc": 0.057
+      },
+      "2024": {
+        "test_year": 2024,
+        "train_years": "2018-2022 (5 yrs)",
+        "n_train_years": 5,
+        "val_year": 2023,
+        "test_samples": 4745,
+        "fire_prevalence": 0.3106,
+        "served_model_pr_auc": 0.7094,
+        "served_model_roc_auc": 0.8731,
+        "clim_pr_auc": 0.6526,
+        "clim_roc_auc": 0.8465,
+        "delta_pr_auc": 0.0567,
+        "delta_roc_auc": 0.0267
+      }
+    },
+    "mean_served_model_pr_auc": 0.7238,
+    "std_served_model_pr_auc": 0.0528,
+    "mean_clim_pr_auc": 0.5534,
+    "std_clim_pr_auc": 0.058,
+    "mean_delta_pr_auc": 0.1704,
+    "std_delta_pr_auc": 0.0873,
+    "mean_served_model_roc_auc": 0.8843,
+    "std_served_model_roc_auc": 0.0269,
+    "mean_clim_roc_auc": 0.8121,
+    "std_clim_roc_auc": 0.0213,
+    "mean_delta_roc_auc": 0.0722,
+    "std_delta_roc_auc": 0.0324
+  },
+  "weekly_block_bootstrap": {
+    "n_bootstrap": 1000,
+    "n_blocks": 52,
+    "model_pr_auc_ci": [
+      0.5886,
+      0.805
+    ],
+    "clim_pr_auc_ci": [
+      0.5632,
+      0.732
+    ],
+    "diff_pr_auc_ci": [
+      -0.0277,
+      0.1368
+    ],
+    "model_roc_auc_ci": [
+      0.8254,
+      0.9102
+    ],
+    "clim_roc_auc_ci": [
+      0.7954,
+      0.8898
+    ],
+    "diff_roc_auc_ci": [
+      -0.0085,
+      0.0631
+    ],
+    "diff_pr_auc_mean": 0.0585,
+    "diff_roc_auc_mean": 0.0267,
+    "pr_auc_significant": false,
+    "roc_auc_significant": false
+  },
+  "risk_level_validation": {
+    "served_model_levels": [
+      {
+        "risk_level": "Low",
+        "days_count": 2208,
+        "fire_days": 116,
+        "mean_predicted_prob": 0.0615,
+        "observed_fire_rate": 0.0525
+      },
+      {
+        "risk_level": "Medium",
+        "days_count": 849,
+        "fire_days": 271,
+        "mean_predicted_prob": 0.373,
+        "observed_fire_rate": 0.3192
+      },
+      {
+        "risk_level": "High",
+        "days_count": 1074,
+        "fire_days": 602,
+        "mean_predicted_prob": 0.622,
+        "observed_fire_rate": 0.5605
+      },
+      {
+        "risk_level": "Extreme",
+        "days_count": 614,
+        "fire_days": 485,
+        "mean_predicted_prob": 0.8414,
+        "observed_fire_rate": 0.7899
+      }
+    ],
+    "lookup_levels": [
+      {
+        "risk_level": "Low",
+        "days_count": 2408,
+        "fire_days": 157,
+        "mean_predicted_prob": 0.0723,
+        "observed_fire_rate": 0.0652
+      },
+      {
+        "risk_level": "Medium",
+        "days_count": 1669,
+        "fire_days": 861,
+        "mean_predicted_prob": 0.3607,
+        "observed_fire_rate": 0.5159
+      },
+      {
+        "risk_level": "High",
+        "days_count": 577,
+        "fire_days": 386,
+        "mean_predicted_prob": 0.5914,
+        "observed_fire_rate": 0.669
+      },
+      {
+        "risk_level": "Extreme",
+        "days_count": 91,
+        "fire_days": 70,
+        "mean_predicted_prob": 0.789,
+        "observed_fire_rate": 0.7692
+      }
+    ]
+  },
+  "per_district_summary": [
+    {
+      "district": "Nainital",
+      "terrain": "Hills / Forest",
+      "test_days": 365,
+      "fire_days": 148,
+      "pos_rate": 0.4054794520547945,
+      "precision": 0.7127659574468085,
+      "recall": 0.9054054054054054,
+      "f1_score": 0.7976190476190477,
+      "pr_auc": 0.8398094523542126,
+      "roc_auc": 0.9039419603935732
+    },
+    {
+      "district": "Pauri Garhwal",
+      "terrain": "Hills / Forest",
+      "test_days": 365,
+      "fire_days": 130,
+      "pos_rate": 0.3561643835616438,
+      "precision": 0.6086956521739131,
+      "recall": 0.9692307692307692,
+      "f1_score": 0.7477744807121661,
+      "pr_auc": 0.8069200816310105,
+      "roc_auc": 0.908936170212766
+    },
+    {
+      "district": "Udham Singh Nagar",
+      "terrain": "Plains / Agri",
+      "test_days": 365,
+      "fire_days": 173,
+      "pos_rate": 0.473972602739726,
+      "precision": 0.6733067729083665,
+      "recall": 0.976878612716763,
+      "f1_score": 0.7971698113207547,
+      "pr_auc": 0.7752000636381087,
+      "roc_auc": 0.8389480973025047
+    },
+    {
+      "district": "Almora",
+      "terrain": "Hills / Forest",
+      "test_days": 365,
+      "fire_days": 137,
+      "pos_rate": 0.37534246575342467,
+      "precision": 0.6631578947368421,
+      "recall": 0.9197080291970803,
+      "f1_score": 0.7706422018348624,
+      "pr_auc": 0.7717780772366717,
+      "roc_auc": 0.8804904597259573
+    },
+    {
+      "district": "Tehri Garhwal",
+      "terrain": "Hills / Forest",
+      "test_days": 365,
+      "fire_days": 129,
+      "pos_rate": 0.35342465753424657,
+      "precision": 0.6457142857142857,
+      "recall": 0.875968992248062,
+      "f1_score": 0.743421052631579,
+      "pr_auc": 0.7653652508099941,
+      "roc_auc": 0.8950860596505059
+    },
+    {
+      "district": "Uttarkashi",
+      "terrain": "Hills / Forest",
+      "test_days": 365,
+      "fire_days": 136,
+      "pos_rate": 0.3726027397260274,
+      "precision": 0.5794871794871795,
+      "recall": 0.8308823529411765,
+      "f1_score": 0.6827794561933535,
+      "pr_auc": 0.6980661028700532,
+      "roc_auc": 0.8109748266118675
+    },
+    {
+      "district": "Champawat",
+      "terrain": "Hills / Forest",
+      "test_days": 365,
+      "fire_days": 76,
+      "pos_rate": 0.20821917808219179,
+      "precision": 0.5040650406504065,
+      "recall": 0.8157894736842105,
+      "f1_score": 0.6231155778894473,
+      "pr_auc": 0.6774083857042639,
+      "roc_auc": 0.905618284465489
+    },
+    {
+      "district": "Pithoragarh",
+      "terrain": "Hills / Forest",
+      "test_days": 365,
+      "fire_days": 95,
+      "pos_rate": 0.2602739726027397,
+      "precision": 0.5087719298245614,
+      "recall": 0.9157894736842105,
+      "f1_score": 0.6541353383458647,
+      "pr_auc": 0.6594186771794038,
+      "roc_auc": 0.8827290448343079
+    },
+    {
+      "district": "Chamoli",
+      "terrain": "Hills / Forest",
+      "test_days": 365,
+      "fire_days": 113,
+      "pos_rate": 0.3095890410958904,
+      "precision": 0.5294117647058824,
+      "recall": 0.8761061946902655,
+      "f1_score": 0.66,
+      "pr_auc": 0.6398146888102125,
+      "roc_auc": 0.839865149599663
+    },
+    {
+      "district": "Dehradun",
+      "terrain": "Hills / Forest",
+      "test_days": 365,
+      "fire_days": 109,
+      "pos_rate": 0.29863013698630136,
+      "precision": 0.559322033898305,
+      "recall": 0.908256880733945,
+      "f1_score": 0.6923076923076923,
+      "pr_auc": 0.6145907331504589,
+      "roc_auc": 0.8598408830275229
+    },
+    {
+      "district": "Bageshwar",
+      "terrain": "Hills / Forest",
+      "test_days": 365,
+      "fire_days": 95,
+      "pos_rate": 0.2602739726027397,
+      "precision": 0.5384615384615384,
+      "recall": 0.8105263157894737,
+      "f1_score": 0.6470588235294118,
+      "pr_auc": 0.6091533495174127,
+      "roc_auc": 0.867485380116959
+    },
+    {
+      "district": "Rudraprayag",
+      "terrain": "Hills / Forest",
+      "test_days": 365,
+      "fire_days": 43,
+      "pos_rate": 0.1178082191780822,
+      "precision": 0.4642857142857143,
+      "recall": 0.6046511627906976,
+      "f1_score": 0.5252525252525253,
+      "pr_auc": 0.5157944269093601,
+      "roc_auc": 0.8659540661562906
+    },
+    {
+      "district": "Haridwar",
+      "terrain": "Plains / Agri",
+      "test_days": 365,
+      "fire_days": 90,
+      "pos_rate": 0.2465753424657534,
+      "precision": 0.33004926108374383,
+      "recall": 0.7444444444444445,
+      "f1_score": 0.45733788395904434,
+      "pr_auc": 0.4093233576699744,
+      "roc_auc": 0.6953939393939393
+    }
+  ],
+  "hypotheses_and_limitations": {
+    "forest_mask": false,
+    "fwi_proxy_heuristic": "Rule-Based FWI / Drought Proxy is a weak heuristic baseline that predicts positive on 53.7% of days (at its 50th percentile training threshold), with low precision (46.0%) and PR-AUC of 0.5303.",
+    "haridwar_crop_burning_hypothesis": "Satellite detections in southern agricultural lowlands are hypothesized to reflect post-harvest crop residue burning.",
+    "rudraprayag_low_prevalence": "Rudraprayag positive rate is 11.8% (43 fire days), which naturally limits precision and recall on sparse events."
+  },
+  "attribution": {
+    "boundary_code_license": "The MIT License (MIT), Copyright (c) 2014 Sajjad Anwar",
+    "boundary_data_terms": "GADM (gadm.org) - Academic, research, and non-commercial use",
+    "weather_source": "Open-Meteo Historical Archive API (CC BY 4.0)",
+    "fire_source": "NASA FIRMS VIIRS SNPP Near Real-Time & Country Archive"
+  }
+}

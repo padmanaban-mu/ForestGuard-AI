@@ -1,0 +1,808 @@
+{
+  "Almora": {
+    "1": {
+      "temp_max_mean": 13.95,
+      "humidity_mean_mean": 72.64,
+      "rain_30d_mean": 37.72
+    },
+    "2": {
+      "temp_max_mean": 15.91,
+      "humidity_mean_mean": 72.06,
+      "rain_30d_mean": 53.73
+    },
+    "3": {
+      "temp_max_mean": 21.01,
+      "humidity_mean_mean": 60.63,
+      "rain_30d_mean": 45.75
+    },
+    "4": {
+      "temp_max_mean": 25.09,
+      "humidity_mean_mean": 50.63,
+      "rain_30d_mean": 28.54
+    },
+    "5": {
+      "temp_max_mean": 26.23,
+      "humidity_mean_mean": 60.7,
+      "rain_30d_mean": 68.92
+    },
+    "6": {
+      "temp_max_mean": 27.19,
+      "humidity_mean_mean": 72.72,
+      "rain_30d_mean": 114.26
+    },
+    "7": {
+      "temp_max_mean": 25.38,
+      "humidity_mean_mean": 87.77,
+      "rain_30d_mean": 272.64
+    },
+    "8": {
+      "temp_max_mean": 25.12,
+      "humidity_mean_mean": 88.78,
+      "rain_30d_mean": 349.05
+    },
+    "9": {
+      "temp_max_mean": 24.54,
+      "humidity_mean_mean": 87.52,
+      "rain_30d_mean": 224.65
+    },
+    "10": {
+      "temp_max_mean": 22.78,
+      "humidity_mean_mean": 74.41,
+      "rain_30d_mean": 136.43
+    },
+    "11": {
+      "temp_max_mean": 19.8,
+      "humidity_mean_mean": 70.65,
+      "rain_30d_mean": 43.72
+    },
+    "12": {
+      "temp_max_mean": 15.77,
+      "humidity_mean_mean": 67.22,
+      "rain_30d_mean": 11.71
+    }
+  },
+  "Bageshwar": {
+    "1": {
+      "temp_max_mean": 7.46,
+      "humidity_mean_mean": 47.63,
+      "rain_30d_mean": 85.87
+    },
+    "2": {
+      "temp_max_mean": 9.15,
+      "humidity_mean_mean": 49.89,
+      "rain_30d_mean": 105.16
+    },
+    "3": {
+      "temp_max_mean": 14.08,
+      "humidity_mean_mean": 47.84,
+      "rain_30d_mean": 112.4
+    },
+    "4": {
+      "temp_max_mean": 17.28,
+      "humidity_mean_mean": 50.21,
+      "rain_30d_mean": 90.65
+    },
+    "5": {
+      "temp_max_mean": 18.93,
+      "humidity_mean_mean": 57.53,
+      "rain_30d_mean": 155.18
+    },
+    "6": {
+      "temp_max_mean": 20.51,
+      "humidity_mean_mean": 71.54,
+      "rain_30d_mean": 246.9
+    },
+    "7": {
+      "temp_max_mean": 19.61,
+      "humidity_mean_mean": 87.27,
+      "rain_30d_mean": 574.1
+    },
+    "8": {
+      "temp_max_mean": 19.54,
+      "humidity_mean_mean": 86.95,
+      "rain_30d_mean": 721.85
+    },
+    "9": {
+      "temp_max_mean": 18.91,
+      "humidity_mean_mean": 80.04,
+      "rain_30d_mean": 611.73
+    },
+    "10": {
+      "temp_max_mean": 16.25,
+      "humidity_mean_mean": 57.8,
+      "rain_30d_mean": 280.09
+    },
+    "11": {
+      "temp_max_mean": 13.13,
+      "humidity_mean_mean": 49.22,
+      "rain_30d_mean": 77.04
+    },
+    "12": {
+      "temp_max_mean": 9.6,
+      "humidity_mean_mean": 42.08,
+      "rain_30d_mean": 34.25
+    }
+  },
+  "Chamoli": {
+    "1": {
+      "temp_max_mean": 3.69,
+      "humidity_mean_mean": 36.04,
+      "rain_30d_mean": 83.96
+    },
+    "2": {
+      "temp_max_mean": 4.37,
+      "humidity_mean_mean": 37.95,
+      "rain_30d_mean": 119.48
+    },
+    "3": {
+      "temp_max_mean": 8.39,
+      "humidity_mean_mean": 39.61,
+      "rain_30d_mean": 85.39
+    },
+    "4": {
+      "temp_max_mean": 12.03,
+      "humidity_mean_mean": 46.58,
+      "rain_30d_mean": 68.92
+    },
+    "5": {
+      "temp_max_mean": 14.71,
+      "humidity_mean_mean": 55.99,
+      "rain_30d_mean": 110.83
+    },
+    "6": {
+      "temp_max_mean": 17.11,
+      "humidity_mean_mean": 68.38,
+      "rain_30d_mean": 138.78
+    },
+    "7": {
+      "temp_max_mean": 17.66,
+      "humidity_mean_mean": 82.08,
+      "rain_30d_mean": 238.29
+    },
+    "8": {
+      "temp_max_mean": 17.41,
+      "humidity_mean_mean": 82.5,
+      "rain_30d_mean": 297.62
+    },
+    "9": {
+      "temp_max_mean": 16.26,
+      "humidity_mean_mean": 75.8,
+      "rain_30d_mean": 194.01
+    },
+    "10": {
+      "temp_max_mean": 12.79,
+      "humidity_mean_mean": 51.82,
+      "rain_30d_mean": 146.87
+    },
+    "11": {
+      "temp_max_mean": 9.48,
+      "humidity_mean_mean": 40.27,
+      "rain_30d_mean": 84.79
+    },
+    "12": {
+      "temp_max_mean": 5.55,
+      "humidity_mean_mean": 29.53,
+      "rain_30d_mean": 49.6
+    }
+  },
+  "Champawat": {
+    "1": {
+      "temp_max_mean": 13.42,
+      "humidity_mean_mean": 65.56,
+      "rain_30d_mean": 64.41
+    },
+    "2": {
+      "temp_max_mean": 15.4,
+      "humidity_mean_mean": 66.71,
+      "rain_30d_mean": 79.37
+    },
+    "3": {
+      "temp_max_mean": 20.18,
+      "humidity_mean_mean": 57.26,
+      "rain_30d_mean": 83.11
+    },
+    "4": {
+      "temp_max_mean": 23.57,
+      "humidity_mean_mean": 53.62,
+      "rain_30d_mean": 71.14
+    },
+    "5": {
+      "temp_max_mean": 24.64,
+      "humidity_mean_mean": 64.91,
+      "rain_30d_mean": 148.99
+    },
+    "6": {
+      "temp_max_mean": 25.22,
+      "humidity_mean_mean": 78.95,
+      "rain_30d_mean": 202.55
+    },
+    "7": {
+      "temp_max_mean": 24.06,
+      "humidity_mean_mean": 91.05,
+      "rain_30d_mean": 438.46
+    },
+    "8": {
+      "temp_max_mean": 23.78,
+      "humidity_mean_mean": 91.86,
+      "rain_30d_mean": 546.29
+    },
+    "9": {
+      "temp_max_mean": 23.21,
+      "humidity_mean_mean": 88.83,
+      "rain_30d_mean": 401.39
+    },
+    "10": {
+      "temp_max_mean": 21.36,
+      "humidity_mean_mean": 70.72,
+      "rain_30d_mean": 269.04
+    },
+    "11": {
+      "temp_max_mean": 18.46,
+      "humidity_mean_mean": 62.39,
+      "rain_30d_mean": 67.02
+    },
+    "12": {
+      "temp_max_mean": 14.85,
+      "humidity_mean_mean": 57.52,
+      "rain_30d_mean": 25.47
+    }
+  },
+  "Dehradun": {
+    "1": {
+      "temp_max_mean": 8.72,
+      "humidity_mean_mean": 73.27,
+      "rain_30d_mean": 75.36
+    },
+    "2": {
+      "temp_max_mean": 10.82,
+      "humidity_mean_mean": 73.72,
+      "rain_30d_mean": 94.35
+    },
+    "3": {
+      "temp_max_mean": 15.83,
+      "humidity_mean_mean": 63.94,
+      "rain_30d_mean": 79.63
+    },
+    "4": {
+      "temp_max_mean": 20.14,
+      "humidity_mean_mean": 53.33,
+      "rain_30d_mean": 44.88
+    },
+    "5": {
+      "temp_max_mean": 22.14,
+      "humidity_mean_mean": 57.16,
+      "rain_30d_mean": 55.89
+    },
+    "6": {
+      "temp_max_mean": 23.11,
+      "humidity_mean_mean": 69.43,
+      "rain_30d_mean": 84.38
+    },
+    "7": {
+      "temp_max_mean": 20.8,
+      "humidity_mean_mean": 90.02,
+      "rain_30d_mean": 350.06
+    },
+    "8": {
+      "temp_max_mean": 20.41,
+      "humidity_mean_mean": 91.45,
+      "rain_30d_mean": 574.6
+    },
+    "9": {
+      "temp_max_mean": 19.73,
+      "humidity_mean_mean": 88.77,
+      "rain_30d_mean": 322.58
+    },
+    "10": {
+      "temp_max_mean": 17.81,
+      "humidity_mean_mean": 75.39,
+      "rain_30d_mean": 144.98
+    },
+    "11": {
+      "temp_max_mean": 14.2,
+      "humidity_mean_mean": 73.59,
+      "rain_30d_mean": 26.18
+    },
+    "12": {
+      "temp_max_mean": 10.43,
+      "humidity_mean_mean": 70.95,
+      "rain_30d_mean": 28.54
+    }
+  },
+  "Haridwar": {
+    "1": {
+      "temp_max_mean": 18.73,
+      "humidity_mean_mean": 80.81,
+      "rain_30d_mean": 40.21
+    },
+    "2": {
+      "temp_max_mean": 22.25,
+      "humidity_mean_mean": 74.21,
+      "rain_30d_mean": 52.52
+    },
+    "3": {
+      "temp_max_mean": 28.48,
+      "humidity_mean_mean": 61.9,
+      "rain_30d_mean": 40.29
+    },
+    "4": {
+      "temp_max_mean": 34.33,
+      "humidity_mean_mean": 44.01,
+      "rain_30d_mean": 17.28
+    },
+    "5": {
+      "temp_max_mean": 36.0,
+      "humidity_mean_mean": 48.28,
+      "rain_30d_mean": 32.04
+    },
+    "6": {
+      "temp_max_mean": 36.78,
+      "humidity_mean_mean": 57.48,
+      "rain_30d_mean": 45.74
+    },
+    "7": {
+      "temp_max_mean": 32.61,
+      "humidity_mean_mean": 80.52,
+      "rain_30d_mean": 151.78
+    },
+    "8": {
+      "temp_max_mean": 31.71,
+      "humidity_mean_mean": 84.77,
+      "rain_30d_mean": 247.81
+    },
+    "9": {
+      "temp_max_mean": 31.32,
+      "humidity_mean_mean": 81.79,
+      "rain_30d_mean": 165.97
+    },
+    "10": {
+      "temp_max_mean": 29.48,
+      "humidity_mean_mean": 74.6,
+      "rain_30d_mean": 96.05
+    },
+    "11": {
+      "temp_max_mean": 25.24,
+      "humidity_mean_mean": 72.37,
+      "rain_30d_mean": 20.27
+    },
+    "12": {
+      "temp_max_mean": 20.14,
+      "humidity_mean_mean": 78.44,
+      "rain_30d_mean": 10.39
+    }
+  },
+  "Nainital": {
+    "1": {
+      "temp_max_mean": 14.2,
+      "humidity_mean_mean": 68.28,
+      "rain_30d_mean": 44.41
+    },
+    "2": {
+      "temp_max_mean": 16.38,
+      "humidity_mean_mean": 67.43,
+      "rain_30d_mean": 57.86
+    },
+    "3": {
+      "temp_max_mean": 21.83,
+      "humidity_mean_mean": 56.01,
+      "rain_30d_mean": 55.96
+    },
+    "4": {
+      "temp_max_mean": 26.13,
+      "humidity_mean_mean": 46.26,
+      "rain_30d_mean": 31.36
+    },
+    "5": {
+      "temp_max_mean": 27.04,
+      "humidity_mean_mean": 58.28,
+      "rain_30d_mean": 73.58
+    },
+    "6": {
+      "temp_max_mean": 27.44,
+      "humidity_mean_mean": 72.94,
+      "rain_30d_mean": 113.86
+    },
+    "7": {
+      "temp_max_mean": 25.44,
+      "humidity_mean_mean": 88.55,
+      "rain_30d_mean": 291.68
+    },
+    "8": {
+      "temp_max_mean": 25.11,
+      "humidity_mean_mean": 89.43,
+      "rain_30d_mean": 432.39
+    },
+    "9": {
+      "temp_max_mean": 24.44,
+      "humidity_mean_mean": 87.35,
+      "rain_30d_mean": 265.18
+    },
+    "10": {
+      "temp_max_mean": 22.66,
+      "humidity_mean_mean": 72.55,
+      "rain_30d_mean": 209.17
+    },
+    "11": {
+      "temp_max_mean": 19.51,
+      "humidity_mean_mean": 67.94,
+      "rain_30d_mean": 66.22
+    },
+    "12": {
+      "temp_max_mean": 15.73,
+      "humidity_mean_mean": 63.45,
+      "rain_30d_mean": 15.35
+    }
+  },
+  "Pauri Garhwal": {
+    "1": {
+      "temp_max_mean": 16.91,
+      "humidity_mean_mean": 71.12,
+      "rain_30d_mean": 44.53
+    },
+    "2": {
+      "temp_max_mean": 19.22,
+      "humidity_mean_mean": 69.94,
+      "rain_30d_mean": 61.84
+    },
+    "3": {
+      "temp_max_mean": 24.56,
+      "humidity_mean_mean": 60.66,
+      "rain_30d_mean": 50.64
+    },
+    "4": {
+      "temp_max_mean": 28.91,
+      "humidity_mean_mean": 50.67,
+      "rain_30d_mean": 25.05
+    },
+    "5": {
+      "temp_max_mean": 30.17,
+      "humidity_mean_mean": 57.83,
+      "rain_30d_mean": 59.64
+    },
+    "6": {
+      "temp_max_mean": 30.98,
+      "humidity_mean_mean": 68.23,
+      "rain_30d_mean": 78.22
+    },
+    "7": {
+      "temp_max_mean": 28.51,
+      "humidity_mean_mean": 86.62,
+      "rain_30d_mean": 230.18
+    },
+    "8": {
+      "temp_max_mean": 28.05,
+      "humidity_mean_mean": 88.01,
+      "rain_30d_mean": 325.76
+    },
+    "9": {
+      "temp_max_mean": 27.51,
+      "humidity_mean_mean": 85.45,
+      "rain_30d_mean": 184.53
+    },
+    "10": {
+      "temp_max_mean": 25.72,
+      "humidity_mean_mean": 72.41,
+      "rain_30d_mean": 98.31
+    },
+    "11": {
+      "temp_max_mean": 22.32,
+      "humidity_mean_mean": 69.65,
+      "rain_30d_mean": 21.2
+    },
+    "12": {
+      "temp_max_mean": 18.34,
+      "humidity_mean_mean": 67.17,
+      "rain_30d_mean": 11.57
+    }
+  },
+  "Pithoragarh": {
+    "1": {
+      "temp_max_mean": 8.14,
+      "humidity_mean_mean": 50.59,
+      "rain_30d_mean": 80.77
+    },
+    "2": {
+      "temp_max_mean": 9.0,
+      "humidity_mean_mean": 56.48,
+      "rain_30d_mean": 99.95
+    },
+    "3": {
+      "temp_max_mean": 13.14,
+      "humidity_mean_mean": 56.37,
+      "rain_30d_mean": 99.63
+    },
+    "4": {
+      "temp_max_mean": 16.65,
+      "humidity_mean_mean": 60.95,
+      "rain_30d_mean": 92.72
+    },
+    "5": {
+      "temp_max_mean": 18.58,
+      "humidity_mean_mean": 67.7,
+      "rain_30d_mean": 166.11
+    },
+    "6": {
+      "temp_max_mean": 20.78,
+      "humidity_mean_mean": 76.96,
+      "rain_30d_mean": 244.46
+    },
+    "7": {
+      "temp_max_mean": 21.02,
+      "humidity_mean_mean": 88.65,
+      "rain_30d_mean": 616.27
+    },
+    "8": {
+      "temp_max_mean": 20.83,
+      "humidity_mean_mean": 88.2,
+      "rain_30d_mean": 698.29
+    },
+    "9": {
+      "temp_max_mean": 19.86,
+      "humidity_mean_mean": 83.24,
+      "rain_30d_mean": 483.12
+    },
+    "10": {
+      "temp_max_mean": 16.66,
+      "humidity_mean_mean": 65.42,
+      "rain_30d_mean": 230.29
+    },
+    "11": {
+      "temp_max_mean": 13.85,
+      "humidity_mean_mean": 55.22,
+      "rain_30d_mean": 78.13
+    },
+    "12": {
+      "temp_max_mean": 10.39,
+      "humidity_mean_mean": 43.78,
+      "rain_30d_mean": 42.81
+    }
+  },
+  "Rudraprayag": {
+    "1": {
+      "temp_max_mean": 8.21,
+      "humidity_mean_mean": 50.08,
+      "rain_30d_mean": 170.28
+    },
+    "2": {
+      "temp_max_mean": 9.35,
+      "humidity_mean_mean": 50.1,
+      "rain_30d_mean": 218.07
+    },
+    "3": {
+      "temp_max_mean": 13.78,
+      "humidity_mean_mean": 49.17,
+      "rain_30d_mean": 201.96
+    },
+    "4": {
+      "temp_max_mean": 17.52,
+      "humidity_mean_mean": 47.26,
+      "rain_30d_mean": 104.63
+    },
+    "5": {
+      "temp_max_mean": 19.52,
+      "humidity_mean_mean": 52.92,
+      "rain_30d_mean": 146.07
+    },
+    "6": {
+      "temp_max_mean": 21.65,
+      "humidity_mean_mean": 63.95,
+      "rain_30d_mean": 246.55
+    },
+    "7": {
+      "temp_max_mean": 21.13,
+      "humidity_mean_mean": 80.51,
+      "rain_30d_mean": 519.23
+    },
+    "8": {
+      "temp_max_mean": 21.11,
+      "humidity_mean_mean": 79.8,
+      "rain_30d_mean": 526.57
+    },
+    "9": {
+      "temp_max_mean": 20.39,
+      "humidity_mean_mean": 71.59,
+      "rain_30d_mean": 379.51
+    },
+    "10": {
+      "temp_max_mean": 17.57,
+      "humidity_mean_mean": 51.61,
+      "rain_30d_mean": 178.75
+    },
+    "11": {
+      "temp_max_mean": 14.13,
+      "humidity_mean_mean": 47.63,
+      "rain_30d_mean": 90.4
+    },
+    "12": {
+      "temp_max_mean": 10.3,
+      "humidity_mean_mean": 44.2,
+      "rain_30d_mean": 91.22
+    }
+  },
+  "Tehri Garhwal": {
+    "1": {
+      "temp_max_mean": 13.95,
+      "humidity_mean_mean": 62.3,
+      "rain_30d_mean": 55.78
+    },
+    "2": {
+      "temp_max_mean": 16.3,
+      "humidity_mean_mean": 62.7,
+      "rain_30d_mean": 67.95
+    },
+    "3": {
+      "temp_max_mean": 21.4,
+      "humidity_mean_mean": 54.76,
+      "rain_30d_mean": 46.79
+    },
+    "4": {
+      "temp_max_mean": 25.64,
+      "humidity_mean_mean": 50.57,
+      "rain_30d_mean": 30.83
+    },
+    "5": {
+      "temp_max_mean": 27.56,
+      "humidity_mean_mean": 53.95,
+      "rain_30d_mean": 51.04
+    },
+    "6": {
+      "temp_max_mean": 28.9,
+      "humidity_mean_mean": 64.76,
+      "rain_30d_mean": 83.63
+    },
+    "7": {
+      "temp_max_mean": 26.54,
+      "humidity_mean_mean": 84.25,
+      "rain_30d_mean": 280.76
+    },
+    "8": {
+      "temp_max_mean": 26.29,
+      "humidity_mean_mean": 85.63,
+      "rain_30d_mean": 433.46
+    },
+    "9": {
+      "temp_max_mean": 25.72,
+      "humidity_mean_mean": 82.13,
+      "rain_30d_mean": 284.86
+    },
+    "10": {
+      "temp_max_mean": 23.64,
+      "humidity_mean_mean": 65.27,
+      "rain_30d_mean": 110.31
+    },
+    "11": {
+      "temp_max_mean": 19.72,
+      "humidity_mean_mean": 60.09,
+      "rain_30d_mean": 18.81
+    },
+    "12": {
+      "temp_max_mean": 15.49,
+      "humidity_mean_mean": 55.92,
+      "rain_30d_mean": 14.83
+    }
+  },
+  "Udham Singh Nagar": {
+    "1": {
+      "temp_max_mean": 18.86,
+      "humidity_mean_mean": 83.04,
+      "rain_30d_mean": 42.5
+    },
+    "2": {
+      "temp_max_mean": 22.39,
+      "humidity_mean_mean": 74.76,
+      "rain_30d_mean": 47.55
+    },
+    "3": {
+      "temp_max_mean": 29.09,
+      "humidity_mean_mean": 58.99,
+      "rain_30d_mean": 32.62
+    },
+    "4": {
+      "temp_max_mean": 34.35,
+      "humidity_mean_mean": 42.87,
+      "rain_30d_mean": 10.95
+    },
+    "5": {
+      "temp_max_mean": 35.14,
+      "humidity_mean_mean": 52.68,
+      "rain_30d_mean": 38.98
+    },
+    "6": {
+      "temp_max_mean": 35.39,
+      "humidity_mean_mean": 64.33,
+      "rain_30d_mean": 59.94
+    },
+    "7": {
+      "temp_max_mean": 31.92,
+      "humidity_mean_mean": 83.33,
+      "rain_30d_mean": 231.37
+    },
+    "8": {
+      "temp_max_mean": 31.11,
+      "humidity_mean_mean": 86.79,
+      "rain_30d_mean": 369.65
+    },
+    "9": {
+      "temp_max_mean": 30.97,
+      "humidity_mean_mean": 84.41,
+      "rain_30d_mean": 273.19
+    },
+    "10": {
+      "temp_max_mean": 29.71,
+      "humidity_mean_mean": 73.95,
+      "rain_30d_mean": 175.66
+    },
+    "11": {
+      "temp_max_mean": 25.4,
+      "humidity_mean_mean": 74.92,
+      "rain_30d_mean": 46.28
+    },
+    "12": {
+      "temp_max_mean": 20.59,
+      "humidity_mean_mean": 78.74,
+      "rain_30d_mean": 10.13
+    }
+  },
+  "Uttarkashi": {
+    "1": {
+      "temp_max_mean": -17.55,
+      "humidity_mean_mean": 55.18,
+      "rain_30d_mean": 135.32
+    },
+    "2": {
+      "temp_max_mean": -15.14,
+      "humidity_mean_mean": 52.86,
+      "rain_30d_mean": 149.38
+    },
+    "3": {
+      "temp_max_mean": -10.98,
+      "humidity_mean_mean": 50.94,
+      "rain_30d_mean": 135.54
+    },
+    "4": {
+      "temp_max_mean": -6.27,
+      "humidity_mean_mean": 59.38,
+      "rain_30d_mean": 99.07
+    },
+    "5": {
+      "temp_max_mean": -3.18,
+      "humidity_mean_mean": 69.54,
+      "rain_30d_mean": 93.7
+    },
+    "6": {
+      "temp_max_mean": 1.29,
+      "humidity_mean_mean": 77.71,
+      "rain_30d_mean": 74.74
+    },
+    "7": {
+      "temp_max_mean": 4.45,
+      "humidity_mean_mean": 87.24,
+      "rain_30d_mean": 178.94
+    },
+    "8": {
+      "temp_max_mean": 4.43,
+      "humidity_mean_mean": 88.68,
+      "rain_30d_mean": 290.31
+    },
+    "9": {
+      "temp_max_mean": 1.8,
+      "humidity_mean_mean": 83.05,
+      "rain_30d_mean": 189.19
+    },
+    "10": {
+      "temp_max_mean": -4.0,
+      "humidity_mean_mean": 60.41,
+      "rain_30d_mean": 111.76
+    },
+    "11": {
+      "temp_max_mean": -9.69,
+      "humidity_mean_mean": 45.96,
+      "rain_30d_mean": 63.1
+    },
+    "12": {
+      "temp_max_mean": -14.88,
+      "humidity_mean_mean": 41.26,
+      "rain_30d_mean": 85.07
+    }
+  }
+}
