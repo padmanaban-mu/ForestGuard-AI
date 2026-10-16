@@ -22,3 +22,6 @@ QUALITY
 
 WORKFLOW
 Use Planning mode. Before each phase produce an Implementation Plan artifact and wait for my approval. After each phase STOP, summarise what changed, show test/build output, and wait for "continue". Never skip phases or combine them.
+Python version for this project is 3.13 (Docker, CI, Render, scripts, docs). Pin library versions from ml/requirements.txt.
+
+Never run destructive commands (git checkout --, git reset, git clean, rm, Remove-Item on project files) or edit files under .agent/ without asking me first and showing the exact command.
