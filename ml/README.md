@@ -23,8 +23,7 @@ Vegetation dryness is represented strictly by topsoil volumetric moisture (`soil
 
 ## 2. Environment & Python Version
 
-- **Python Version:** Pinned to **Python `3.13`** (see `.python-version`).
-- **Deployment Requirement:** For Docker builds, GitHub Actions CI, and Render/cloud deployments, **Python 3.13** is strictly required to ensure full binary compatibility with the serialized scikit-learn (`1.8.0`), numpy (`2.4.1`), pandas (`3.0.2`), and joblib (`1.5.3`) model artifacts.
+- **Deployment Requirement:** Project standard is Python 3.13; the model needs the pinned scikit-learn/numpy/pandas/joblib versions (scikit-learn `1.8.0`, numpy `2.4.1`, pandas `3.0.2`, joblib `1.5.3`; see `.python-version`).
 - **Dependencies:** Install pinned requirements via:
   ```bash
   pip install -r ml/requirements.txt
@@ -115,3 +114,4 @@ If you wish to rerun the pipeline from scratch:
 1. **Unmasked FIRMS Labels:** Target labels count any active fire detection from NASA FIRMS within district administrative boundaries without a forest canopy or land-use mask.
 2. **Plains Agricultural Burning Hypothesis:** In southern agricultural lowlands (**Haridwar** PR-AUC 0.4093, precision 33.0%; **Udham Singh Nagar** 47.4% positive rate), post-harvest agricultural crop residue burning is **hypothesized** to contribute significantly to satellite thermal detections in agricultural areas without a forest canopy mask.
 3. **Complex High-Altitude Terrain (Rudraprayag):** Rudraprayag exhibits lower detection sensitivity (PR-AUC 0.5158, F1 0.5253), primarily explained by its **low baseline positive rate of 11.8%** (only 43 detection days out of 365), alongside **hypothesized** steep topography and cloud shadows.
+4. **Physical & Data Limitations:** Weather is sampled at one centroid per district (notably, the Uttarkashi 5023 m and Chamoli 3016 m centroids are situated above the local tree line); the binary fire target label covers the entire administrative district; no land-cover or forest-canopy mask is applied; and vegetation dryness is represented strictly by topsoil moisture (`soil_moisture_0_to_7cm_mean`) and ET0 proxies (no satellite NDVI).

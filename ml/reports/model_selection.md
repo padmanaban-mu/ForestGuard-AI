@@ -28,9 +28,18 @@ All candidates were trained exclusively on 2018–2022 data and evaluated on 202
 
 | Candidate Architecture | Implementation Details | Val PR-AUC (Selection Metric) | Val ROC-AUC | Val F1 ($\tau^*$) | Val Precision | Val Recall | Selection Decision |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| **Gradient Boosting** | `HistGradientBoostingClassifier(max_iter=100, max_depth=6, class_weight="balanced", random_state=42)` | **0.6436** | **0.8524** | **0.6496** ($\tau^*=0.47$) | 56.4% | 76.6% | **SELECTED & SERVED** |
+| **Gradient Boosting (Raw)** | `HistGradientBoostingClassifier(max_iter=100, max_depth=6, class_weight="balanced", random_state=42)` | **0.6436** | **0.8524** | **0.6496** ($\tau^*=0.47$) | 56.4% | 76.6% | **SELECTED & SERVED** |
 | **Random Forest** | `RandomForestClassifier(n_estimators=80, max_depth=10, min_samples_leaf=10, class_weight="balanced", random_state=42)` | 0.6289 | 0.8435 | 0.6369 ($\tau^*=0.41$) | 51.6% | 83.3% | Baseline Comparison |
 | **Logistic Regression** | `StandardScaler()` + `LogisticRegression(class_weight="balanced", max_iter=1000, random_state=42)` | 0.6203 | 0.8398 | 0.6405 ($\tau^*=0.41$) | 51.6% | 84.5% | Linear Baseline |
+
+### Metrics Reconciliation: Raw Model ($\tau^* = 0.47$) vs Calibrated Served Pipeline ($\tau = 0.50$)
+
+| Model Version & Operating Threshold | F1 Score | Precision | Recall | PR-AUC | ROC-AUC | Source / Context |
+| :--- | :---: | :---: | :---: | :---: | :---: | :--- |
+| **Raw Base Model** ($\tau^* = 0.47$) | **0.6496** | 56.40% | 76.60% | 0.6436 | 0.8524 | Architecture selection benchmark in Table 2 above. |
+| **Calibrated Pipeline** ($\tau = 0.50$) | **0.6417** | 57.41% | 72.75% | 0.6436 | 0.8524 | Serialized in `risk_model.joblib` bundle (`/model/metrics`). |
+
+- **Explanation:** The raw base model's F1 score of **0.6496** is obtained by maximizing F1 on raw predicted probabilities across validation grid search ($\tau^* = 0.47$). After fitting probability calibration (`CalibratedClassifierCV(method='sigmoid')`), probabilities are mapped to true posterior ignition frequencies; evaluating this calibrated pipeline at the standard operating threshold $\tau = 0.50$ yields F1 = **0.6417**, Precision = **57.41%**, and Recall = **72.75%**. Both versions exhibit identical ranking performance (PR-AUC = 0.6436, ROC-AUC = 0.8524) because strictly monotonic sigmoid scaling preserves AUC metrics.
 
 ---
 
@@ -50,3 +59,17 @@ All candidates were trained exclusively on 2018–2022 data and evaluated on 202
 2. **Probability Calibration:** The winning model was calibrated using sigmoid scaling (`CalibratedClassifierCV(method="sigmoid")`) fitted via `PredefinedSplit` on the 2023 validation split. No test set data was seen.
 3. **Serialization:** The calibrated pipeline, feature metadata, environment dependencies, and operational risk thresholds were serialized into `ml/models/risk_model.joblib`.
 4. **Integrity Confirmation:** Zero 2024 test data was inspected, queried, or utilized during model selection, hyperparameter tuning, or calibration fitting.
+
+---
+
+## 5. Served Model vs Baseline Significance & Walk-Forward Protocol (Year 2024)
+
+### Weekly Block Bootstrap Difference vs Climatology Lookup (Test Year 2024)
+On the held-out 2024 test year ($N = 4,745$ across all 13 districts), the statistical significance of the served model (Calibrated Gradient Boosting) over the District + Month Climatology Lookup was assessed using weekly block bootstrapping (52 ISO week clusters, $B = 1,000$ resamples):
+- **Delta PR-AUC Mean:** $+0.0585$ (95% CI: `[-0.0277, 0.1368]`)
+- **Delta ROC-AUC Mean:** $+0.0267$ (95% CI: `[-0.0085, 0.0631]`)
+- **Scientific Finding:** Because the 95% confidence interval for $\Delta\text{PR-AUC}$ crosses zero, the ranking improvement over the geographic-monthly lookup baseline is modest and not statistically significant. This confirms that broad calendar seasonality and district geography explain the bulk of baseline risk, while daily weather dynamics provide fine-grained modulation.
+
+### Rolling-Origin Climatology Recomputation Protocol
+In walk-forward rolling-origin evaluation (2021–2024), climatology tables and anomaly features are recomputed dynamically and strictly from each fold's training years only (e.g., fold 2021 uses only 2018–2019; fold 2022 uses 2018–2020; fold 2023 uses 2018–2021; fold 2024 uses 2018–2022). Zero future or test data enters any fold's baseline calculations.
+

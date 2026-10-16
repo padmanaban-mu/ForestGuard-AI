@@ -1,0 +1,14 @@
+# Backend dependencies for ForestGuard AI (Python 3.13)
+fastapi==0.115.11
+uvicorn==0.34.0
+pydantic==2.10.6
+pydantic-settings==2.8.1
+requests==2.33.1
+httpx==0.28.1
+cachetools==5.5.2
+joblib==1.5.3
+scikit-learn==1.8.0
+numpy==2.4.1
+pandas==3.0.2
+python-dotenv==1.2.2
+pytest==8.3.5

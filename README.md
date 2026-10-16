@@ -2,7 +2,7 @@
 
 **AI-Based Forest Fire Risk Prediction System** is an intelligent ML solution that analyzes historical daily weather, evaporative demand, and soil moisture observations with machine learning to predict pre-ignition fire risk as Low, Medium, High, or Extreme, providing early warnings through a user-friendly dashboard so authorities can take preventive measures.
 
-> **Environment Requirements:** Python `3.13` (strictly required for Docker builds, CI, and Render/cloud deployments to ensure binary compatibility with scikit-learn `1.8.0`, numpy `2.4.1`, and joblib `1.5.3` model artifacts; see `.python-version`), Node.js 22+ and npm 10+ (for frontend).
+> **Environment Requirements:** Project standard is Python 3.13; the model needs the pinned scikit-learn/numpy/pandas/joblib versions (see `.python-version`), Node.js 22+ and npm 10+ (for frontend).
 > **Vegetation Representation:** Vegetation dryness is represented strictly by topsoil volumetric moisture (`soil_moisture_0_to_7cm_mean`) and FAO-56 Penman-Monteith reference evapotranspiration (`et0`) proxies from ERA5-Land/Open-Meteo. Satellite NDVI is not ingested.
 > Live observations, cached responses and fallback files remain distinguishable. Empty files stay empty. Fire-engine readiness, crew, water and response metrics are simulated and labelled; the app is not a public-safety or emergency-dispatch system.
 

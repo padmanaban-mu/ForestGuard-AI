@@ -1,0 +1,1518 @@
+{
+  "model": "Gradient Boosting",
+  "weather_source": "cached",
+  "generated_at": "2026-10-16T21:43:41.915459+00:00",
+  "status": "cached",
+  "days": 7,
+  "count": 13,
+  "districts": [
+    {
+      "district": "Almora",
+      "caveat": null,
+      "centroid": [
+        29.6952,
+        79.489
+      ],
+      "elevation": 1489.0,
+      "forecast": [
+        {
+          "weather_date": "2026-10-17",
+          "risk_for_date": "2026-10-18",
+          "probability": 0.039,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 22.5,
+            "humidity_mean": 63.0,
+            "wind_speed_max": 11.6,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.428,
+            "days_since_rain": 2.0,
+            "vpd_proxy": 1.01
+          }
+        },
+        {
+          "weather_date": "2026-10-18",
+          "risk_for_date": "2026-10-19",
+          "probability": 0.0498,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 23.8,
+            "humidity_mean": 63.0,
+            "wind_speed_max": 11.4,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.419,
+            "days_since_rain": 3.0,
+            "vpd_proxy": 1.09
+          }
+        },
+        {
+          "weather_date": "2026-10-19",
+          "risk_for_date": "2026-10-20",
+          "probability": 0.0484,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 24.1,
+            "humidity_mean": 56.0,
+            "wind_speed_max": 10.9,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.411,
+            "days_since_rain": 4.0,
+            "vpd_proxy": 1.32
+          }
+        },
+        {
+          "weather_date": "2026-10-20",
+          "risk_for_date": "2026-10-21",
+          "probability": 0.0524,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 24.5,
+            "humidity_mean": 61.0,
+            "wind_speed_max": 11.5,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.402,
+            "days_since_rain": 5.0,
+            "vpd_proxy": 1.2
+          }
+        },
+        {
+          "weather_date": "2026-10-21",
+          "risk_for_date": "2026-10-22",
+          "probability": 0.058,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 24.1,
+            "humidity_mean": 71.0,
+            "wind_speed_max": 9.9,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.395,
+            "days_since_rain": 6.0,
+            "vpd_proxy": 0.87
+          }
+        },
+        {
+          "weather_date": "2026-10-22",
+          "risk_for_date": "2026-10-23",
+          "probability": 0.064,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 24.0,
+            "humidity_mean": 70.0,
+            "wind_speed_max": 10.4,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.389,
+            "days_since_rain": 7.0,
+            "vpd_proxy": 0.9
+          }
+        },
+        {
+          "weather_date": "2026-10-23",
+          "risk_for_date": "2026-10-24",
+          "probability": 0.0466,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 23.1,
+            "humidity_mean": 78.0,
+            "wind_speed_max": 6.8,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.383,
+            "days_since_rain": 8.0,
+            "vpd_proxy": 0.62
+          }
+        }
+      ]
+    },
+    {
+      "district": "Bageshwar",
+      "caveat": null,
+      "centroid": [
+        29.997,
+        79.846
+      ],
+      "elevation": 2448.0,
+      "forecast": [
+        {
+          "weather_date": "2026-10-17",
+          "risk_for_date": "2026-10-18",
+          "probability": 0.0429,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 16.1,
+            "humidity_mean": 48.0,
+            "wind_speed_max": 8.5,
+            "rain_sum": 2.6,
+            "soil_moisture_mean": 0.38,
+            "days_since_rain": 0.0,
+            "vpd_proxy": 0.95
+          }
+        },
+        {
+          "weather_date": "2026-10-18",
+          "risk_for_date": "2026-10-19",
+          "probability": 0.0576,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 16.9,
+            "humidity_mean": 42.0,
+            "wind_speed_max": 8.3,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.373,
+            "days_since_rain": 1.0,
+            "vpd_proxy": 1.12
+          }
+        },
+        {
+          "weather_date": "2026-10-19",
+          "risk_for_date": "2026-10-20",
+          "probability": 0.0569,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 17.4,
+            "humidity_mean": 42.0,
+            "wind_speed_max": 7.8,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.364,
+            "days_since_rain": 2.0,
+            "vpd_proxy": 1.15
+          }
+        },
+        {
+          "weather_date": "2026-10-20",
+          "risk_for_date": "2026-10-21",
+          "probability": 0.0644,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 17.7,
+            "humidity_mean": 42.0,
+            "wind_speed_max": 7.1,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.357,
+            "days_since_rain": 3.0,
+            "vpd_proxy": 1.18
+          }
+        },
+        {
+          "weather_date": "2026-10-21",
+          "risk_for_date": "2026-10-22",
+          "probability": 0.0629,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 17.4,
+            "humidity_mean": 45.0,
+            "wind_speed_max": 7.4,
+            "rain_sum": 0.3,
+            "soil_moisture_mean": 0.352,
+            "days_since_rain": 4.0,
+            "vpd_proxy": 1.09
+          }
+        },
+        {
+          "weather_date": "2026-10-22",
+          "risk_for_date": "2026-10-23",
+          "probability": 0.0627,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 17.3,
+            "humidity_mean": 41.0,
+            "wind_speed_max": 7.0,
+            "rain_sum": 0.9,
+            "soil_moisture_mean": 0.35,
+            "days_since_rain": 5.0,
+            "vpd_proxy": 1.17
+          }
+        },
+        {
+          "weather_date": "2026-10-23",
+          "risk_for_date": "2026-10-24",
+          "probability": 0.0602,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 16.4,
+            "humidity_mean": 46.0,
+            "wind_speed_max": 7.7,
+            "rain_sum": 1.2,
+            "soil_moisture_mean": 0.348,
+            "days_since_rain": 0.0,
+            "vpd_proxy": 1.01
+          }
+        }
+      ]
+    },
+    {
+      "district": "Chamoli",
+      "caveat": null,
+      "centroid": [
+        30.4985,
+        79.5583
+      ],
+      "elevation": 3016.0,
+      "forecast": [
+        {
+          "weather_date": "2026-10-17",
+          "risk_for_date": "2026-10-18",
+          "probability": 0.062,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 12.1,
+            "humidity_mean": 46.0,
+            "wind_speed_max": 8.3,
+            "rain_sum": 0.4,
+            "soil_moisture_mean": 0.38,
+            "days_since_rain": 2.0,
+            "vpd_proxy": 0.76
+          }
+        },
+        {
+          "weather_date": "2026-10-18",
+          "risk_for_date": "2026-10-19",
+          "probability": 0.0975,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 14.4,
+            "humidity_mean": 31.0,
+            "wind_speed_max": 8.1,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.371,
+            "days_since_rain": 3.0,
+            "vpd_proxy": 1.13
+          }
+        },
+        {
+          "weather_date": "2026-10-19",
+          "risk_for_date": "2026-10-20",
+          "probability": 0.0805,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 14.8,
+            "humidity_mean": 36.0,
+            "wind_speed_max": 7.5,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.364,
+            "days_since_rain": 4.0,
+            "vpd_proxy": 1.08
+          }
+        },
+        {
+          "weather_date": "2026-10-20",
+          "risk_for_date": "2026-10-21",
+          "probability": 0.0717,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 15.1,
+            "humidity_mean": 38.0,
+            "wind_speed_max": 8.2,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.357,
+            "days_since_rain": 5.0,
+            "vpd_proxy": 1.06
+          }
+        },
+        {
+          "weather_date": "2026-10-21",
+          "risk_for_date": "2026-10-22",
+          "probability": 0.0707,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 14.8,
+            "humidity_mean": 41.0,
+            "wind_speed_max": 8.1,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.351,
+            "days_since_rain": 6.0,
+            "vpd_proxy": 0.99
+          }
+        },
+        {
+          "weather_date": "2026-10-22",
+          "risk_for_date": "2026-10-23",
+          "probability": 0.0724,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 14.3,
+            "humidity_mean": 38.0,
+            "wind_speed_max": 8.2,
+            "rain_sum": 0.3,
+            "soil_moisture_mean": 0.347,
+            "days_since_rain": 7.0,
+            "vpd_proxy": 1.01
+          }
+        },
+        {
+          "weather_date": "2026-10-23",
+          "risk_for_date": "2026-10-24",
+          "probability": 0.0725,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 12.8,
+            "humidity_mean": 41.0,
+            "wind_speed_max": 7.4,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.343,
+            "days_since_rain": 8.0,
+            "vpd_proxy": 0.87
+          }
+        }
+      ]
+    },
+    {
+      "district": "Champawat",
+      "caveat": null,
+      "centroid": [
+        29.3031,
+        80.0617
+      ],
+      "elevation": 1449.0,
+      "forecast": [
+        {
+          "weather_date": "2026-10-17",
+          "risk_for_date": "2026-10-18",
+          "probability": 0.0129,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 20.8,
+            "humidity_mean": 64.0,
+            "wind_speed_max": 7.3,
+            "rain_sum": 1.2,
+            "soil_moisture_mean": 0.466,
+            "days_since_rain": 0.0,
+            "vpd_proxy": 0.88
+          }
+        },
+        {
+          "weather_date": "2026-10-18",
+          "risk_for_date": "2026-10-19",
+          "probability": 0.0197,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 21.8,
+            "humidity_mean": 65.0,
+            "wind_speed_max": 7.4,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.456,
+            "days_since_rain": 1.0,
+            "vpd_proxy": 0.91
+          }
+        },
+        {
+          "weather_date": "2026-10-19",
+          "risk_for_date": "2026-10-20",
+          "probability": 0.0192,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 22.6,
+            "humidity_mean": 66.0,
+            "wind_speed_max": 7.0,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.445,
+            "days_since_rain": 2.0,
+            "vpd_proxy": 0.93
+          }
+        },
+        {
+          "weather_date": "2026-10-20",
+          "risk_for_date": "2026-10-21",
+          "probability": 0.0177,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 21.5,
+            "humidity_mean": 74.0,
+            "wind_speed_max": 8.1,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.436,
+            "days_since_rain": 3.0,
+            "vpd_proxy": 0.67
+          }
+        },
+        {
+          "weather_date": "2026-10-21",
+          "risk_for_date": "2026-10-22",
+          "probability": 0.0193,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 21.1,
+            "humidity_mean": 66.0,
+            "wind_speed_max": 8.2,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.429,
+            "days_since_rain": 4.0,
+            "vpd_proxy": 0.85
+          }
+        },
+        {
+          "weather_date": "2026-10-22",
+          "risk_for_date": "2026-10-23",
+          "probability": 0.0146,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 21.8,
+            "humidity_mean": 61.0,
+            "wind_speed_max": 8.1,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.421,
+            "days_since_rain": 5.0,
+            "vpd_proxy": 1.02
+          }
+        },
+        {
+          "weather_date": "2026-10-23",
+          "risk_for_date": "2026-10-24",
+          "probability": 0.0179,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 20.8,
+            "humidity_mean": 65.0,
+            "wind_speed_max": 7.3,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.415,
+            "days_since_rain": 6.0,
+            "vpd_proxy": 0.86
+          }
+        }
+      ]
+    },
+    {
+      "district": "Dehradun",
+      "caveat": null,
+      "centroid": [
+        30.4686,
+        77.9598
+      ],
+      "elevation": 2040.0,
+      "forecast": [
+        {
+          "weather_date": "2026-10-17",
+          "risk_for_date": "2026-10-18",
+          "probability": 0.0511,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 16.9,
+            "humidity_mean": 66.0,
+            "wind_speed_max": 10.1,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.438,
+            "days_since_rain": 2.0,
+            "vpd_proxy": 0.66
+          }
+        },
+        {
+          "weather_date": "2026-10-18",
+          "risk_for_date": "2026-10-19",
+          "probability": 0.0694,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 18.1,
+            "humidity_mean": 60.0,
+            "wind_speed_max": 8.9,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.421,
+            "days_since_rain": 3.0,
+            "vpd_proxy": 0.83
+          }
+        },
+        {
+          "weather_date": "2026-10-19",
+          "risk_for_date": "2026-10-20",
+          "probability": 0.0776,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 18.2,
+            "humidity_mean": 63.0,
+            "wind_speed_max": 8.2,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.408,
+            "days_since_rain": 4.0,
+            "vpd_proxy": 0.77
+          }
+        },
+        {
+          "weather_date": "2026-10-20",
+          "risk_for_date": "2026-10-21",
+          "probability": 0.0669,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 18.3,
+            "humidity_mean": 65.0,
+            "wind_speed_max": 8.0,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.397,
+            "days_since_rain": 5.0,
+            "vpd_proxy": 0.74
+          }
+        },
+        {
+          "weather_date": "2026-10-21",
+          "risk_for_date": "2026-10-22",
+          "probability": 0.0843,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 18.1,
+            "humidity_mean": 74.0,
+            "wind_speed_max": 8.7,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.388,
+            "days_since_rain": 6.0,
+            "vpd_proxy": 0.54
+          }
+        },
+        {
+          "weather_date": "2026-10-22",
+          "risk_for_date": "2026-10-23",
+          "probability": 0.0895,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 18.2,
+            "humidity_mean": 69.0,
+            "wind_speed_max": 8.8,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.379,
+            "days_since_rain": 7.0,
+            "vpd_proxy": 0.65
+          }
+        },
+        {
+          "weather_date": "2026-10-23",
+          "risk_for_date": "2026-10-24",
+          "probability": 0.0852,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 17.7,
+            "humidity_mean": 71.0,
+            "wind_speed_max": 7.5,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.371,
+            "days_since_rain": 8.0,
+            "vpd_proxy": 0.59
+          }
+        }
+      ]
+    },
+    {
+      "district": "Haridwar",
+      "caveat": "Mixed agricultural lowlands with seasonal post-harvest crop residue burning; thermal detections lack a forest canopy mask.",
+      "centroid": [
+        29.8773,
+        77.9887
+      ],
+      "elevation": 256.0,
+      "forecast": [
+        {
+          "weather_date": "2026-10-17",
+          "risk_for_date": "2026-10-18",
+          "probability": 0.2456,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 28.1,
+            "humidity_mean": 73.0,
+            "wind_speed_max": 8.8,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.323,
+            "days_since_rain": 2.0,
+            "vpd_proxy": 1.03
+          }
+        },
+        {
+          "weather_date": "2026-10-18",
+          "risk_for_date": "2026-10-19",
+          "probability": 0.2745,
+          "risk_level": "Medium",
+          "key_inputs": {
+            "temp_max": 27.7,
+            "humidity_mean": 74.0,
+            "wind_speed_max": 9.6,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.309,
+            "days_since_rain": 3.0,
+            "vpd_proxy": 0.97
+          }
+        },
+        {
+          "weather_date": "2026-10-19",
+          "risk_for_date": "2026-10-20",
+          "probability": 0.3597,
+          "risk_level": "Medium",
+          "key_inputs": {
+            "temp_max": 27.6,
+            "humidity_mean": 77.0,
+            "wind_speed_max": 11.4,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.299,
+            "days_since_rain": 4.0,
+            "vpd_proxy": 0.85
+          }
+        },
+        {
+          "weather_date": "2026-10-20",
+          "risk_for_date": "2026-10-21",
+          "probability": 0.3248,
+          "risk_level": "Medium",
+          "key_inputs": {
+            "temp_max": 27.5,
+            "humidity_mean": 82.0,
+            "wind_speed_max": 7.1,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.291,
+            "days_since_rain": 5.0,
+            "vpd_proxy": 0.66
+          }
+        },
+        {
+          "weather_date": "2026-10-21",
+          "risk_for_date": "2026-10-22",
+          "probability": 0.2681,
+          "risk_level": "Medium",
+          "key_inputs": {
+            "temp_max": 27.5,
+            "humidity_mean": 84.0,
+            "wind_speed_max": 6.6,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.284,
+            "days_since_rain": 6.0,
+            "vpd_proxy": 0.59
+          }
+        },
+        {
+          "weather_date": "2026-10-22",
+          "risk_for_date": "2026-10-23",
+          "probability": 0.4155,
+          "risk_level": "Medium",
+          "key_inputs": {
+            "temp_max": 27.9,
+            "humidity_mean": 82.0,
+            "wind_speed_max": 7.8,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.278,
+            "days_since_rain": 7.0,
+            "vpd_proxy": 0.68
+          }
+        },
+        {
+          "weather_date": "2026-10-23",
+          "risk_for_date": "2026-10-24",
+          "probability": 0.2207,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 27.9,
+            "humidity_mean": 82.0,
+            "wind_speed_max": 4.9,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.272,
+            "days_since_rain": 8.0,
+            "vpd_proxy": 0.68
+          }
+        }
+      ]
+    },
+    {
+      "district": "Nainital",
+      "caveat": null,
+      "centroid": [
+        29.3168,
+        79.455
+      ],
+      "elevation": 1271.0,
+      "forecast": [
+        {
+          "weather_date": "2026-10-17",
+          "risk_for_date": "2026-10-18",
+          "probability": 0.0808,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 21.5,
+            "humidity_mean": 65.0,
+            "wind_speed_max": 7.0,
+            "rain_sum": 1.6,
+            "soil_moisture_mean": 0.436,
+            "days_since_rain": 0.0,
+            "vpd_proxy": 0.9
+          }
+        },
+        {
+          "weather_date": "2026-10-18",
+          "risk_for_date": "2026-10-19",
+          "probability": 0.2561,
+          "risk_level": "Medium",
+          "key_inputs": {
+            "temp_max": 22.2,
+            "humidity_mean": 69.0,
+            "wind_speed_max": 7.6,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.432,
+            "days_since_rain": 1.0,
+            "vpd_proxy": 0.83
+          }
+        },
+        {
+          "weather_date": "2026-10-19",
+          "risk_for_date": "2026-10-20",
+          "probability": 0.2106,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 22.9,
+            "humidity_mean": 61.0,
+            "wind_speed_max": 7.8,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.421,
+            "days_since_rain": 2.0,
+            "vpd_proxy": 1.09
+          }
+        },
+        {
+          "weather_date": "2026-10-20",
+          "risk_for_date": "2026-10-21",
+          "probability": 0.2891,
+          "risk_level": "Medium",
+          "key_inputs": {
+            "temp_max": 22.0,
+            "humidity_mean": 72.0,
+            "wind_speed_max": 7.8,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.412,
+            "days_since_rain": 3.0,
+            "vpd_proxy": 0.74
+          }
+        },
+        {
+          "weather_date": "2026-10-21",
+          "risk_for_date": "2026-10-22",
+          "probability": 0.1793,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 21.7,
+            "humidity_mean": 81.0,
+            "wind_speed_max": 8.0,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.405,
+            "days_since_rain": 4.0,
+            "vpd_proxy": 0.49
+          }
+        },
+        {
+          "weather_date": "2026-10-22",
+          "risk_for_date": "2026-10-23",
+          "probability": 0.1831,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 22.1,
+            "humidity_mean": 82.0,
+            "wind_speed_max": 8.1,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.398,
+            "days_since_rain": 5.0,
+            "vpd_proxy": 0.48
+          }
+        },
+        {
+          "weather_date": "2026-10-23",
+          "risk_for_date": "2026-10-24",
+          "probability": 0.1735,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 21.4,
+            "humidity_mean": 86.0,
+            "wind_speed_max": 7.4,
+            "rain_sum": 0.6,
+            "soil_moisture_mean": 0.393,
+            "days_since_rain": 6.0,
+            "vpd_proxy": 0.36
+          }
+        }
+      ]
+    },
+    {
+      "district": "Pauri Garhwal",
+      "caveat": null,
+      "centroid": [
+        29.8987,
+        78.7567
+      ],
+      "elevation": 909.0,
+      "forecast": [
+        {
+          "weather_date": "2026-10-17",
+          "risk_for_date": "2026-10-18",
+          "probability": 0.0549,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 25.6,
+            "humidity_mean": 64.0,
+            "wind_speed_max": 7.4,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.425,
+            "days_since_rain": 2.0,
+            "vpd_proxy": 1.18
+          }
+        },
+        {
+          "weather_date": "2026-10-18",
+          "risk_for_date": "2026-10-19",
+          "probability": 0.0513,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 26.6,
+            "humidity_mean": 65.0,
+            "wind_speed_max": 6.4,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.41,
+            "days_since_rain": 3.0,
+            "vpd_proxy": 1.22
+          }
+        },
+        {
+          "weather_date": "2026-10-19",
+          "risk_for_date": "2026-10-20",
+          "probability": 0.0706,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 27.1,
+            "humidity_mean": 65.0,
+            "wind_speed_max": 6.0,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.397,
+            "days_since_rain": 4.0,
+            "vpd_proxy": 1.25
+          }
+        },
+        {
+          "weather_date": "2026-10-20",
+          "risk_for_date": "2026-10-21",
+          "probability": 0.0857,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 26.8,
+            "humidity_mean": 67.0,
+            "wind_speed_max": 6.2,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.386,
+            "days_since_rain": 5.0,
+            "vpd_proxy": 1.16
+          }
+        },
+        {
+          "weather_date": "2026-10-21",
+          "risk_for_date": "2026-10-22",
+          "probability": 0.075,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 26.3,
+            "humidity_mean": 74.0,
+            "wind_speed_max": 6.8,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.377,
+            "days_since_rain": 6.0,
+            "vpd_proxy": 0.89
+          }
+        },
+        {
+          "weather_date": "2026-10-22",
+          "risk_for_date": "2026-10-23",
+          "probability": 0.0886,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 26.6,
+            "humidity_mean": 80.0,
+            "wind_speed_max": 6.7,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.368,
+            "days_since_rain": 7.0,
+            "vpd_proxy": 0.7
+          }
+        },
+        {
+          "weather_date": "2026-10-23",
+          "risk_for_date": "2026-10-24",
+          "probability": 0.0882,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 26.0,
+            "humidity_mean": 78.0,
+            "wind_speed_max": 6.9,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.36,
+            "days_since_rain": 8.0,
+            "vpd_proxy": 0.74
+          }
+        }
+      ]
+    },
+    {
+      "district": "Pithoragarh",
+      "caveat": null,
+      "centroid": [
+        30.1119,
+        80.3336
+      ],
+      "elevation": 2322.0,
+      "forecast": [
+        {
+          "weather_date": "2026-10-17",
+          "risk_for_date": "2026-10-18",
+          "probability": 0.0306,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 16.2,
+            "humidity_mean": 58.0,
+            "wind_speed_max": 6.3,
+            "rain_sum": 2.1,
+            "soil_moisture_mean": 0.372,
+            "days_since_rain": 0.0,
+            "vpd_proxy": 0.77
+          }
+        },
+        {
+          "weather_date": "2026-10-18",
+          "risk_for_date": "2026-10-19",
+          "probability": 0.0571,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 17.3,
+            "humidity_mean": 49.0,
+            "wind_speed_max": 6.5,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.366,
+            "days_since_rain": 1.0,
+            "vpd_proxy": 1.01
+          }
+        },
+        {
+          "weather_date": "2026-10-19",
+          "risk_for_date": "2026-10-20",
+          "probability": 0.08,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 18.0,
+            "humidity_mean": 53.0,
+            "wind_speed_max": 6.5,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.358,
+            "days_since_rain": 2.0,
+            "vpd_proxy": 0.97
+          }
+        },
+        {
+          "weather_date": "2026-10-20",
+          "risk_for_date": "2026-10-21",
+          "probability": 0.082,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 18.5,
+            "humidity_mean": 51.0,
+            "wind_speed_max": 6.6,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.351,
+            "days_since_rain": 3.0,
+            "vpd_proxy": 1.04
+          }
+        },
+        {
+          "weather_date": "2026-10-21",
+          "risk_for_date": "2026-10-22",
+          "probability": 0.0859,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 18.1,
+            "humidity_mean": 53.0,
+            "wind_speed_max": 6.3,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.346,
+            "days_since_rain": 4.0,
+            "vpd_proxy": 0.98
+          }
+        },
+        {
+          "weather_date": "2026-10-22",
+          "risk_for_date": "2026-10-23",
+          "probability": 0.0778,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 17.9,
+            "humidity_mean": 50.0,
+            "wind_speed_max": 6.3,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.342,
+            "days_since_rain": 5.0,
+            "vpd_proxy": 1.02
+          }
+        },
+        {
+          "weather_date": "2026-10-23",
+          "risk_for_date": "2026-10-24",
+          "probability": 0.0842,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 16.6,
+            "humidity_mean": 50.0,
+            "wind_speed_max": 5.5,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.339,
+            "days_since_rain": 6.0,
+            "vpd_proxy": 0.94
+          }
+        }
+      ]
+    },
+    {
+      "district": "Rudraprayag",
+      "caveat": null,
+      "centroid": [
+        30.5948,
+        79.0985
+      ],
+      "elevation": 2262.0,
+      "forecast": [
+        {
+          "weather_date": "2026-10-17",
+          "risk_for_date": "2026-10-18",
+          "probability": 0.026,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 17.1,
+            "humidity_mean": 43.0,
+            "wind_speed_max": 7.3,
+            "rain_sum": 0.5,
+            "soil_moisture_mean": 0.342,
+            "days_since_rain": 2.0,
+            "vpd_proxy": 1.11
+          }
+        },
+        {
+          "weather_date": "2026-10-18",
+          "risk_for_date": "2026-10-19",
+          "probability": 0.0496,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 18.9,
+            "humidity_mean": 38.0,
+            "wind_speed_max": 8.5,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.336,
+            "days_since_rain": 3.0,
+            "vpd_proxy": 1.35
+          }
+        },
+        {
+          "weather_date": "2026-10-19",
+          "risk_for_date": "2026-10-20",
+          "probability": 0.0808,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 19.5,
+            "humidity_mean": 38.0,
+            "wind_speed_max": 9.2,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.329,
+            "days_since_rain": 4.0,
+            "vpd_proxy": 1.41
+          }
+        },
+        {
+          "weather_date": "2026-10-20",
+          "risk_for_date": "2026-10-21",
+          "probability": 0.1017,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 19.8,
+            "humidity_mean": 39.0,
+            "wind_speed_max": 9.0,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.324,
+            "days_since_rain": 5.0,
+            "vpd_proxy": 1.41
+          }
+        },
+        {
+          "weather_date": "2026-10-21",
+          "risk_for_date": "2026-10-22",
+          "probability": 0.0987,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 19.5,
+            "humidity_mean": 38.0,
+            "wind_speed_max": 8.8,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.319,
+            "days_since_rain": 6.0,
+            "vpd_proxy": 1.41
+          }
+        },
+        {
+          "weather_date": "2026-10-22",
+          "risk_for_date": "2026-10-23",
+          "probability": 0.0698,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 19.3,
+            "humidity_mean": 38.0,
+            "wind_speed_max": 9.0,
+            "rain_sum": 0.3,
+            "soil_moisture_mean": 0.314,
+            "days_since_rain": 7.0,
+            "vpd_proxy": 1.39
+          }
+        },
+        {
+          "weather_date": "2026-10-23",
+          "risk_for_date": "2026-10-24",
+          "probability": 0.0366,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 18.0,
+            "humidity_mean": 50.0,
+            "wind_speed_max": 9.5,
+            "rain_sum": 4.8,
+            "soil_moisture_mean": 0.321,
+            "days_since_rain": 0.0,
+            "vpd_proxy": 1.03
+          }
+        }
+      ]
+    },
+    {
+      "district": "Tehri Garhwal",
+      "caveat": null,
+      "centroid": [
+        30.4429,
+        78.5698
+      ],
+      "elevation": 1368.0,
+      "forecast": [
+        {
+          "weather_date": "2026-10-17",
+          "risk_for_date": "2026-10-18",
+          "probability": 0.0438,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 22.7,
+            "humidity_mean": 62.0,
+            "wind_speed_max": 7.0,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.394,
+            "days_since_rain": 2.0,
+            "vpd_proxy": 1.05
+          }
+        },
+        {
+          "weather_date": "2026-10-18",
+          "risk_for_date": "2026-10-19",
+          "probability": 0.0386,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 23.9,
+            "humidity_mean": 60.0,
+            "wind_speed_max": 6.4,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.382,
+            "days_since_rain": 3.0,
+            "vpd_proxy": 1.19
+          }
+        },
+        {
+          "weather_date": "2026-10-19",
+          "risk_for_date": "2026-10-20",
+          "probability": 0.0425,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 24.4,
+            "humidity_mean": 61.0,
+            "wind_speed_max": 6.7,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.373,
+            "days_since_rain": 4.0,
+            "vpd_proxy": 1.19
+          }
+        },
+        {
+          "weather_date": "2026-10-20",
+          "risk_for_date": "2026-10-21",
+          "probability": 0.0656,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 24.7,
+            "humidity_mean": 63.0,
+            "wind_speed_max": 7.4,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.363,
+            "days_since_rain": 5.0,
+            "vpd_proxy": 1.15
+          }
+        },
+        {
+          "weather_date": "2026-10-21",
+          "risk_for_date": "2026-10-22",
+          "probability": 0.0409,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 24.4,
+            "humidity_mean": 63.0,
+            "wind_speed_max": 6.5,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.355,
+            "days_since_rain": 6.0,
+            "vpd_proxy": 1.13
+          }
+        },
+        {
+          "weather_date": "2026-10-22",
+          "risk_for_date": "2026-10-23",
+          "probability": 0.0429,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 24.4,
+            "humidity_mean": 61.0,
+            "wind_speed_max": 6.2,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.348,
+            "days_since_rain": 7.0,
+            "vpd_proxy": 1.19
+          }
+        },
+        {
+          "weather_date": "2026-10-23",
+          "risk_for_date": "2026-10-24",
+          "probability": 0.0373,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 23.6,
+            "humidity_mean": 63.0,
+            "wind_speed_max": 4.2,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.341,
+            "days_since_rain": 8.0,
+            "vpd_proxy": 1.08
+          }
+        }
+      ]
+    },
+    {
+      "district": "Udham Singh Nagar",
+      "caveat": "Mixed agricultural lowlands with seasonal post-harvest crop residue burning; thermal detections lack a forest canopy mask.",
+      "centroid": [
+        29.043,
+        79.4992
+      ],
+      "elevation": 246.0,
+      "forecast": [
+        {
+          "weather_date": "2026-10-17",
+          "risk_for_date": "2026-10-18",
+          "probability": 0.8498,
+          "risk_level": "Extreme",
+          "key_inputs": {
+            "temp_max": 28.1,
+            "humidity_mean": 77.0,
+            "wind_speed_max": 9.7,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.293,
+            "days_since_rain": 6.0,
+            "vpd_proxy": 0.87
+          }
+        },
+        {
+          "weather_date": "2026-10-18",
+          "risk_for_date": "2026-10-19",
+          "probability": 0.8789,
+          "risk_level": "Extreme",
+          "key_inputs": {
+            "temp_max": 27.9,
+            "humidity_mean": 80.0,
+            "wind_speed_max": 11.2,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.282,
+            "days_since_rain": 7.0,
+            "vpd_proxy": 0.75
+          }
+        },
+        {
+          "weather_date": "2026-10-19",
+          "risk_for_date": "2026-10-20",
+          "probability": 0.8765,
+          "risk_level": "Extreme",
+          "key_inputs": {
+            "temp_max": 28.0,
+            "humidity_mean": 81.0,
+            "wind_speed_max": 12.4,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.273,
+            "days_since_rain": 8.0,
+            "vpd_proxy": 0.72
+          }
+        },
+        {
+          "weather_date": "2026-10-20",
+          "risk_for_date": "2026-10-21",
+          "probability": 0.8299,
+          "risk_level": "Extreme",
+          "key_inputs": {
+            "temp_max": 27.3,
+            "humidity_mean": 83.0,
+            "wind_speed_max": 6.1,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.266,
+            "days_since_rain": 9.0,
+            "vpd_proxy": 0.62
+          }
+        },
+        {
+          "weather_date": "2026-10-21",
+          "risk_for_date": "2026-10-22",
+          "probability": 0.7937,
+          "risk_level": "Extreme",
+          "key_inputs": {
+            "temp_max": 27.9,
+            "humidity_mean": 80.0,
+            "wind_speed_max": 5.3,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.259,
+            "days_since_rain": 10.0,
+            "vpd_proxy": 0.75
+          }
+        },
+        {
+          "weather_date": "2026-10-22",
+          "risk_for_date": "2026-10-23",
+          "probability": 0.8824,
+          "risk_level": "Extreme",
+          "key_inputs": {
+            "temp_max": 28.0,
+            "humidity_mean": 78.0,
+            "wind_speed_max": 6.7,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.253,
+            "days_since_rain": 11.0,
+            "vpd_proxy": 0.83
+          }
+        },
+        {
+          "weather_date": "2026-10-23",
+          "risk_for_date": "2026-10-24",
+          "probability": 0.731,
+          "risk_level": "High",
+          "key_inputs": {
+            "temp_max": 28.0,
+            "humidity_mean": 78.0,
+            "wind_speed_max": 4.2,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.246,
+            "days_since_rain": 12.0,
+            "vpd_proxy": 0.83
+          }
+        }
+      ]
+    },
+    {
+      "district": "Uttarkashi",
+      "caveat": null,
+      "centroid": [
+        30.9782,
+        78.5892
+      ],
+      "elevation": 5023.0,
+      "forecast": [
+        {
+          "weather_date": "2026-10-17",
+          "risk_for_date": "2026-10-18",
+          "probability": 0.0482,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": -7.9,
+            "humidity_mean": 75.0,
+            "wind_speed_max": 8.3,
+            "rain_sum": 0.5,
+            "soil_moisture_mean": 0.356,
+            "days_since_rain": 2.0,
+            "vpd_proxy": 0.08
+          }
+        },
+        {
+          "weather_date": "2026-10-18",
+          "risk_for_date": "2026-10-19",
+          "probability": 0.0848,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": -5.6,
+            "humidity_mean": 45.0,
+            "wind_speed_max": 6.7,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.356,
+            "days_since_rain": 3.0,
+            "vpd_proxy": 0.22
+          }
+        },
+        {
+          "weather_date": "2026-10-19",
+          "risk_for_date": "2026-10-20",
+          "probability": 0.0989,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": -4.9,
+            "humidity_mean": 52.0,
+            "wind_speed_max": 6.0,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.355,
+            "days_since_rain": 4.0,
+            "vpd_proxy": 0.2
+          }
+        },
+        {
+          "weather_date": "2026-10-20",
+          "risk_for_date": "2026-10-21",
+          "probability": 0.0899,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": -4.5,
+            "humidity_mean": 59.0,
+            "wind_speed_max": 6.1,
+            "rain_sum": 0.3,
+            "soil_moisture_mean": 0.355,
+            "days_since_rain": 5.0,
+            "vpd_proxy": 0.18
+          }
+        },
+        {
+          "weather_date": "2026-10-21",
+          "risk_for_date": "2026-10-22",
+          "probability": 0.0984,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": -5.0,
+            "humidity_mean": 68.0,
+            "wind_speed_max": 6.3,
+            "rain_sum": 0.3,
+            "soil_moisture_mean": 0.355,
+            "days_since_rain": 6.0,
+            "vpd_proxy": 0.14
+          }
+        },
+        {
+          "weather_date": "2026-10-22",
+          "risk_for_date": "2026-10-23",
+          "probability": 0.1218,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": -5.2,
+            "humidity_mean": 74.0,
+            "wind_speed_max": 7.3,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.355,
+            "days_since_rain": 7.0,
+            "vpd_proxy": 0.11
+          }
+        },
+        {
+          "weather_date": "2026-10-23",
+          "risk_for_date": "2026-10-24",
+          "probability": 0.0967,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": -7.2,
+            "humidity_mean": 76.0,
+            "wind_speed_max": 7.4,
+            "rain_sum": 1.8,
+            "soil_moisture_mean": 0.355,
+            "days_since_rain": 0.0,
+            "vpd_proxy": 0.09
+          }
+        }
+      ]
+    }
+  ]
+}
