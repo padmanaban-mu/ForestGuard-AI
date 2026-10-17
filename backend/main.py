@@ -324,11 +324,13 @@ def get_recent_fires(
             try:
                 lat = float(row.get("latitude", 0.0))
                 lon = float(row.get("longitude", 0.0))
+                bright_val = float(row["brightness"]) if row.get("brightness") else (float(row["bright_ti4"]) if row.get("bright_ti4") else None)
+                bright_ti4_val = float(row["bright_ti4"]) if row.get("bright_ti4") else bright_val
                 fires.append(
                     FireDetection(
                         latitude=lat,
                         longitude=lon,
-                        brightness=float(row["brightness"]) if row.get("brightness") else None,
+                        brightness=bright_val,
                         scan=float(row["scan"]) if row.get("scan") else None,
                         track=float(row["track"]) if row.get("track") else None,
                         acq_date=row.get("acq_date", ""),
@@ -337,6 +339,7 @@ def get_recent_fires(
                         confidence=row.get("confidence"),
                         version=row.get("version"),
                         bright_t31=float(row["bright_t31"]) if row.get("bright_t31") else None,
+                        bright_ti4=bright_ti4_val,
                         frp=float(row["frp"]) if row.get("frp") else None,
                         daynight=row.get("daynight"),
                     )

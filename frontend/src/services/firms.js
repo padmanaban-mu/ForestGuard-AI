@@ -1,4 +1,5 @@
 import Papa from 'papaparse';
+import { getRecentFires } from './api.js';
 import { boxAsString } from '../data/region.js';
 import { fetchWithTimeout, getFreshCache, loadFallback, saveCache, state } from './cache.js';
 
@@ -22,23 +23,40 @@ export function normalizeFire(row) {
   return { id: `${latitude.toFixed(4)}-${longitude.toFixed(4)}-${acqDate}-${rawTime}-${get('satellite', 'VIIRS')}`, latitude, longitude, brightness, frp, confidence: rawConf === '' ? null : String(rawConf), confidenceRank: confidenceRank(rawConf), satellite: String(get('satellite', 'Unknown')), instrument: String(get('instrument', 'VIIRS')), acqDate: acqDate || null, acqTime: rawTime || null, dayNight: String(get('daynight', 'Unknown')).toUpperCase() };
 }
 export function parseFirmsCsv(text) { const parsed = Papa.parse(text, { header: true, skipEmptyLines: 'greedy', dynamicTyping: false }); return (parsed.data || []).map(normalizeFire).filter(Boolean); }
+
 async function readHistory() { return parseFirmsCsv(await loadFallback('/data/fires_history.csv', 'text')); }
+
 export async function loadFires({ force = false } = {}) {
-  if (!force) { const cached = getFreshCache(CACHE_KEY, CACHE_TTL); if (cached) return { fires: cached.data, meta: state(cached.status, cached.source, cached.fetchedAt, cached.error) }; }
-  const key = import.meta.env.VITE_FIRMS_KEY?.trim();
-  if (!key) {
-    const reason = 'NASA FIRMS Map Key is not configured; the bundled history file is empty until supplied.';
-    try { const fires = await readHistory(); const saved = saveCache(CACHE_KEY, fires, 'Local fires_history.csv', { status: 'Fallback', error: reason }); return { fires, meta: state('Fallback', saved.source, saved.fetchedAt, reason) }; }
-    catch (error) { return { fires: [], meta: state('Fallback', 'Local history unavailable', null, error) }; }
+  if (!force) {
+    const cached = getFreshCache(CACHE_KEY, CACHE_TTL);
+    if (cached) return { fires: cached.data, meta: state(cached.status, cached.source, cached.fetchedAt, cached.error) };
   }
+
   try {
-    const url = `https://firms.modaps.eosdis.nasa.gov/api/area/csv/${encodeURIComponent(key)}/VIIRS_SNPP_NRT/${boxAsString()}/7`;
-    const response = await fetchWithTimeout(url); if (!response.ok) throw new Error(`NASA FIRMS returned HTTP ${response.status}`);
-    const fires = parseFirmsCsv(await response.text()); const saved = saveCache(CACHE_KEY, fires, 'NASA FIRMS VIIRS_SNPP_NRT');
-    return { fires, meta: state('Live', 'NASA FIRMS · VIIRS_SNPP_NRT', saved.fetchedAt) };
+    const res = await getRecentFires(72);
+    if (res.ok && res.data) {
+      if (res.data.status === 'not_configured') {
+        const reason = 'NASA FIRMS Map Key is not configured in backend/.env; active satellite detections are unavailable.';
+        const fires = await readHistory().catch(() => []);
+        const saved = saveCache(CACHE_KEY, fires, 'Local fires_history.csv', { status: 'Fallback', error: reason });
+        return { fires, meta: state('Fallback', 'NASA FIRMS key not configured in backend/.env', saved.fetchedAt, reason) };
+      }
+
+      const fires = (res.data.fires || []).map(normalizeFire).filter(Boolean);
+      const saved = saveCache(CACHE_KEY, fires, 'NASA FIRMS VIIRS_SNPP_NRT');
+      return { fires, meta: state('Live', 'NASA FIRMS · VIIRS_SNPP_NRT', saved.fetchedAt) };
+    }
+
+    // Backend returned an error response
+    throw new Error(res.error || 'Failed to retrieve active fire records from backend.');
   } catch (error) {
-    try { const fires = await readHistory(); const saved = saveCache(CACHE_KEY, fires, 'Local fires_history.csv', { status: 'Fallback', error }); return { fires, meta: state('Fallback', saved.source, saved.fetchedAt, error) }; }
-    catch (fallbackError) { return { fires: [], meta: state('Fallback', 'No fire data available', null, `${error.message}; fallback: ${fallbackError.message}`) }; }
+    try {
+      const fires = await readHistory();
+      const saved = saveCache(CACHE_KEY, fires, 'Local fires_history.csv', { status: 'Fallback', error });
+      return { fires, meta: state('Fallback', saved.source, saved.fetchedAt, error) };
+    } catch (fallbackError) {
+      return { fires: [], meta: state('Fallback', 'No fire data available', null, `${error.message}; fallback: ${fallbackError.message}`) };
+    }
   }
 }
 export function withinLastHours(fires, hours) {

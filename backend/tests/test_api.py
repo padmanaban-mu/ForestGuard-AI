@@ -631,3 +631,61 @@ def test_static_cache_age_and_relative_report_urls(client):
     for name, path in m_data["report_urls"].items():
         assert path.startswith("/reports/"), f"Expected relative path starting with /reports/, got {path}"
         assert not path.startswith("http://"), f"Found absolute URL: {path}"
+
+
+def test_configurable_cors_origins(client, monkeypatch):
+    """Verify that custom origins configured in CORS_ORIGINS receive standard CORS headers."""
+    # Test configured origin
+    headers = {
+        "Origin": "http://127.0.0.1:3000",
+        "Access-Control-Request-Method": "GET",
+    }
+    response = client.options("/health", headers=headers)
+    assert response.headers.get("access-control-allow-origin") == "http://127.0.0.1:3000"
+
+    # Test unauthorized origin is rejected
+    bad_headers = {
+        "Origin": "http://malicious-site.com",
+        "Access-Control-Request-Method": "GET",
+    }
+    bad_response = client.options("/health", headers=bad_headers)
+    assert bad_response.headers.get("access-control-allow-origin") != "http://malicious-site.com"
+
+
+def test_fires_recent_normalize_fire_compatibility(client, monkeypatch):
+    """Verify that /fires/recent returns all fields required by frontend normalizeFire."""
+    mock_csv = (
+        "latitude,longitude,bright_ti4,scan,track,acq_date,acq_time,satellite,instrument,confidence,version,bright_t31,frp,daynight\n"
+        "30.1234,79.5678,325.4,0.39,0.36,2026-05-14,0830,N,VIIRS,nominal,2.0NRT,295.1,12.8,D\n"
+    )
+
+    def mock_firms_get(url, timeout=None):
+        mock_resp = MagicMock()
+        mock_resp.status_code = 200
+        mock_resp.text = mock_csv
+        return mock_resp
+
+    import backend.main as main_mod
+    monkeypatch.setattr(main_mod, "FIRMS_MAP_KEY", "test_key_abc123")
+    monkeypatch.setattr(requests, "get", mock_firms_get)
+
+    response = client.get("/fires/recent?hours=48")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["status"] == "live"
+    assert data["count"] == 1
+    assert len(data["fires"]) == 1
+
+    fire = data["fires"][0]
+    # Check all fields needed for normalizeFire
+    assert fire["latitude"] == 30.1234
+    assert fire["longitude"] == 79.5678
+    assert fire["bright_ti4"] == 325.4
+    assert fire["brightness"] == 325.4
+    assert fire["frp"] == 12.8
+    assert fire["confidence"] == "nominal"
+    assert fire["acq_date"] == "2026-05-14"
+    assert fire["acq_time"] == "0830"
+    assert fire["satellite"] == "N"
+    assert fire["daynight"] == "D"
+

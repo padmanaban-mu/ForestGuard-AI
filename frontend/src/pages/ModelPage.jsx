@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Activity, AlertCircle, BarChart3, CheckCircle2, Cpu, FileText, Info, Layers, ShieldCheck } from 'lucide-react';
+import { Activity, BarChart3, Cpu, ShieldCheck } from 'lucide-react';
 import { API_BASE, getModelMetrics } from '../services/api.js';
-import { ChartCard, DataNote, EmptyState, ErrorNotice, Loader, PageHeader, RiskBadge, SourceLine, StatCard } from '../components/ui.jsx';
+import { EmptyState, ErrorNotice, Loader, PageHeader, RiskBadge, StatCard } from '../components/ui.jsx';
+
+const fmtNum = (val, digits = 4) => (val != null && !isNaN(val) ? Number(val).toFixed(digits) : 'unavailable');
+const fmtPct = (val, digits = 1) => (val != null && !isNaN(val) ? `${(Number(val) * 100).toFixed(digits)}%` : 'unavailable');
 
 export default function ModelPage() {
   const [data, setData] = useState(null);
@@ -54,12 +57,39 @@ export default function ModelPage() {
     risk_thresholds = {},
     report_urls = {},
     generated_at,
-    status,
   } = data;
 
   const rawVal = validation_metrics.raw_model_val_at_optimal_tau || {};
   const calVal = validation_metrics.calibrated_model_val_at_tau_0_50 || {};
-  const test2024 = metrics_summary.fair_metrics_2024?.['ForestGuard Served Model (Calibrated Gradient Boosting)'] || {};
+
+  // Fair metrics 2024 test benchmark (ml/reports/metrics.json -> fair_metrics_2024)
+  const fairMetrics = metrics_summary.fair_metrics_2024 || {};
+  // JSON Path: metrics_summary.fair_metrics_2024['ForestGuard Served Model (Calibrated Gradient Boosting)']
+  const testServed = fairMetrics['ForestGuard Served Model (Calibrated Gradient Boosting)'] || {};
+  // JSON Path: metrics_summary.fair_metrics_2024['Climatology (District + Month)']
+  const climDistMonth = fairMetrics['Climatology (District + Month)'] || {};
+  // JSON Path: metrics_summary.fair_metrics_2024['Climatology (Month Only)']
+  const climMonthOnly = fairMetrics['Climatology (Month Only)'] || {};
+  // JSON Path: metrics_summary.fair_metrics_2024['Logistic Regression (Baseline)']
+  const logReg = fairMetrics['Logistic Regression (Baseline)'] || {};
+  // JSON Path: metrics_summary.fair_metrics_2024['Rule-Based FWI / Drought Proxy']
+  const ruleFwi = fairMetrics['Rule-Based FWI / Drought Proxy'] || {};
+
+  // JSON Path: metrics_summary.rolling_origin_summary.by_year['2024'].fire_prevalence
+  const prev2024 = metrics_summary.rolling_origin_summary?.by_year?.['2024']?.fire_prevalence;
+  const prevDisplay = fmtPct(prev2024, 1);
+
+  // JSON Path: metrics_summary.gain_reconciliation.bootstrap_ci_95 || metrics_summary.weekly_block_bootstrap.diff_pr_auc_ci
+  const ci = metrics_summary.gain_reconciliation?.bootstrap_ci_95 || metrics_summary.weekly_block_bootstrap?.diff_pr_auc_ci;
+  const ciText = ci && ci.length === 2 ? `[${Number(ci[0]).toFixed(4)}, ${Number(ci[1]).toFixed(4)}]` : 'unavailable';
+  // JSON Path: metrics_summary.gain_reconciliation.bootstrap_mean_gain
+  const gainMean = metrics_summary.gain_reconciliation?.bootstrap_mean_gain != null
+    ? Number(metrics_summary.gain_reconciliation.bootstrap_mean_gain).toFixed(4)
+    : (metrics_summary.weekly_block_bootstrap?.diff_pr_auc_mean != null
+      ? Number(metrics_summary.weekly_block_bootstrap.diff_pr_auc_mean).toFixed(4)
+      : 'unavailable');
+
+  // JSON Path: metrics_summary.risk_level_validation.served_model_levels
   const observedLevels = metrics_summary.risk_level_validation?.served_model_levels || [];
 
   return (
@@ -70,6 +100,7 @@ export default function ModelPage() {
         subtitle="Transparent evaluation, calibration diagnostics, and scientific limits for Uttarakhand pre-ignition fire forecasting."
       />
 
+      {/* Headline KPI StatCards (E1: source attribute on all cards) */}
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard
           label="Served architecture"
@@ -77,28 +108,32 @@ export default function ModelPage() {
           icon={Cpu}
           accent="green"
           note="Calibrated via Sigmoid scaling (PredefinedSplit on 2023)"
+          source="ForestGuard ML metrics (ml/reports/metrics.json)"
         />
         <StatCard
           label="Selection criterion"
           value="Validation PR-AUC"
-          suffix="0.6436"
+          suffix={rawVal.pr_auc != null ? rawVal.pr_auc.toFixed(4) : (data.selection_record?.validation_pr_auc ? data.selection_record.validation_pr_auc.toFixed(4) : 'unavailable')}
           icon={Activity}
           accent="orange"
           note="Single pre-stated metric on held-out 2023 year"
+          source="ForestGuard ML metrics (ml/reports/metrics.json)"
         />
         <StatCard
           label="2024 test PR-AUC"
-          value={test2024.pr_auc ? test2024.pr_auc.toFixed(4) : '0.7094'}
+          value={testServed.pr_auc != null ? testServed.pr_auc.toFixed(4) : 'unavailable'}
           icon={BarChart3}
           accent="amber"
-          note="Held-out 2024 test set (4,745 district-days)"
+          note={`Held-out 2024 test set (4,745 district-days, prevalence: ${prevDisplay})`}
+          source="ForestGuard ML metrics (ml/reports/metrics.json)"
         />
         <StatCard
           label="Operating threshold (τ*)"
-          value="0.33"
+          value={testServed.threshold != null ? testServed.threshold.toFixed(2) : (data.served_model?.decision_threshold_tau != null ? data.served_model.decision_threshold_tau.toFixed(2) : 'unavailable')}
           icon={ShieldCheck}
           accent="slate"
           note="Validation-tuned decision threshold for headline F1"
+          source="ForestGuard ML metrics (ml/reports/metrics.json)"
         />
       </div>
 
@@ -110,12 +145,12 @@ export default function ModelPage() {
           </div>
           <div className="space-y-3 text-xs leading-5 text-slate-600 dark:text-slate-300">
             <p>
-              <strong className="text-slate-900 dark:text-white">Primary Selection Metric:</strong> {selection_criterion}.
-              PR-AUC was selected prior to model exploration because fire ignition days represent ~15–25% of observations.
+              <strong className="text-slate-900 dark:text-white">Primary Selection Metric:</strong> {selection_criterion || 'Validation PR-AUC on held-out 2023 validation set'}.
+              PR-AUC was selected prior to model exploration because fire ignition days represent ~15–25% of observations (2024 test prevalence: {prevDisplay}).
               Unlike ROC-AUC, PR-AUC does not reward true negatives from easy winter non-fire days.
             </p>
             <p>
-              <strong className="text-slate-900 dark:text-white">Served Pipeline:</strong> {architecture}.
+              <strong className="text-slate-900 dark:text-white">Served Pipeline:</strong> {architecture || 'CalibratedClassifierCV(HistGradientBoostingClassifier, method=\'sigmoid\')'}.
               Trained on 2018–2022 historical ERA5 observations with genuine 92-day antecedent buffers; calibrated on 2023; strictly tested on 2024.
             </p>
           </div>
@@ -132,16 +167,17 @@ export default function ModelPage() {
               Low (&lt; 25%), Medium (25%–50%), High (50%–75%), and Extreme (&ge; 75%).
             </p>
             <p>
-              <strong className="text-slate-900 dark:text-white">Validation-Tuned Decision Threshold (τ = 0.33):</strong> Operating threshold tuned strictly on 2023 validation set to maximize F1-score for binary evaluation on the 2024 test headline.
+              <strong className="text-slate-900 dark:text-white">Validation-Tuned Decision Threshold (τ* = {testServed.threshold != null ? testServed.threshold.toFixed(2) : '0.33'}):</strong> Operating threshold tuned strictly on 2023 validation set to maximize F1-score for binary evaluation on the 2024 test headline.
             </p>
           </div>
         </section>
       </div>
 
+      {/* Validation Reconciliation: Raw vs Calibrated vs Test 2024 */}
       <section className="card overflow-hidden">
         <div className="p-4 sm:p-5">
           <p className="eyebrow">Validation reconciliation & test benchmarks</p>
-          <h2 className="mt-1 text-sm font-bold text-slate-900 dark:text-white">Raw model (τ* = 0.47) vs. calibrated served pipeline (τ = 0.50 &amp; τ = 0.33)</h2>
+          <h2 className="mt-1 text-sm font-bold text-slate-900 dark:text-white">Raw model (τ* = {rawVal.decision_threshold_tau ?? '0.47'}) vs. calibrated served pipeline (τ = {calVal.decision_threshold_tau ?? '0.50'} &amp; τ* = {testServed.threshold ?? '0.33'})</h2>
         </div>
         <div className="table-wrap">
           <table className="data-table">
@@ -162,36 +198,126 @@ export default function ModelPage() {
                   Raw HistGradientBoosting (Validation 2023)
                   <span className="block text-[10px] font-normal text-slate-400">Architecture selection benchmark on raw predicted probabilities</span>
                 </td>
-                <td className="font-mono text-xs">τ* = {rawVal.decision_threshold_tau ?? 0.47}</td>
-                <td className="font-mono text-xs">{rawVal.pr_auc?.toFixed(4) ?? '0.6436'}</td>
-                <td className="font-mono text-xs">{rawVal.roc_auc?.toFixed(4) ?? '0.8524'}</td>
-                <td className="font-mono text-xs">{rawVal.precision ? `${(rawVal.precision * 100).toFixed(1)}%` : '56.4%'}</td>
-                <td className="font-mono text-xs">{rawVal.recall ? `${(rawVal.recall * 100).toFixed(1)}%` : '76.6%'}</td>
-                <td className="font-mono text-xs font-bold text-forest-700 dark:text-emerald-300">{rawVal.f1_score?.toFixed(4) ?? '0.6496'}</td>
+                <td className="font-mono text-xs">τ* = {rawVal.decision_threshold_tau != null ? rawVal.decision_threshold_tau.toFixed(2) : 'unavailable'}</td>
+                <td className="font-mono text-xs">{fmtNum(rawVal.pr_auc)}</td>
+                <td className="font-mono text-xs">{fmtNum(rawVal.roc_auc)}</td>
+                <td className="font-mono text-xs">{fmtPct(rawVal.precision)}</td>
+                <td className="font-mono text-xs">{fmtPct(rawVal.recall)}</td>
+                <td className="font-mono text-xs font-bold text-forest-700 dark:text-emerald-300">{fmtNum(rawVal.f1_score)}</td>
               </tr>
               <tr>
                 <td className="font-semibold">
                   Calibrated Served Pipeline (Validation 2023)
                   <span className="block text-[10px] font-normal text-slate-400">Evaluated on calibrated posterior probabilities at standard threshold</span>
                 </td>
-                <td className="font-mono text-xs">τ = {calVal.decision_threshold_tau ?? 0.50}</td>
-                <td className="font-mono text-xs">{calVal.pr_auc?.toFixed(4) ?? '0.6436'}</td>
-                <td className="font-mono text-xs">{calVal.roc_auc?.toFixed(4) ?? '0.8524'}</td>
-                <td className="font-mono text-xs">{calVal.precision ? `${(calVal.precision * 100).toFixed(1)}%` : '57.4%'}</td>
-                <td className="font-mono text-xs">{calVal.recall ? `${(calVal.recall * 100).toFixed(1)}%` : '72.8%'}</td>
-                <td className="font-mono text-xs font-bold text-forest-700 dark:text-emerald-300">{calVal.f1_score?.toFixed(4) ?? '0.6417'}</td>
+                <td className="font-mono text-xs">τ = {calVal.decision_threshold_tau != null ? calVal.decision_threshold_tau.toFixed(2) : 'unavailable'}</td>
+                <td className="font-mono text-xs">{fmtNum(calVal.pr_auc)}</td>
+                <td className="font-mono text-xs">{fmtNum(calVal.roc_auc)}</td>
+                <td className="font-mono text-xs">{fmtPct(calVal.precision)}</td>
+                <td className="font-mono text-xs">{fmtPct(calVal.recall)}</td>
+                <td className="font-mono text-xs font-bold text-forest-700 dark:text-emerald-300">{fmtNum(calVal.f1_score)}</td>
               </tr>
               <tr>
                 <td className="font-semibold">
                   Served Model (Held-Out Test Year 2024)
                   <span className="block text-[10px] font-normal text-slate-400">Final test evaluation on held-out year at validation-tuned threshold</span>
                 </td>
-                <td className="font-mono text-xs">τ* = {test2024.threshold ?? 0.33}</td>
-                <td className="font-mono text-xs">{test2024.pr_auc?.toFixed(4) ?? '0.7094'}</td>
-                <td className="font-mono text-xs">{test2024.roc_auc?.toFixed(4) ?? '0.8731'}</td>
-                <td className="font-mono text-xs">{test2024.precision ? `${(test2024.precision * 100).toFixed(1)}%` : '57.3%'}</td>
-                <td className="font-mono text-xs">{test2024.recall ? `${(test2024.recall * 100).toFixed(1)}%` : '88.1%'}</td>
-                <td className="font-mono text-xs font-bold text-forest-700 dark:text-emerald-300">{test2024.f1_score?.toFixed(4) ?? '0.6941'}</td>
+                <td className="font-mono text-xs">τ* = {testServed.threshold != null ? testServed.threshold.toFixed(2) : 'unavailable'}</td>
+                <td className="font-mono text-xs">{fmtNum(testServed.pr_auc)}</td>
+                <td className="font-mono text-xs">{fmtNum(testServed.roc_auc)}</td>
+                <td className="font-mono text-xs">{fmtPct(testServed.precision)}</td>
+                <td className="font-mono text-xs">{fmtPct(testServed.recall)}</td>
+                <td className="font-mono text-xs font-bold text-forest-700 dark:text-emerald-300">{fmtNum(testServed.f1_score)}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      {/* Baseline Comparison Table (E5: read dynamically from /model/metrics fair_metrics_2024) */}
+      <section className="card overflow-hidden">
+        <div className="p-4 sm:p-5">
+          <p className="eyebrow">Baseline comparison · 2024 test benchmark</p>
+          <h2 className="mt-1 text-sm font-bold text-slate-900 dark:text-white">Served model vs. climatology &amp; heuristic baselines (Held-out year 2024, N = 4,745)</h2>
+        </div>
+        <div className="table-wrap">
+          <table className="data-table">
+            <thead>
+              <tr>
+                <th>Model / Baseline pipeline</th>
+                <th>Threshold (τ)</th>
+                <th>PR-AUC</th>
+                <th>ROC-AUC</th>
+                <th>Precision</th>
+                <th>Recall</th>
+                <th>F1-score</th>
+              </tr>
+            </thead>
+            <tbody>
+              {/* Served Model: metrics_summary.fair_metrics_2024['ForestGuard Served Model (Calibrated Gradient Boosting)'] */}
+              <tr className="bg-emerald-50/40 dark:bg-emerald-950/20">
+                <td className="font-semibold text-slate-900 dark:text-white">
+                  ForestGuard Served Model (Calibrated Gradient Boosting)
+                  <span className="block text-[10px] font-normal text-forest-700 dark:text-emerald-400">Selected production model · 33 features</span>
+                </td>
+                <td className="font-mono text-xs">{testServed.threshold != null ? `τ* = ${testServed.threshold.toFixed(2)}` : 'unavailable'}</td>
+                <td className="font-mono text-xs font-bold text-forest-700 dark:text-emerald-300">{fmtNum(testServed.pr_auc)}</td>
+                <td className="font-mono text-xs font-bold text-forest-700 dark:text-emerald-300">{fmtNum(testServed.roc_auc)}</td>
+                <td className="font-mono text-xs">{fmtPct(testServed.precision)}</td>
+                <td className="font-mono text-xs">{fmtPct(testServed.recall)}</td>
+                <td className="font-mono text-xs font-bold text-forest-700 dark:text-emerald-300">{fmtNum(testServed.f1_score)}</td>
+              </tr>
+              {/* Climatology District + Month: metrics_summary.fair_metrics_2024['Climatology (District + Month)'] */}
+              <tr>
+                <td className="font-semibold">
+                  Climatology (District + Month Lookup)
+                  <span className="block text-[10px] font-normal text-slate-400">Geographic &amp; calendar baseline</span>
+                </td>
+                <td className="font-mono text-xs">{climDistMonth.threshold != null ? `τ* = ${climDistMonth.threshold.toFixed(2)}` : 'unavailable'}</td>
+                <td className="font-mono text-xs">{fmtNum(climDistMonth.pr_auc)}</td>
+                <td className="font-mono text-xs">{fmtNum(climDistMonth.roc_auc)}</td>
+                <td className="font-mono text-xs">{fmtPct(climDistMonth.precision)}</td>
+                <td className="font-mono text-xs">{fmtPct(climDistMonth.recall)}</td>
+                <td className="font-mono text-xs">{fmtNum(climDistMonth.f1_score)}</td>
+              </tr>
+              {/* Climatology Month Only: metrics_summary.fair_metrics_2024['Climatology (Month Only)'] */}
+              <tr>
+                <td className="font-semibold">
+                  Climatology (Month Only)
+                  <span className="block text-[10px] font-normal text-slate-400">Pure seasonal calendar baseline</span>
+                </td>
+                <td className="font-mono text-xs">{climMonthOnly.threshold != null ? `τ* = ${climMonthOnly.threshold.toFixed(2)}` : 'unavailable'}</td>
+                <td className="font-mono text-xs">{fmtNum(climMonthOnly.pr_auc)}</td>
+                <td className="font-mono text-xs">{fmtNum(climMonthOnly.roc_auc)}</td>
+                <td className="font-mono text-xs">{fmtPct(climMonthOnly.precision)}</td>
+                <td className="font-mono text-xs">{fmtPct(climMonthOnly.recall)}</td>
+                <td className="font-mono text-xs">{fmtNum(climMonthOnly.f1_score)}</td>
+              </tr>
+              {/* Logistic Regression: metrics_summary.fair_metrics_2024['Logistic Regression (Baseline)'] */}
+              <tr>
+                <td className="font-semibold">
+                  Logistic Regression (Baseline)
+                  <span className="block text-[10px] font-normal text-slate-400">Standardized linear classifier</span>
+                </td>
+                <td className="font-mono text-xs">{logReg.threshold != null ? `τ* = ${logReg.threshold.toFixed(2)}` : 'unavailable'}</td>
+                <td className="font-mono text-xs">{fmtNum(logReg.pr_auc)}</td>
+                <td className="font-mono text-xs">{fmtNum(logReg.roc_auc)}</td>
+                <td className="font-mono text-xs">{fmtPct(logReg.precision)}</td>
+                <td className="font-mono text-xs">{fmtPct(logReg.recall)}</td>
+                <td className="font-mono text-xs">{fmtNum(logReg.f1_score)}</td>
+              </tr>
+              {/* Rule-Based FWI / Drought Proxy: metrics_summary.fair_metrics_2024['Rule-Based FWI / Drought Proxy'] */}
+              <tr>
+                <td className="font-semibold">
+                  Rule-Based FWI / Drought Proxy
+                  <span className="block text-[10px] font-normal text-slate-400">Static weather threshold heuristic</span>
+                </td>
+                <td className="font-mono text-xs">{ruleFwi.threshold != null ? `τ* = ${ruleFwi.threshold.toFixed(4)}` : 'unavailable'}</td>
+                <td className="font-mono text-xs">{fmtNum(ruleFwi.pr_auc)}</td>
+                <td className="font-mono text-xs">{fmtNum(ruleFwi.roc_auc)}</td>
+                <td className="font-mono text-xs">{fmtPct(ruleFwi.precision)}</td>
+                <td className="font-mono text-xs">{fmtPct(ruleFwi.recall)}</td>
+                <td className="font-mono text-xs">{fmtNum(ruleFwi.f1_score)}</td>
               </tr>
             </tbody>
           </table>
@@ -199,46 +325,54 @@ export default function ModelPage() {
       </section>
 
       <div className="grid gap-5 xl:grid-cols-2">
+        {/* Risk Tier Calibration (E3: dynamic values without hardcoding) */}
         <section className="card overflow-hidden">
           <div className="p-4 sm:p-5">
             <p className="eyebrow">Risk tier calibration</p>
             <h2 className="mt-1 text-sm font-bold text-slate-900 dark:text-white">Observed fire rates by risk tier (2024 test data)</h2>
           </div>
-          <div className="table-wrap">
-            <table className="data-table">
-              <thead>
-                <tr>
-                  <th>Risk tier</th>
-                  <th>Probability cut-point</th>
-                  <th>Mean predicted prob</th>
-                  <th>Observed fire rate</th>
-                  <th>District-days</th>
-                </tr>
-              </thead>
-              <tbody>
-                {observedLevels.map((lvl) => (
-                  <tr key={lvl.risk_level}>
-                    <td>
-                      <RiskBadge level={lvl.risk_level} />
-                    </td>
-                    <td className="font-mono text-xs">
-                      {lvl.risk_level === 'Low' && '< 25%'}
-                      {lvl.risk_level === 'Medium' && '25% – 50%'}
-                      {lvl.risk_level === 'High' && '50% – 75%'}
-                      {lvl.risk_level === 'Extreme' && '≥ 75%'}
-                    </td>
-                    <td className="font-mono text-xs">{(lvl.mean_predicted_prob * 100).toFixed(1)}%</td>
-                    <td className="font-mono text-xs font-bold text-slate-900 dark:text-white">
-                      {(lvl.observed_fire_rate * 100).toFixed(1)}%
-                    </td>
-                    <td className="font-mono text-xs text-slate-500">{lvl.days_count}</td>
+          {observedLevels.length ? (
+            <div className="table-wrap">
+              <table className="data-table">
+                <thead>
+                  <tr>
+                    <th>Risk tier</th>
+                    <th>Probability cut-point</th>
+                    <th>Mean predicted prob</th>
+                    <th>Observed fire rate</th>
+                    <th>District-days</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {observedLevels.map((lvl) => (
+                    <tr key={lvl.risk_level}>
+                      <td>
+                        <RiskBadge level={lvl.risk_level} />
+                      </td>
+                      <td className="font-mono text-xs">
+                        {lvl.risk_level === 'Low' && '< 25%'}
+                        {lvl.risk_level === 'Medium' && '25% – 50%'}
+                        {lvl.risk_level === 'High' && '50% – 75%'}
+                        {lvl.risk_level === 'Extreme' && '≥ 75%'}
+                      </td>
+                      <td className="font-mono text-xs">{fmtPct(lvl.mean_predicted_prob)}</td>
+                      <td className="font-mono text-xs font-bold text-slate-900 dark:text-white">
+                        {fmtPct(lvl.observed_fire_rate)}
+                      </td>
+                      <td className="font-mono text-xs text-slate-500">{lvl.days_count ?? 'unavailable'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <div className="p-4">
+              <EmptyState compact title="Calibration data unavailable" description="Run ML evaluation pipeline to populate tier validation." />
+            </div>
+          )}
         </section>
 
+        {/* Scientific Boundary: 4 Honest Limits (E4) */}
         <section className="card p-4 sm:p-5">
           <div className="mb-4">
             <p className="eyebrow">Scientific boundary</p>
@@ -248,7 +382,7 @@ export default function ModelPage() {
             <div className="flex items-start gap-2">
               <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500" />
               <p>
-                <strong>Modest gain over geographic lookup:</strong> Improvement over the district+month lookup baseline is modest and not statistically significant (weekly block bootstrap 95% CI: [-0.0277, 0.1368]).
+                <strong>Modest gain over geographic lookup:</strong> Improvement over the district+month lookup baseline is modest and not statistically significant (bootstrap mean difference: +{gainMean}, weekly block bootstrap 95% CI: {ciText}). Broad seasonality and district geography capture baseline risk; daily weather modulates it.
               </p>
             </div>
             <div className="flex items-start gap-2">
@@ -266,12 +400,6 @@ export default function ModelPage() {
             <div className="flex items-start gap-2">
               <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500" />
               <p>
-                <strong>Spatial representation:</strong> Weather is sampled from one representative centroid point per district, not a continuous spatial grid across complex mountainous terrain.
-              </p>
-            </div>
-            <div className="flex items-start gap-2">
-              <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500" />
-              <p>
                 <strong>Vegetation dryness proxy:</strong> Vegetation dryness is represented strictly by topsoil volumetric moisture (0–7 cm) and reference evapotranspiration (ET0). Satellite NDVI is not ingested.
               </p>
             </div>
@@ -279,6 +407,7 @@ export default function ModelPage() {
         </section>
       </div>
 
+      {/* Evaluation Artifacts (E2: caption mentions 2024 held-out test set) */}
       <div className="space-y-4">
         <div>
           <p className="eyebrow">Evaluation artifacts</p>
@@ -289,7 +418,7 @@ export default function ModelPage() {
           {report_urls.calibration_reliability && (
             <section className="card overflow-hidden p-4 sm:p-5">
               <h3 className="text-xs font-bold text-slate-800 dark:text-slate-100">Probability calibration curve</h3>
-              <p className="mt-1 text-[11px] text-slate-500">Sigmoid calibration reliability on held-out validation</p>
+              <p className="mt-1 text-[11px] text-slate-500">Sigmoid calibration reliability on 2024 held-out test set</p>
               <div className="mt-3 overflow-hidden rounded-xl border border-slate-100 bg-slate-50 dark:border-slate-800 dark:bg-slate-900">
                 <img
                   src={`${API_BASE}${report_urls.calibration_reliability}`}
@@ -304,7 +433,7 @@ export default function ModelPage() {
           {report_urls.confusion_matrix && (
             <section className="card overflow-hidden p-4 sm:p-5">
               <h3 className="text-xs font-bold text-slate-800 dark:text-slate-100">Test confusion matrix</h3>
-              <p className="mt-1 text-[11px] text-slate-500">Confusion matrix on 2024 held-out test data (τ = 0.33)</p>
+              <p className="mt-1 text-[11px] text-slate-500">Confusion matrix on 2024 held-out test data (τ* = {testServed.threshold ?? '0.33'})</p>
               <div className="mt-3 overflow-hidden rounded-xl border border-slate-100 bg-slate-50 dark:border-slate-800 dark:bg-slate-900">
                 <img
                   src={`${API_BASE}${report_urls.confusion_matrix}`}

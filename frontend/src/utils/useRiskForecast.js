@@ -51,6 +51,7 @@ let cachedState = {
   wakingUp: false,
   error: null,
   refreshedAt: null,
+  isOfflineWithMemory: false,
 };
 
 let inFlightPromise = null;
@@ -92,16 +93,31 @@ async function loadSharedForecast({ force = false } = {}) {
       const features =
         geoResult?.type === 'FeatureCollection' && Array.isArray(geoResult.features)
           ? geoResult.features
-          : [];
+          : cachedState.geoFeatures;
 
       if (!forecastResult.ok || !forecastResult.data) {
-        cachedState = {
-          ...cachedState,
-          loading: false,
-          wakingUp: false,
-          error: forecastResult.error || 'Failed to retrieve ML forecast.',
-          refreshedAt: new Date().toISOString(),
-        };
+        if (cachedState.forecast) {
+          // Offline with memory state
+          const genAt = cachedState.forecast.generated_at;
+          const timeStr = genAt ? new Date(genAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'earlier';
+          cachedState = {
+            ...cachedState,
+            loading: false,
+            wakingUp: false,
+            isOfflineWithMemory: true,
+            error: `Cannot reach the ForestGuard server. Showing the last forecast received at ${timeStr}.`,
+            refreshedAt: new Date().toISOString(),
+          };
+        } else {
+          cachedState = {
+            ...cachedState,
+            loading: false,
+            wakingUp: false,
+            isOfflineWithMemory: false,
+            error: forecastResult.error || 'Failed to retrieve ML forecast.',
+            refreshedAt: new Date().toISOString(),
+          };
+        }
       } else {
         cachedState = {
           ...cachedState,
@@ -109,18 +125,33 @@ async function loadSharedForecast({ force = false } = {}) {
           geoFeatures: features,
           loading: false,
           wakingUp: false,
+          isOfflineWithMemory: false,
           error: null,
           refreshedAt: new Date().toISOString(),
         };
       }
     } catch (err) {
-      cachedState = {
-        ...cachedState,
-        loading: false,
-        wakingUp: false,
-        error: err.message || 'Error communicating with backend.',
-        refreshedAt: new Date().toISOString(),
-      };
+      if (cachedState.forecast) {
+        const genAt = cachedState.forecast.generated_at;
+        const timeStr = genAt ? new Date(genAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'earlier';
+        cachedState = {
+          ...cachedState,
+          loading: false,
+          wakingUp: false,
+          isOfflineWithMemory: true,
+          error: `Cannot reach the ForestGuard server. Showing the last forecast received at ${timeStr}.`,
+          refreshedAt: new Date().toISOString(),
+        };
+      } else {
+        cachedState = {
+          ...cachedState,
+          loading: false,
+          wakingUp: false,
+          isOfflineWithMemory: false,
+          error: err.message || 'Error communicating with backend.',
+          refreshedAt: new Date().toISOString(),
+        };
+      }
     } finally {
       inFlightPromise = null;
       broadcast();
@@ -153,6 +184,64 @@ export function useRiskForecast() {
 
   const districts = state.forecast?.districts || [];
 
+  // Expiration check: > 24 hours old OR risk_for_date no longer in future
+  const isExpired = useMemo(() => {
+    if (!state.forecast) return false;
+    const genAt = state.forecast.generated_at;
+    if (genAt) {
+      const ageHours = (Date.now() - new Date(genAt).getTime()) / (3600 * 1000);
+      if (ageHours >= 24) return true;
+    }
+    if (districts.length > 0) {
+      const allPastOrToday = districts.every((d) =>
+        d.forecast.every((f) => f.risk_for_date <= todayKolkata)
+      );
+      if (allPastOrToday) return true;
+    }
+    return false;
+  }, [state.forecast, districts, todayKolkata]);
+
+  // 60-second auto-retry, paused while tab is hidden, stopped once forecast is Expired
+  useEffect(() => {
+    let timer = null;
+
+    const startTimer = () => {
+      if (timer) clearInterval(timer);
+      if (isExpired) return;
+      timer = setInterval(() => {
+        if (typeof document !== 'undefined' && document.visibilityState === 'visible' && !isExpired) {
+          loadSharedForecast({ force: true });
+        }
+      }, 60000);
+    };
+
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible') {
+        if (!isExpired) {
+          loadSharedForecast({ force: true });
+        }
+        startTimer();
+      } else {
+        if (timer) clearInterval(timer);
+      }
+    };
+
+    if (typeof document !== 'undefined' && document.visibilityState === 'visible' && !isExpired) {
+      startTimer();
+    }
+
+    if (typeof document !== 'undefined') {
+      document.addEventListener('visibilitychange', handleVisibility);
+    }
+
+    return () => {
+      if (timer) clearInterval(timer);
+      if (typeof document !== 'undefined') {
+        document.removeEventListener('visibilitychange', handleVisibility);
+      }
+    };
+  }, [isExpired]);
+
   // Categorize districts into forest vs mixed agricultural lowlands
   const { forestDistricts, lowlandDistricts } = useMemo(() => {
     const forest = [];
@@ -167,12 +256,12 @@ export function useRiskForecast() {
     return { forestDistricts: forest, lowlandDistricts: lowland };
   }, [districts]);
 
-  // Tomorrow entry lookup per district
+  // Target date entry lookup per district
   const tomorrowDataByDistrict = useMemo(() => {
     const lookup = {};
     for (const d of districts) {
       const match =
-        d.forecast.find((f) => f.risk_for_date === tomorrowKolkata) ||
+        (!isExpired && d.forecast.find((f) => f.risk_for_date === tomorrowKolkata)) ||
         d.forecast.find((f) => !f.expired) ||
         d.forecast[0] ||
         null;
@@ -190,13 +279,13 @@ export function useRiskForecast() {
         lead_days: match?.lead_days ?? 1,
         reliability_note: match?.reliability_note ?? null,
         key_inputs: match?.key_inputs ?? {},
-        expired: Boolean(match?.expired),
+        expired: isExpired || Boolean(match?.expired),
       };
     }
     return lookup;
-  }, [districts, tomorrowKolkata]);
+  }, [districts, tomorrowKolkata, isExpired]);
 
-  // Forest districts tomorrow risk stats
+  // Forest districts risk stats
   const forestStats = useMemo(() => {
     const forestItems = forestDistricts
       .map((d) => tomorrowDataByDistrict[d.district])
@@ -210,9 +299,11 @@ export function useRiskForecast() {
       ? validProbs.reduce((a, b) => a + b, 0) / validProbs.length
       : null;
 
-    const highOrExtreme = forestItems.filter(
-      (item) => item.risk_level === 'High' || item.risk_level === 'Extreme'
-    );
+    const highOrExtreme = isExpired
+      ? []
+      : forestItems.filter(
+          (item) => item.risk_level === 'High' || item.risk_level === 'Extreme'
+        );
 
     const sortedByRisk = [...forestItems].sort(
       (a, b) => (b.probability ?? -1) - (a.probability ?? -1)
@@ -229,14 +320,19 @@ export function useRiskForecast() {
       monitoredCount: forestDistricts.length,
       totalCount: districts.length,
     };
-  }, [forestDistricts, districts, tomorrowDataByDistrict]);
+  }, [forestDistricts, districts, tomorrowDataByDistrict, isExpired]);
 
-  // Check if forecast is stale or expired
-  const isStale = Boolean(state.forecast?.stale);
-  const isExpired = useMemo(() => {
-    if (!districts.length) return false;
-    return districts.every((d) => d.forecast.every((f) => f.expired));
-  }, [districts]);
+  // Check if forecast is stale or offline
+  const isStale = Boolean(state.forecast?.stale) || state.isOfflineWithMemory;
+
+  // Compute statusLabel
+  const statusLabel = isExpired
+    ? 'Expired'
+    : state.isOfflineWithMemory
+    ? 'Offline'
+    : state.forecast?.status === 'live'
+    ? 'Live'
+    : 'Cached';
 
   return {
     ...state,
@@ -250,6 +346,7 @@ export function useRiskForecast() {
     forestStats,
     isStale,
     isExpired,
+    statusLabel,
     envelope: state.forecast
       ? {
           model: state.forecast.model,

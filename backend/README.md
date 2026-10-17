@@ -37,6 +37,32 @@ The backend runs **out of the box without any `.env` file**.
 | `FIRMS_MAP_KEY` | *(empty)* | Optional NASA FIRMS map key for active fire proxy |
 | `PORT` | `8000` | Port for the Uvicorn server |
 
+### Adding Custom Teammate Frontend Origins
+To allow teammates on your local network to connect to the backend (e.g., from `http://192.168.1.50:3000`):
+1. Copy `backend/.env.example` to `backend/.env`.
+2. Append your IP/port to `CORS_ORIGINS`:
+   ```bash
+   CORS_ORIGINS=http://localhost:3000,http://localhost:5173,http://localhost:4173,http://127.0.0.1:3000,http://192.168.1.50:3000
+   ```
+3. Restart Uvicorn with `--host 0.0.0.0`.
+
+### The Five Operating Forecast States
+The ForestGuard UI and backend handle five distinct forecast states transparently:
+1. **Live:** Backend is running, Open-Meteo external API is reachable. Returns `status="live"`, `weather_source="open-meteo"`, `cache_age_hours=0.0`. Frontend displays `Live` badge.
+   - *How to reproduce:* Run backend normally with an active internet connection.
+2. **Cached:** Backend is running, but network fails or Open-Meteo is unreachable. Backend immediately falls back to static cache `backend/cache/forecast_latest.json`. Returns `status="cached"`, `weather_source="cached"`. Frontend displays `Cached` badge.
+   - *How to reproduce:* Disconnect your network or block `api.open-meteo.com` in hosts.
+3. **Offline-with-Memory:** Frontend previously loaded a forecast successfully, but the backend server goes down or becomes unreachable (`Failed to fetch`). The frontend retains the forecast in memory.
+   - *Banner displayed:* `"Cannot reach the ForestGuard server. Showing the last forecast received at <time>."`
+   - *Card badges:* Display `Offline` (or `Stale`).
+   - *Auto-retry:* Automatically retries every 60s while the browser tab is active, pausing when hidden, and recovering when the backend returns.
+   - *How to reproduce:* Start backend, load dashboard in browser, then kill the backend process.
+4. **Forecast Expired:** The forecast in memory is older than 24 hours (`generated_at` > 24h old) OR `risk_for_date` is no longer in the future in `Asia/Kolkata`.
+   - *Behavior:* Does not label predictions as "tomorrow", suppresses/hides early warnings, displays `"Forecast expired"`. Auto-retry ceases until user action.
+   - *How to reproduce:* In `backend/cache/forecast_latest.json`, set `generated_at` to a timestamp 30 hours ago and `risk_for_date` to yesterday's date.
+5. **No Data:** Initial load occurs when the backend is unreachable and no prior forecast is in browser memory. Displays graceful `EmptyState` / retry controls.
+   - *How to reproduce:* Clear browser session/localStorage, ensure backend is stopped, and visit the page.
+
 To pre-generate or refresh the static forecast cache manually:
 ```bash
 python backend/export_static_forecast.py

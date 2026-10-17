@@ -116,6 +116,7 @@ export default function VulnerableAreasPage() {
       <DataNote tone="amber">
         <strong>Pre-ignition prediction model:</strong> ForestGuard predicts the probability of at least one satellite fire detection in the district on the target risk date (day <em>t+1</em>), modeled from antecedent weather observations, evaporative demand (ET0), and topsoil moisture (day <em>t</em>).
         Calibrated operational cut-points: <strong>Low (&lt; 25%)</strong>, <strong>Medium (25%–50%)</strong>, <strong>High (50%–75%)</strong>, and <strong>Extreme (≥ 75%)</strong>.
+        Values change when the weather forecast updates; districts near a cut-point can change tier between refreshes.
         <br />
         <span className="mt-1 block text-slate-600 dark:text-slate-300">
           <strong>Lowland caveat:</strong> Haridwar and Udham Singh Nagar reflect seasonal post-harvest crop residue burning without a forest canopy mask. Their scores are labelled <em>&quot;Fire-detection risk (mixed agricultural burning)&quot;</em> and excluded from forest totals by default.
@@ -176,13 +177,14 @@ export default function VulnerableAreasPage() {
               fetchedAt={envelope?.generated_at}
             />
           </div>
-          <div className="h-[370px]">
+          <div className="w-full">
             <MapView
               zones={geoFeatures}
               fires={[]}
               riskByName={mapRiskLookup}
               center={REGION.center}
               zoom={REGION.zoom}
+              heightStyle="clamp(320px, 50vh, 500px)"
             />
           </div>
           <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 text-[10px] text-slate-500">
@@ -251,6 +253,13 @@ export default function VulnerableAreasPage() {
             <h2 className="mt-1 text-sm font-bold text-slate-900 dark:text-white">
               Districts by predicted pre-ignition fire risk (tomorrow)
             </h2>
+            <div className="mt-1">
+              <SourceLine
+                source="ForestGuard ML forecast"
+                status={statusLabel}
+                fetchedAt={envelope?.generated_at}
+              />
+            </div>
           </div>
           <div className="flex flex-wrap gap-2">
             <select
@@ -293,56 +302,89 @@ export default function VulnerableAreasPage() {
                 </tr>
               </thead>
               <tbody>
-                {filtered.map((item, index) => {
-                  const isLowland = item.mixed_agricultural;
-                  return (
-                    <tr
-                      key={item.district}
-                      onClick={() => setSelectedDistrictName(item.district)}
-                      className="cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50"
-                    >
-                      <td className="font-mono text-xs">{String(index + 1).padStart(2, '0')}</td>
-                      <td className="font-semibold">
-                        {item.district}
-                        {isLowland ? (
+                {filtered.filter((item) => !item.mixed_agricultural).map((item, index) => (
+                  <tr
+                    key={item.district}
+                    onClick={() => setSelectedDistrictName(item.district)}
+                    className="cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50"
+                  >
+                    <td className="font-mono text-xs">{String(index + 1).padStart(2, '0')}</td>
+                    <td className="font-semibold">
+                      {item.district}
+                      <span className="block text-[10px] font-normal text-slate-400">
+                        Forest district · Elevation {item.elevation ? `${Math.round(item.elevation)} m` : '—'}
+                      </span>
+                    </td>
+                    <td>
+                      <RiskBadge level={item.risk_level} />
+                    </td>
+                    <td className="font-mono text-xs font-bold text-slate-900 dark:text-white">
+                      {formatProbabilityPercent(item.probability)}
+                    </td>
+                    <td className="text-xs text-slate-600 dark:text-slate-300">
+                      {item.risk_for_date}
+                      <span className="block text-[10px] text-slate-400">
+                        From weather on {item.weather_date}
+                      </span>
+                    </td>
+                    <td className="max-w-xs text-xs text-slate-500">
+                      <span>
+                        {item.key_inputs?.temp_max != null ? `${item.key_inputs.temp_max}°C` : ''} ·{' '}
+                        {item.key_inputs?.humidity_mean != null ? `${item.key_inputs.humidity_mean}% RH` : ''} ·{' '}
+                        {item.key_inputs?.wind_speed_max != null ? `${item.key_inputs.wind_speed_max} km/h wind` : ''} ·{' '}
+                        {item.key_inputs?.days_since_rain != null ? `${item.key_inputs.days_since_rain}d dry` : ''}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+
+                {filtered.some((item) => item.mixed_agricultural) && (
+                  <>
+                    <tr className="bg-amber-50/70 border-y border-amber-200 dark:bg-amber-950/30 dark:border-amber-900/60">
+                      <td colSpan={6} className="px-4 py-2 text-xs font-bold text-amber-900 dark:text-amber-200">
+                        Mixed Agricultural Lowlands (Seasonal crop residue burning · Excluded from forest priority ranking)
+                      </td>
+                    </tr>
+                    {filtered.filter((item) => item.mixed_agricultural).map((item) => (
+                      <tr
+                        key={item.district}
+                        onClick={() => setSelectedDistrictName(item.district)}
+                        className="cursor-pointer bg-amber-50/20 hover:bg-amber-50/50 dark:bg-amber-950/10 dark:hover:bg-amber-950/30"
+                      >
+                        <td className="font-mono text-xs text-amber-700 dark:text-amber-400">Agri</td>
+                        <td className="font-semibold text-slate-800 dark:text-slate-200">
+                          {item.district}
                           <span className="block text-[10px] font-normal text-amber-600 dark:text-amber-400">
                             Mixed agricultural lowlands (crop residue burning)
                           </span>
-                        ) : (
-                          <span className="block text-[10px] font-normal text-slate-400">
-                            Forest district · Elevation {item.elevation ? `${Math.round(item.elevation)} m` : '—'}
+                        </td>
+                        <td>
+                          <RiskBadge level={item.risk_level} />
+                        </td>
+                        <td className="font-mono text-xs font-bold text-slate-900 dark:text-white">
+                          {formatProbabilityPercent(item.probability)}
+                        </td>
+                        <td className="text-xs text-slate-600 dark:text-slate-300">
+                          {item.risk_for_date}
+                          <span className="block text-[10px] text-slate-400">
+                            From weather on {item.weather_date}
                           </span>
-                        )}
-                      </td>
-                      <td>
-                        <RiskBadge level={item.risk_level} />
-                      </td>
-                      <td className="font-mono text-xs font-bold text-slate-900 dark:text-white">
-                        {formatProbabilityPercent(item.probability)}
-                      </td>
-                      <td className="text-xs text-slate-600 dark:text-slate-300">
-                        {item.risk_for_date}
-                        <span className="block text-[10px] text-slate-400">
-                          From weather on {item.weather_date}
-                        </span>
-                      </td>
-                      <td className="max-w-xs text-xs text-slate-500">
-                        {isLowland ? (
-                          <span className="text-amber-700 dark:text-amber-300">
+                        </td>
+                        <td className="max-w-xs text-xs">
+                          <span className="block font-semibold text-amber-700 dark:text-amber-300">
                             Fire-detection risk (mixed agricultural burning)
                           </span>
-                        ) : (
-                          <span>
-                            {item.key_inputs?.temp_max ? `${item.key_inputs.temp_max}°C` : ''} ·{' '}
-                            {item.key_inputs?.humidity_mean ? `${item.key_inputs.humidity_mean}% RH` : ''} ·{' '}
-                            {item.key_inputs?.wind_speed_max ? `${item.key_inputs.wind_speed_max} km/h wind` : ''} ·{' '}
+                          <span className="block text-[11px] text-slate-500">
+                            {item.key_inputs?.temp_max != null ? `${item.key_inputs.temp_max}°C` : ''} ·{' '}
+                            {item.key_inputs?.humidity_mean != null ? `${item.key_inputs.humidity_mean}% RH` : ''} ·{' '}
+                            {item.key_inputs?.wind_speed_max != null ? `${item.key_inputs.wind_speed_max} km/h wind` : ''} ·{' '}
                             {item.key_inputs?.days_since_rain != null ? `${item.key_inputs.days_since_rain}d dry` : ''}
                           </span>
-                        )}
-                      </td>
-                    </tr>
-                  );
-                })}
+                        </td>
+                      </tr>
+                    ))}
+                  </>
+                )}
               </tbody>
             </table>
           </div>
@@ -432,6 +474,10 @@ export default function VulnerableAreasPage() {
                 </div>
               </div>
             </div>
+
+            <p className="text-[10px] text-slate-400">
+              Note: Wind speed is reported in km/h from Open-Meteo daily forecast; the Dashboard centroid conditions card displays instantaneous regional speed in m/s.
+            </p>
 
             <div className="border-t border-slate-100 pt-3 text-[10px] text-slate-400 dark:border-slate-800">
               Source: ForestGuard ML forecast · Generated {dateLabel(envelope?.generated_at)}

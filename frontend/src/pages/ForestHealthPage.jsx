@@ -16,8 +16,8 @@ function scoreZoneHealth(metric, weather) {
   const temperature = numeric(current.temperature_2m);
   const rainfall = numeric(current.precipitation);
   const inputs = [ndvi, soilRaw, humidity, temperature, rainfall];
-  if (inputs.some((value) => value == null)) return { ...metric, soilMoisture: soilRaw, temperature, rainfall, healthScore: null };
-  const soilMoisture = soilRaw <= 1 ? soilRaw * 100 : soilRaw;
+  const soilMoisture = soilRaw != null ? (soilRaw <= 1 ? soilRaw * 100 : soilRaw) : null;
+  if (inputs.some((value) => value == null)) return { ...metric, soilMoisture, temperature, rainfall, healthScore: null };
   const vegetation = clamp(ndvi * 100);
   const moisture = clamp(soilMoisture);
   const humiditySupport = clamp(humidity);

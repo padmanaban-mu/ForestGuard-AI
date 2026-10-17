@@ -283,7 +283,7 @@ export default function DashboardPage() {
             </div>
           )}
 
-          <div className="h-[350px] sm:h-[430px]">
+          <div className="w-full">
             <MapView
               zones={mapZones}
               fires={fires}
@@ -292,14 +292,17 @@ export default function DashboardPage() {
               center={REGION.center}
               zoom={REGION.zoom}
               showHotspotsToggle={true}
+              firmsConfigured={firmsUsable}
               hotspotsNotice={firmsUsable ? `${fires.length} active detections` : 'FIRMS key not configured'}
+              heightStyle="clamp(320px, 52vh, 520px)"
+              triggerKey={selectedDayOffset}
             />
           </div>
 
           <div className="flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 px-4 py-3 text-[10px] text-slate-400 dark:border-slate-800 sm:px-5">
             <div>Map tiles: OpenHikingMap · OpenStreetMap contributors</div>
             <div className="text-slate-500">
-              Lowland districts (Haridwar, Udham Singh Nagar): Thermal detections reflect agricultural residue burning
+              Lowland districts (Haridwar, Udham Singh Nagar): Thermal detections in these districts include seasonal agricultural residue burning as well as forest fires.
             </div>
           </div>
         </section>
@@ -438,8 +441,26 @@ export default function DashboardPage() {
                   <XAxis dataKey="date" tickLine={false} axisLine={false} tick={{ fontSize: 10, fill: '#94a3b8' }} />
                   <YAxis domain={[0, 100]} unit="%" tickLine={false} axisLine={false} tick={{ fontSize: 10, fill: '#94a3b8' }} />
                   <Tooltip
-                    formatter={(val) => [`${val}%`, 'Detection probability']}
-                    labelFormatter={(label) => `Risk target date: ${label}`}
+                    content={({ active, payload }) => {
+                      if (!active || !payload?.length) return null;
+                      const pt = payload[0].payload;
+                      return (
+                        <div className="rounded-xl border border-slate-200 bg-white/95 p-2.5 text-xs shadow-lg backdrop-blur dark:border-slate-800 dark:bg-slate-900/95">
+                          <p className="font-semibold text-slate-800 dark:text-white">Risk target: {pt.date}</p>
+                          <p className="mt-1 font-bold text-forest-700 dark:text-emerald-400">
+                            Detection probability: {pt.probability}%
+                          </p>
+                          {pt.lead_days > 2 && (
+                            <div className="mt-1.5 flex items-center gap-1 text-[10px] text-amber-600 dark:text-amber-400">
+                              <span className="rounded bg-amber-100 px-1.5 py-0.5 font-bold dark:bg-amber-950/50">
+                                Lower confidence
+                              </span>
+                              <span>(Lead {pt.lead_days}d)</span>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    }}
                   />
                   <Area type="monotone" dataKey="probability" stroke="#ea580c" strokeWidth={2.5} fill="url(#riskGrad)" />
                 </AreaChart>
@@ -449,8 +470,14 @@ export default function DashboardPage() {
             <EmptyState compact title="No forecast data" description="Awaiting 7-day forecast series from backend." />
           )}
 
-          <div className="mt-2 text-[10px] text-slate-400">
-            Note: Skill for lead days 3–7 is not validated against historical reanalysis; forecast uncertainty increases beyond 48 hours.
+          <div className="mt-2 flex flex-wrap items-center justify-between gap-2 text-[10px] text-slate-400">
+            <div>
+              <span className="rounded bg-amber-50 px-1.5 py-0.5 font-semibold text-amber-700 dark:bg-amber-950/40 dark:text-amber-300">
+                Lower confidence
+              </span>
+              {' '}indicates lead days 3–7 where numerical forecast uncertainty increases beyond 48 hours.
+            </div>
+            <div>Source: ForestGuard ML forecast</div>
           </div>
         </ChartCard>
 

@@ -132,6 +132,7 @@ class FireDetection(BaseModel):
     confidence: Optional[str] = None
     version: Optional[str] = None
     bright_t31: Optional[float] = None
+    bright_ti4: Optional[float] = None
     frp: Optional[float] = None
     daynight: Optional[str] = None
 
