@@ -33,7 +33,7 @@ The backend runs **out of the box without any `.env` file**.
 
 | Environment Variable | Default | Purpose |
 | :--- | :--- | :--- |
-| `CORS_ORIGINS` | `http://localhost:3000,http://localhost:5173` | Allowed browser frontend origins |
+| `CORS_ORIGINS` | `http://localhost:3000,http://localhost:5173,http://localhost:4173,http://127.0.0.1:3000` | Allowed browser frontend origins (CORS `allow_credentials=False`) |
 | `FIRMS_MAP_KEY` | *(empty)* | Optional NASA FIRMS map key for active fire proxy |
 | `PORT` | `8000` | Port for the Uvicorn server |
 
@@ -47,7 +47,9 @@ python backend/export_static_forecast.py
 ## 3. API Endpoints & Usage Examples
 
 ### 1. `GET /health`
-Returns service status, model name, model load state, and in-memory/static cache availability.
+Returns service status, model name, model load state, separate weather source telemetry, and cache diagnostics.
+- `static_cache_age_hours`: age of the pre-generated static cache file on disk.
+- `cache_age_hours` & `stale`: describe the data actually being served (`0.0` and `false` when serving live forecast; reflective of cache age when in cached/fallback mode).
 
 **cURL:**
 ```bash
@@ -127,8 +129,13 @@ Invoke-RestMethod -Uri "http://localhost:8000/predict" -Method Post -Body $body 
 ### 4. `GET /forecast?days=7`
 Fetches the Open-Meteo operational forecast (with a 90-day lookback buffer) for all 13 districts, computes daily features using `ml/features.build_feature_row`, and generates pre-ignition risk predictions.
 
-> **Crucial Date Semantics:**
-> In every item, `weather_date` represents the observation day (day $t$), while `risk_for_date` ($t+1$) clearly labels the day for which the pre-ignition fire risk applies.
+> **Date Semantics & Lead Time:**
+> - `weather_date`: observation day ($t$).
+> - `risk_for_date`: pre-ignition risk target day ($t+1$).
+> - `lead_days`: computed as days from today in `Asia/Kolkata` (UTC+5:30) to `risk_for_date`. Weather for today = lead 0, risk for tomorrow = lead 1.
+> - **Lower confidence badge (`reliability_note`):** Entries with `lead_days > 2` (days 3–7) carry a reliability note documenting higher numerical forecast uncertainty beyond 48 hours.
+> - `mixed_agricultural`: boolean field (`true` for Haridwar and Udham Singh Nagar, `false` for the 11 forest districts).
+> - **Fail-Fast Resilience:** If network connection fails on the initial district, the backend aborts queries to the remaining 12 districts immediately and serves static cache in < 6 seconds. HTTP 429 rate limits trigger exponential backoff.
 
 **cURL:**
 ```bash

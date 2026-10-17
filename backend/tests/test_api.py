@@ -303,11 +303,22 @@ def test_forecast_days_parameter_validation(client, mock_open_meteo_response, mo
 
 
 def test_cors_restrictions(client):
-    """Verify CORS middleware permits configured origins and rejects untrusted origins."""
+    """Verify CORS middleware permits configured origins, rejects untrusted origins, and disallows credentials."""
     # Allowed origin: http://localhost:3000
     resp_allowed = client.get("/health", headers={"Origin": "http://localhost:3000"})
     assert resp_allowed.status_code == 200
     assert resp_allowed.headers.get("access-control-allow-origin") == "http://localhost:3000"
+    assert resp_allowed.headers.get("access-control-allow-credentials") is None
+
+    # Allowed origin: http://localhost:4173 (preview)
+    resp_preview = client.get("/health", headers={"Origin": "http://localhost:4173"})
+    assert resp_preview.status_code == 200
+    assert resp_preview.headers.get("access-control-allow-origin") == "http://localhost:4173"
+
+    # Allowed origin: http://127.0.0.1:3000
+    resp_ip = client.get("/health", headers={"Origin": "http://127.0.0.1:3000"})
+    assert resp_ip.status_code == 200
+    assert resp_ip.headers.get("access-control-allow-origin") == "http://127.0.0.1:3000"
 
     # Untrusted origin: http://malicious-external-site.com
     resp_denied = client.get("/health", headers={"Origin": "http://malicious-external-site.com"})
@@ -478,3 +489,145 @@ def test_model_metrics_reconciliation(client):
     assert set(data["risk_thresholds"].keys()) == {"Low", "Medium", "High", "Extreme"}
     assert "report_urls" in data
     assert "calibration_reliability" in data["report_urls"]
+    assert data["report_urls"]["calibration_reliability"] == "/reports/calibration_reliability.png"
+
+
+def test_lead_days_kolkata_timezone_crossing(monkeypatch):
+    """Verify lead_days computed from Asia/Kolkata calendar day, not UTC.
+    At 22:35 UTC on day t-1, Asia/Kolkata is already at 04:05 on day t.
+    Weather for day t must produce risk for day t+1 with lead_days == 1 (not 2).
+    """
+    from zoneinfo import ZoneInfo
+    import backend.weather_service as ws_mod
+
+    kolkata_tz = ZoneInfo("Asia/Kolkata")
+    mocked_utc = datetime(2026, 5, 13, 22, 35, 0, tzinfo=timezone.utc)
+
+    class MockDatetime(datetime):
+        @classmethod
+        def now(cls, tz=None):
+            if tz is not None:
+                return mocked_utc.astimezone(tz)
+            return mocked_utc
+
+    monkeypatch.setattr(ws_mod, "datetime", MockDatetime)
+
+    base_date = datetime(2026, 2, 12).date()
+    times = [(base_date + timedelta(days=i)).strftime("%Y-%m-%d") for i in range(92)]
+    assert times[-1] == "2026-05-14"
+
+    raw_weather = {
+        "daily": {
+            "time": times,
+            "temperature_2m_max": [25.0] * len(times),
+            "relative_humidity_2m_mean": [50.0] * len(times),
+            "wind_speed_10m_max": [10.0] * len(times),
+            "precipitation_sum": [0.0] * len(times),
+            "et0_fao_evapotranspiration": [3.0] * len(times),
+            "soil_moisture_0_to_7cm_mean": [0.22] * len(times),
+        }
+    }
+
+    dist_fc = ws_mod.weather_service.compute_district_daily_forecast(
+        "Nainital", raw_weather, days=1
+    )
+    fc_item = dist_fc.forecast[0]
+    assert fc_item.weather_date == "2026-05-14"
+    assert fc_item.risk_for_date == "2026-05-15"
+    assert fc_item.lead_days == 1  # 2026-05-15 - 2026-05-14 == 1 day lead
+
+
+def test_fail_fast_on_network_connection_error_skips_remaining_districts(client, monkeypatch):
+    """Verify that network connection failure on first district aborts immediately and skips remaining 12 districts."""
+    call_count = 0
+    _forecast_memory_cache.clear()
+
+    def mock_connection_error(*args, **kwargs):
+        nonlocal call_count
+        call_count += 1
+        raise requests.exceptions.ConnectionError("Network is down")
+
+    monkeypatch.setattr(requests, "get", mock_connection_error)
+
+    response = client.get("/forecast?days=3")
+    assert response.status_code == 200
+    data = response.json()
+
+    assert call_count == 1, f"Expected 1 call before failing fast, got {call_count}"
+    assert data["status"] == "cached"
+    assert data["weather_source"] == "cached"
+    assert len(data["districts"]) == 13
+
+
+def test_http_429_backoff_behavior(monkeypatch):
+    """Verify HTTP 429 rate limit triggers backoff retry rather than immediate fallback."""
+    import time as time_mod
+    import backend.weather_service as ws_mod
+    _forecast_memory_cache.clear()
+
+    call_count = 0
+    sleeps = []
+
+    def mock_sleep(seconds):
+        sleeps.append(seconds)
+
+    def mock_429_then_200(url, params=None, timeout=None):
+        nonlocal call_count
+        call_count += 1
+        mock_resp = MagicMock()
+        if call_count == 1:
+            mock_resp.status_code = 429
+            mock_resp.text = "Too Many Requests"
+        else:
+            mock_resp.status_code = 200
+            mock_resp.json.return_value = {
+                "daily": {
+                    "time": ["2026-05-14"],
+                    "temperature_2m_max": [25.0],
+                    "relative_humidity_2m_mean": [50.0],
+                    "wind_speed_10m_max": [10.0],
+                    "precipitation_sum": [0.0],
+                    "et0_fao_evapotranspiration": [3.0],
+                    "soil_moisture_0_to_7cm_mean": [0.22],
+                }
+            }
+        return mock_resp
+
+    monkeypatch.setattr(requests, "get", mock_429_then_200)
+    monkeypatch.setattr(time_mod, "sleep", mock_sleep)
+
+    data, source = ws_mod.weather_service.fetch_district_forecast_weather("Nainital", days=1)
+    assert source == "live"
+    assert call_count == 2
+    assert len(sleeps) == 1
+    assert sleeps[0] == 2.0
+
+
+def test_mixed_agricultural_lowland_flag(client):
+    """Verify /forecast tags Haridwar and Udham Singh Nagar with mixed_agricultural=True."""
+    response = client.get("/forecast?days=1")
+    assert response.status_code == 200
+    data = response.json()
+
+    for dist in data["districts"]:
+        if dist["district"] in ["Haridwar", "Udham Singh Nagar"]:
+            assert dist["mixed_agricultural"] is True
+            assert dist["caveat"] is not None
+        else:
+            assert dist["mixed_agricultural"] is False
+
+
+def test_static_cache_age_and_relative_report_urls(client):
+    """Verify static_cache_age_hours telemetry and relative report URLs."""
+    h_resp = client.get("/health")
+    assert h_resp.status_code == 200
+    h_data = h_resp.json()
+    assert "static_cache_age_hours" in h_data
+    assert "static_cache_age_hours" in h_data["cache_state"]
+
+    m_resp = client.get("/model/metrics")
+    assert m_resp.status_code == 200
+    m_data = m_resp.json()
+    for name, path in m_data["report_urls"].items():
+        assert path.startswith("/reports/"), f"Expected relative path starting with /reports/, got {path}"
+        assert not path.startswith("http://"), f"Found absolute URL: {path}"

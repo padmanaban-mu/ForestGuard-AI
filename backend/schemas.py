@@ -15,6 +15,9 @@ class BaseEnvelope(BaseModel):
     cache_age_hours: Optional[float] = Field(
         default=None, description="Age of the cached forecast in hours if cached data is served"
     )
+    static_cache_age_hours: Optional[float] = Field(
+        default=None, description="Age of the static cache file on disk in hours"
+    )
     stale: bool = Field(
         default=False, description="True if cache is older than 24 hours or past dates were expired"
     )
@@ -101,6 +104,9 @@ class DistrictForecast(BaseModel):
     """Forecast across upcoming days for a single district."""
     district: str
     caveat: Optional[str] = None
+    mixed_agricultural: bool = Field(
+        default=False, description="True for mixed agricultural lowland districts (Haridwar, Udham Singh Nagar)"
+    )
     centroid: List[float]
     elevation: float
     forecast: List[ForecastDay]

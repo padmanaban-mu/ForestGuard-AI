@@ -16,7 +16,10 @@ if ENV_PATH.exists():
     load_dotenv(ENV_PATH)
 
 # CORS Origins
-raw_cors = os.getenv("CORS_ORIGINS", "http://localhost:3000,http://localhost:5173")
+raw_cors = os.getenv(
+    "CORS_ORIGINS",
+    "http://localhost:3000,http://localhost:5173,http://localhost:4173,http://127.0.0.1:3000",
+)
 CORS_ORIGINS: List[str] = [origin.strip() for origin in raw_cors.split(",") if origin.strip()]
 
 # API Credentials

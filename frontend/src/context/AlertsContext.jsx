@@ -3,6 +3,7 @@ import { readLocal, writeLocal } from '../utils/storage.js';
 import { recordAudit } from '../services/audit.js';
 import { useData } from './DataContext.jsx';
 import { useAuth } from './AuthContext.jsx';
+import { useRiskForecast } from '../utils/useRiskForecast.js';
 
 const AlertsContext = createContext(null);
 
@@ -44,6 +45,23 @@ function getInitialThresholds() {
   return { ...DEFAULT_THRESHOLDS, ...next };
 }
 
+function readWarningStatuses() {
+  try {
+    const raw = localStorage.getItem('forestguard:warning-statuses');
+    return raw ? JSON.parse(raw) : {};
+  } catch {
+    return {};
+  }
+}
+
+function writeWarningStatuses(data) {
+  try {
+    localStorage.setItem('forestguard:warning-statuses', JSON.stringify(data));
+  } catch {
+    // gracefully handle local storage exceptions
+  }
+}
+
 function buildAlerts(fires, thresholds, statuses) {
   return fires.map((fire) => {
     const conf = fire.confidenceRank;
@@ -56,11 +74,46 @@ function buildAlerts(fires, thresholds, statuses) {
   }).sort((a, b) => (['Extreme', 'Critical', 'High', 'Medium', 'Low'].indexOf(a.severity) - ['Extreme', 'Critical', 'High', 'Medium', 'Low'].indexOf(b.severity)) || String(b.acqDate).localeCompare(String(a.acqDate)));
 }
 
+function buildEarlyWarnings(forestDistricts, tomorrowDataByDistrict, isStale, warningStatuses) {
+  if (isStale) return [];
+  const list = [];
+  for (const d of forestDistricts) {
+    const info = tomorrowDataByDistrict[d.district];
+    if (!info) continue;
+    if ((info.risk_level === 'High' || info.risk_level === 'Extreme') && !info.expired) {
+      const id = `${d.district}_${info.risk_for_date}`;
+      list.push({
+        id,
+        district: d.district,
+        risk_for_date: info.risk_for_date,
+        weather_date: info.weather_date,
+        severity: info.risk_level,
+        probability: info.probability,
+        lead_days: info.lead_days,
+        reliability_note: info.reliability_note,
+        key_inputs: info.key_inputs,
+        centroid: d.centroid,
+        elevation: d.elevation,
+        caveat: d.caveat,
+        mixed_agricultural: false,
+        status: warningStatuses[id] || 'New',
+        title: `${d.district}: ${info.risk_level} risk for ${info.risk_for_date}`,
+        subtitle: `Based on weather on ${info.weather_date}`,
+      });
+    }
+  }
+
+  return list.sort((a, b) => (b.probability ?? 0) - (a.probability ?? 0));
+}
+
 export function AlertsProvider({ children }) {
   const { fires } = useData();
   const { user, role } = useAuth();
+  const { forestDistricts, tomorrowDataByDistrict, isStale, envelope } = useRiskForecast();
+
   const [thresholds, setThresholdState] = useState(getInitialThresholds);
   const [statuses, setStatuses] = useState(() => readLocal('forestguard:alert-statuses', {}));
+  const [warningStatuses, setWarningStatuses] = useState(readWarningStatuses);
 
   const setThresholds = (next) => {
     const merged = {};
@@ -82,7 +135,21 @@ export function AlertsProvider({ children }) {
     });
   };
 
+  const changeWarningStatus = (id, next) => {
+    setWarningStatuses((old) => {
+      const updated = { ...old, [id]: next };
+      writeWarningStatuses(updated);
+      recordAudit({ user, role: role || 'Guest', action: `${next} ML forecast warning`, module: 'Alert Center', details: id });
+      return updated;
+    });
+  };
+
   const alerts = useMemo(() => buildAlerts(fires, thresholds, statuses), [fires, thresholds, statuses]);
+  const earlyWarnings = useMemo(
+    () => buildEarlyWarnings(forestDistricts, tomorrowDataByDistrict, isStale, warningStatuses),
+    [forestDistricts, tomorrowDataByDistrict, isStale, warningStatuses]
+  );
+
   const value = useMemo(() => ({
     alerts,
     thresholds,
@@ -93,7 +160,17 @@ export function AlertsProvider({ children }) {
     newCount: alerts.filter((a) => a.status === 'New').length,
     acknowledgedCount: alerts.filter((a) => a.status === 'Acknowledged').length,
     resolvedCount: alerts.filter((a) => a.status === 'Resolved').length,
-  }), [alerts, thresholds, user, role]);
+
+    // Early warning ML forecast integration (separate from FIRMS alerts)
+    earlyWarnings,
+    earlyWarningsNew: earlyWarnings.filter((w) => w.status === 'New').length,
+    earlyWarningsAcknowledged: earlyWarnings.filter((w) => w.status === 'Acknowledged').length,
+    earlyWarningsResolved: earlyWarnings.filter((w) => w.status === 'Resolved').length,
+    acknowledgeWarning: (id) => changeWarningStatus(id, 'Acknowledged'),
+    resolveWarning: (id) => changeWarningStatus(id, 'Resolved'),
+    isForecastStale: isStale,
+    forecastEnvelope: envelope,
+  }), [alerts, earlyWarnings, thresholds, user, role, isStale, envelope]);
 
   return <AlertsContext.Provider value={value}>{children}</AlertsContext.Provider>;
 }

@@ -120,7 +120,8 @@
             "vpd_proxy": 0.62
           }
         }
-      ]
+      ],
+      "mixed_agricultural": false
     },
     {
       "district": "Bageshwar",
@@ -236,7 +237,8 @@
             "vpd_proxy": 1.01
           }
         }
-      ]
+      ],
+      "mixed_agricultural": false
     },
     {
       "district": "Chamoli",
@@ -352,7 +354,8 @@
             "vpd_proxy": 0.87
           }
         }
-      ]
+      ],
+      "mixed_agricultural": false
     },
     {
       "district": "Champawat",
@@ -468,7 +471,8 @@
             "vpd_proxy": 0.86
           }
         }
-      ]
+      ],
+      "mixed_agricultural": false
     },
     {
       "district": "Dehradun",
@@ -584,7 +588,8 @@
             "vpd_proxy": 0.59
           }
         }
-      ]
+      ],
+      "mixed_agricultural": false
     },
     {
       "district": "Haridwar",
@@ -700,7 +705,8 @@
             "vpd_proxy": 0.68
           }
         }
-      ]
+      ],
+      "mixed_agricultural": true
     },
     {
       "district": "Nainital",
@@ -816,7 +822,8 @@
             "vpd_proxy": 0.36
           }
         }
-      ]
+      ],
+      "mixed_agricultural": false
     },
     {
       "district": "Pauri Garhwal",
@@ -932,7 +939,8 @@
             "vpd_proxy": 0.74
           }
         }
-      ]
+      ],
+      "mixed_agricultural": false
     },
     {
       "district": "Pithoragarh",
@@ -1048,7 +1056,8 @@
             "vpd_proxy": 0.94
           }
         }
-      ]
+      ],
+      "mixed_agricultural": false
     },
     {
       "district": "Rudraprayag",
@@ -1164,7 +1173,8 @@
             "vpd_proxy": 1.03
           }
         }
-      ]
+      ],
+      "mixed_agricultural": false
     },
     {
       "district": "Tehri Garhwal",
@@ -1280,7 +1290,8 @@
             "vpd_proxy": 1.08
           }
         }
-      ]
+      ],
+      "mixed_agricultural": false
     },
     {
       "district": "Udham Singh Nagar",
@@ -1396,7 +1407,8 @@
             "vpd_proxy": 0.83
           }
         }
-      ]
+      ],
+      "mixed_agricultural": true
     },
     {
       "district": "Uttarkashi",
@@ -1512,7 +1524,8 @@
             "vpd_proxy": 0.09
           }
         }
-      ]
+      ],
+      "mixed_agricultural": false
     }
   ]
 }

@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { Activity, AlertTriangle, BarChart3, BookOpen, ChevronLeft, ClipboardList, Flame, Gauge, Leaf, MapPinned, Shield, Siren, Trees } from 'lucide-react';
+import { Activity, AlertTriangle, BarChart3, BookOpen, ChevronLeft, ClipboardList, Cpu, Flame, Gauge, Leaf, MapPinned, Shield, Siren, Trees } from 'lucide-react';
 import { REGION } from '../data/region.js';
 
 export const navItems = [
@@ -12,6 +12,7 @@ export const navItems = [
   { label: 'Risk change', to: '/change-detection', icon: Activity },
   { label: 'Alert center', to: '/alerts', icon: AlertTriangle },
   { label: 'Analytics', to: '/analytics', icon: BarChart3 },
+  { label: 'Model', to: '/model', icon: Cpu },
   { label: 'History', to: '/history', icon: ClipboardList },
   { label: 'Audit & settings', to: '/audit-settings', icon: Shield },
 ];

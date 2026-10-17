@@ -7,6 +7,7 @@ from pathlib import Path
 import sys
 import time
 from typing import Any, Dict, List, Optional, Tuple
+from zoneinfo import ZoneInfo
 from cachetools import TTLCache
 import pandas as pd
 import requests
@@ -43,6 +44,8 @@ logger = logging.getLogger(__name__)
 # In-memory cache for live forecasts: 30-minute TTL
 _forecast_memory_cache = TTLCache(maxsize=100, ttl=CACHE_TTL_SECONDS)
 
+KOLKATA_TZ = ZoneInfo("Asia/Kolkata")
+
 LONG_LEAD_RELIABILITY_NOTE = (
     "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). "
     "Operational skill is validated primarily for short-lead forecasts (days 1-2)."
@@ -54,6 +57,22 @@ class WeatherService:
 
     def __init__(self):
         self.climatology = load_climatology_table(CLIMATOLOGY_PATH)
+
+    def get_static_cache_age_hours(self) -> Optional[float]:
+        """Compute the age in hours of the static forecast cache file on disk."""
+        if not STATIC_FORECAST_CACHE.exists():
+            return None
+        try:
+            with open(STATIC_FORECAST_CACHE, "r", encoding="utf-8") as f:
+                cdata = json.load(f)
+            gen_str = cdata.get("generated_at")
+            if not gen_str:
+                return None
+            now_utc = datetime.now(timezone.utc)
+            gen_dt = datetime.fromisoformat(gen_str.replace("Z", "+00:00"))
+            return round(max(0.0, (now_utc - gen_dt).total_seconds() / 3600.0), 2)
+        except Exception:
+            return None
 
     def fetch_district_forecast_weather(
         self, district: str, days: int = 7
@@ -100,6 +119,9 @@ class WeatherService:
                     time.sleep(2.0 * attempt)
                 else:
                     logger.warning(f"Open-Meteo HTTP {resp.status_code} for {district}: {resp.text}")
+            except (requests.exceptions.ConnectionError, requests.exceptions.ConnectTimeout) as e:
+                logger.warning(f"Network connection error for {district}: {e}. Failing fast.")
+                return None, "connection_failed"
             except Exception as e:
                 logger.warning(f"Open-Meteo request error for {district} (attempt {attempt}): {e}")
                 time.sleep(1.0 * attempt)
@@ -134,7 +156,7 @@ class WeatherService:
         )
 
         forecast_slice = feat_df.iloc[-days:].copy()
-        today_date = datetime.now(timezone.utc).date()
+        today_date = datetime.now(KOLKATA_TZ).date()
 
         forecast_items: List[ForecastDay] = []
         for _, row in forecast_slice.iterrows():
@@ -145,7 +167,7 @@ class WeatherService:
             risk_for_dt = pd.to_datetime(row["date"]) + timedelta(days=1)
             risk_for_date = risk_for_dt.strftime("%Y-%m-%d")
 
-            lead_days = max(1, (risk_for_dt.date() - today_date).days)
+            lead_days = max(0, (risk_for_dt.date() - today_date).days)
             reliability_note = LONG_LEAD_RELIABILITY_NOTE if lead_days > 2 else None
             is_expired = risk_for_dt.date() < today_date
 
@@ -176,6 +198,7 @@ class WeatherService:
         return DistrictForecast(
             district=district,
             caveat=LOWLAND_CAVEAT_DISTRICTS.get(district),
+            mixed_agricultural=(district in LOWLAND_CAVEAT_DISTRICTS),
             centroid=[float(meta.get("latitude", 30.0)), float(meta.get("longitude", 79.0))],
             elevation=float(meta.get("elevation", 1500.0)),
             forecast=forecast_items,
@@ -204,7 +227,7 @@ class WeatherService:
             cache_age_hours = 0.0
 
         is_stale = cache_age_hours > 24.0
-        today_date = now_utc.date()
+        today_date = datetime.now(KOLKATA_TZ).date()
 
         districts: List[DistrictForecast] = []
         any_expired = False
@@ -223,7 +246,7 @@ class WeatherService:
                     any_expired = True
                     continue
 
-                lead_days = max(1, (r_dt - today_date).days)
+                lead_days = max(0, (r_dt - today_date).days)
                 reliability_note = LONG_LEAD_RELIABILITY_NOTE if lead_days > 2 else None
 
                 valid_forecast_days.append(
@@ -260,6 +283,7 @@ class WeatherService:
                 DistrictForecast(
                     district=d["district"],
                     caveat=d.get("caveat"),
+                    mixed_agricultural=d.get("mixed_agricultural", d["district"] in LOWLAND_CAVEAT_DISTRICTS),
                     centroid=d["centroid"],
                     elevation=d["elevation"],
                     forecast=valid_forecast_days[:days],
@@ -275,6 +299,7 @@ class WeatherService:
             generated_at=generated_at_str,
             status="cached",
             cache_age_hours=cache_age_hours,
+            static_cache_age_hours=cache_age_hours,
             stale=is_stale,
             days=days,
             count=len(districts),
@@ -291,6 +316,9 @@ class WeatherService:
             raw_data, source_type = self.fetch_district_forecast_weather(district, days=days)
             if raw_data is None:
                 any_failed = True
+                logger.warning(
+                    f"Failed to fetch weather for {district} (status: {source_type}). Aborting remaining districts to fail fast."
+                )
                 break
 
             try:
@@ -306,12 +334,14 @@ class WeatherService:
             logger.warning("Live weather unavailable or incomplete. Falling back to static cache.")
             return self.load_static_forecast_cache(days=days)
 
+        static_cache_age = self.get_static_cache_age_hours()
         return ForecastResponse(
             model=model_service.best_model_name,
             weather_source="forecast",
             generated_at=datetime.now(timezone.utc).isoformat(),
             status="live",
             cache_age_hours=0.0,
+            static_cache_age_hours=static_cache_age,
             stale=False,
             days=days,
             count=len(district_forecasts),

@@ -74,7 +74,7 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=CORS_ORIGINS,
-    allow_credentials=True,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -94,8 +94,8 @@ def get_health():
     now_utc = datetime.now(timezone.utc)
     now_iso = now_utc.isoformat()
 
-    # Determine cache age and staleness
-    cache_age_hours: Optional[float] = None
+    # Determine static cache file age and staleness
+    static_cache_age_hours: Optional[float] = None
     is_cache_stale = False
     static_available = STATIC_FORECAST_CACHE.exists()
 
@@ -105,8 +105,8 @@ def get_health():
                 cdata = json.load(f)
             gen_str = cdata.get("generated_at", now_iso)
             gen_dt = datetime.fromisoformat(gen_str.replace("Z", "+00:00"))
-            cache_age_hours = round(max(0.0, (now_utc - gen_dt).total_seconds() / 3600.0), 2)
-            if cache_age_hours > 24.0:
+            static_cache_age_hours = round(max(0.0, (now_utc - gen_dt).total_seconds() / 3600.0), 2)
+            if static_cache_age_hours > 24.0:
                 is_cache_stale = True
         except Exception:
             is_cache_stale = True
@@ -115,18 +115,25 @@ def get_health():
     if not model_service.is_loaded:
         health_status = "error"
         weather_source = "none"
-    elif is_cache_stale and len(_forecast_memory_cache) == 0:
-        health_status = "degraded"
-        weather_source = "cached"
-    else:
+        served_cache_age = None
+        served_stale = False
+    elif len(_forecast_memory_cache) > 0:
         health_status = "ok"
-        weather_source = "live" if len(_forecast_memory_cache) > 0 else "cached"
+        weather_source = "live"
+        served_cache_age = 0.0
+        served_stale = False
+    else:
+        weather_source = "cached"
+        served_cache_age = static_cache_age_hours
+        served_stale = is_cache_stale
+        health_status = "degraded" if is_cache_stale else "ok"
 
     cache_state = {
         "in_memory_cached_entries": len(_forecast_memory_cache),
         "static_cache_available": static_available,
-        "cache_age_hours": cache_age_hours,
-        "stale": is_cache_stale,
+        "static_cache_age_hours": static_cache_age_hours,
+        "cache_age_hours": served_cache_age,
+        "stale": served_stale,
         "ttl_seconds": CACHE_TTL_SECONDS,
     }
 
@@ -137,8 +144,9 @@ def get_health():
         status=health_status,
         model_name=model_service.best_model_name,
         model_loaded=model_service.is_loaded,
-        cache_age_hours=cache_age_hours,
-        stale=is_cache_stale,
+        cache_age_hours=served_cache_age,
+        static_cache_age_hours=static_cache_age_hours,
+        stale=served_stale,
         cache_state=cache_state,
     )
 
@@ -361,12 +369,11 @@ def get_recent_fires(
 
 
 @app.get("/model/metrics", response_model=ModelMetricsResponse)
-def get_model_metrics(request: Request):
+def get_model_metrics():
     """Retrieve served model metadata, selection criterion, validation metrics, and report figures.
     Reconciles raw base model validation metrics (tau*=0.47) and calibrated served metrics (tau=0.50).
+    Returns relative paths for report figures.
     """
-    base_url = str(request.base_url).rstrip("/")
-
     # Load metrics.json if present
     metrics_summary: Dict[str, Any] = {}
     if METRICS_PATH.exists():
@@ -376,9 +383,9 @@ def get_model_metrics(request: Request):
         except Exception as e:
             logger.warning(f"Failed to load metrics.json: {e}")
 
-    # Dynamically generate URLs for all report figures in REPORTS_DIR
+    # Relative paths for all report figures in REPORTS_DIR
     report_urls = {
-        rf.stem: f"{base_url}/reports/{rf.name}"
+        rf.stem: f"/reports/{rf.name}"
         for rf in sorted(REPORTS_DIR.glob("*.png"))
     }
 

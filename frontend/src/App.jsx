@@ -15,6 +15,7 @@ const SimulationPage = lazy(() => import('./pages/SimulationPage.jsx'));
 const ChangeDetectionPage = lazy(() => import('./pages/ChangeDetectionPage.jsx'));
 const AlertsPage = lazy(() => import('./pages/AlertsPage.jsx'));
 const AnalyticsPage = lazy(() => import('./pages/AnalyticsPage.jsx'));
+const ModelPage = lazy(() => import('./pages/ModelPage.jsx'));
 const HistoryPage = lazy(() => import('./pages/HistoryPage.jsx'));
 const AuditSettingsPage = lazy(() => import('./pages/AuditSettingsPage.jsx'));
 
@@ -40,6 +41,7 @@ export default function App() {
     <Route path="/change-detection" element={<ChangeDetectionPage />} />
     <Route path="/alerts" element={<AlertsPage />} />
     <Route path="/analytics" element={<AnalyticsPage />} />
+    <Route path="/model" element={<ModelPage />} />
     <Route path="/history" element={<HistoryPage />} />
     <Route path="/audit-settings" element={<AuditSettingsPage />} />
     <Route path="*" element={<Navigate to="/dashboard" replace />} />
