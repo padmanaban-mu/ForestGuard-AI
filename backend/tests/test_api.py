@@ -371,16 +371,21 @@ def test_no_secret_leaks_in_endpoint_responses(client, mock_open_meteo_response,
 
 def test_cached_mode_fallback_when_offline(client, monkeypatch):
     """Verify that if live Open-Meteo queries fail, backend falls back gracefully to static cache."""
+    import backend.weather_service as ws_mod
+    sleep_calls = []
+
     def mock_failed_get(*args, **kwargs):
         raise requests.RequestException("Simulated external network outage")
 
     monkeypatch.setattr(requests, "get", mock_failed_get)
+    monkeypatch.setattr(ws_mod.time, "sleep", lambda s: sleep_calls.append(s))
     _forecast_memory_cache.clear()
 
     response = client.get("/forecast?days=3")
     assert response.status_code == 200
     data = response.json()
 
+    assert sleep_calls == [1.0, 2.0, 3.0]
     assert data["status"] == "cached"
     assert data["weather_source"] == "cached"
     assert data["count"] == 13
@@ -603,8 +608,17 @@ def test_http_429_backoff_behavior(monkeypatch):
     assert sleeps[0] == 2.0
 
 
-def test_mixed_agricultural_lowland_flag(client):
+def test_mixed_agricultural_lowland_flag(client, mock_open_meteo_response, monkeypatch):
     """Verify /forecast tags Haridwar and Udham Singh Nagar with mixed_agricultural=True."""
+    def mock_get(url, params=None, timeout=None):
+        mock_resp = MagicMock()
+        mock_resp.status_code = 200
+        mock_resp.json.return_value = mock_open_meteo_response
+        return mock_resp
+
+    monkeypatch.setattr(requests, "get", mock_get)
+    _forecast_memory_cache.clear()
+
     response = client.get("/forecast?days=1")
     assert response.status_code == 200
     data = response.json()
