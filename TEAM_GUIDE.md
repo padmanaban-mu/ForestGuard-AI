@@ -2,9 +2,11 @@
 
 ## Option A: Use the live link
 
-**Live dashboard:** *(deployment URL — will be added after publishing)*
+**Live dashboard:** `<LIVE_URL>`
 
 Open the link in any modern browser. No installation needed.
+
+> **Note on Free-Tier Wake-Up:** The cloud server automatically sleeps after 15 minutes of inactivity. When opening the app for the first time, it may take 30–60 seconds to wake up (the dashboard will display *"Waking up the server..."*). Once awake, pages respond immediately.
 
 ---
 
@@ -12,12 +14,12 @@ Open the link in any modern browser. No installation needed.
 
 **Requirements:** Python 3.13 — download from [python.org/downloads](https://python.org/downloads/) and tick *"Add Python to PATH"* during setup. No Node.js, no Docker.
 
-1. Unzip **ForestGuard-AI-share.zip** → you get a `ForestGuard-AI/` folder.
+1. Unzip **ForestGuard-AI-share.zip** (e.g., right-click → *Extract All*). `run.bat` and `run.sh` are located directly at the top level of the extracted folder.
 2. Double-click **`run.bat`** (or run it in a terminal).
    - It creates a `.venv`, installs packages (~1 min first time, fast after), and opens **http://127.0.0.1:8000** automatically.
 3. The terminal window must stay open while you use the app. Close it or press **Ctrl+C** to stop.
 
-**macOS / Linux:** open a terminal in the folder and run `chmod +x run.sh && ./run.sh`.
+**macOS / Linux:** open a terminal in the extracted folder and run `chmod +x run.sh && ./run.sh`.
 
 ---
 

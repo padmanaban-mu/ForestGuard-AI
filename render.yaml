@@ -1,0 +1,20 @@
+# Render Blueprint specification for ForestGuard AI (Single-Server Web Service)
+# Docs: https://render.com/docs/blueprint-spec
+# Python Version Doc: https://render.com/docs/python-version
+
+services:
+  - type: web
+    name: forestguard-ai
+    runtime: python
+    plan: free
+    region: oregon
+    buildCommand: pip install -r requirements-serve.txt
+    startCommand: uvicorn backend.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.13.2
+      - key: FIRMS_MAP_KEY
+        sync: false
+      - key: CORS_ORIGINS
+        value: ""

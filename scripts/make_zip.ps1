@@ -103,7 +103,7 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
 $zip = [System.IO.Compression.ZipFile]::Open($ZipPath, "Create")
 try {
     foreach ($file in $included) {
-        $entryName = $RepoName + "\" + $file.FullName.Substring($RepoRoot.Length + 1)
+        $entryName = $file.FullName.Substring($RepoRoot.Length + 1)
         [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile(
             $zip, $file.FullName, $entryName,
             [System.IO.Compression.CompressionLevel]::Optimal
@@ -122,7 +122,7 @@ Write-Host "Top-level entries in zip:"
 $zipRead = [System.IO.Compression.ZipFile]::OpenRead($ZipPath)
 try {
     $topLevel = $zipRead.Entries |
-        ForEach-Object { ($_.FullName -replace "\\", "/").Split("/")[1] } |
+        ForEach-Object { ($_.FullName -replace "\\", "/").Split("/")[0] } |
         Sort-Object -Unique
     foreach ($t in $topLevel) { Write-Host "  $t" }
 } finally {
@@ -191,7 +191,7 @@ New-Item -ItemType Directory -Path $TempDir | Out-Null
 $serverProc = $null
 try {
     [System.IO.Compression.ZipFile]::ExtractToDirectory($ZipPath, $TempDir)
-    $extractedRepo = Join-Path $TempDir $RepoName
+    $extractedRepo = $TempDir
 
     Write-Host ""
     Write-Host "  Running check_setup.py ..."

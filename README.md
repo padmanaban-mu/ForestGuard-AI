@@ -46,6 +46,20 @@ All keys live in `backend/.env` only — never in frontend code or `VITE_` varia
 | `FIRMS_MAP_KEY` | empty | Optional NASA FIRMS Map Key for live VIIRS fire detections. Without it the server returns an honest "not_configured" response and the frontend shows historical fallback data. |
 | `CORS_ORIGINS` | localhost variants | Comma-separated origins allowed by the API. Add teammates' LAN IPs here. |
 
+### Cloud deployment (Render)
+ForestGuard AI deploys to Render's free web service tier via Blueprint with zero Node.js runtime dependencies. See [**DEPLOY.md**](DEPLOY.md) for beginner step-by-step instructions.
+
+### Owner maintenance: refreshing the fallback forecast cache
+The committed fallback forecast in `backend/cache/forecast_latest.json` powers offline mode and instant cold starts, but marks itself "stale" after 24 hours. Before deploying or presenting, refresh the cache:
+```bash
+# 1. Connect to the internet and run the static forecast exporter
+python -m backend.export_static_forecast
+
+# 2. Commit the refreshed cache file
+git add backend/cache/forecast_latest.json
+git commit -m "chore(cache): refresh 7-day forecast cache"
+```
+
 
 ## Pages
 
