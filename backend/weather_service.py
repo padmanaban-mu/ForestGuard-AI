@@ -7,6 +7,7 @@ from pathlib import Path
 import sys
 import time
 from typing import Any, Dict, List, Optional, Tuple
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from zoneinfo import ZoneInfo
 from cachetools import TTLCache
 import pandas as pd
@@ -19,8 +20,11 @@ from backend.config import (
     LOWLAND_CAVEAT_DISTRICTS,
     OPEN_METEO_FORECAST_URL,
     STATIC_FORECAST_CACHE,
+    WEATHER_CONCURRENCY,
+    WEATHER_CONNECT_TIMEOUT,
+    WEATHER_LIVE_RECOVERY_SECONDS,
     WEATHER_MAX_RETRIES,
-    WEATHER_REQUEST_TIMEOUT,
+    WEATHER_READ_TIMEOUT,
 )
 from backend.model_service import model_service
 from backend.schemas import DistrictForecast, ForecastDay, ForecastResponse
@@ -57,6 +61,8 @@ class WeatherService:
 
     def __init__(self):
         self.climatology = load_climatology_table(CLIMATOLOGY_PATH)
+        # In-memory only: resets on server restart
+        self._last_live_failure_time: Optional[float] = None
 
     def get_static_cache_age_hours(self) -> Optional[float]:
         """Compute the age in hours of the static forecast cache file on disk."""
@@ -103,12 +109,12 @@ class WeatherService:
             "timezone": "Asia/Kolkata",
         }
 
-        for attempt in range(1, WEATHER_MAX_RETRIES + 1):
+        for attempt in range(1, 3):  # up to 2 attempts for 429 rate-limiting
             try:
                 resp = requests.get(
                     OPEN_METEO_FORECAST_URL,
                     params=params,
-                    timeout=WEATHER_REQUEST_TIMEOUT,
+                    timeout=(WEATHER_CONNECT_TIMEOUT, WEATHER_READ_TIMEOUT),
                 )
                 if resp.status_code == 200:
                     data = resp.json()
@@ -117,16 +123,18 @@ class WeatherService:
                 elif resp.status_code == 429:
                     logger.warning(f"Open-Meteo rate limit for {district}, retrying attempt {attempt}...")
                     time.sleep(2.0 * attempt)
+                    continue
                 else:
                     logger.warning(f"Open-Meteo HTTP {resp.status_code} for {district}: {resp.text}")
+                    return None, f"http_{resp.status_code}"
             except (requests.exceptions.ConnectionError, requests.exceptions.ConnectTimeout) as e:
-                logger.warning(f"Network connection error for {district}: {e}. Failing fast.")
+                logger.warning(f"Network connection error for {district}: {type(e).__name__}.")
                 return None, "connection_failed"
             except Exception as e:
-                logger.warning(f"Open-Meteo request error for {district} (attempt {attempt}): {e}")
-                time.sleep(1.0 * attempt)
+                logger.warning(f"Open-Meteo request error for {district}: {type(e).__name__}")
+                return None, "request_failed"
 
-        logger.error(f"Failed to fetch live forecast for {district} after {WEATHER_MAX_RETRIES} attempts.")
+        logger.error(f"Failed to fetch live forecast for {district}.")
         return None, "cached"
 
     def compute_district_daily_forecast(
@@ -307,33 +315,78 @@ class WeatherService:
         )
 
     def get_forecast(self, days: int = 7) -> ForecastResponse:
-        """Generate forecast for all 13 districts with automatic fallback to static cache."""
+        """Generate forecast for all 13 districts with concurrent fetching (unverified, conservative concurrency of 6),
+        single retry for failed districts, and automatic fallback to static cache.
+        Never mixes live and cached districts in one response.
+        """
         days = max(1, min(7, days))
-        district_forecasts: List[DistrictForecast] = []
-        any_failed = False
+        now = time.monotonic()
 
-        for district in ALL_DISTRICTS:
-            raw_data, source_type = self.fetch_district_forecast_weather(district, days=days)
-            if raw_data is None:
-                any_failed = True
-                logger.warning(
-                    f"Failed to fetch weather for {district} (status: {source_type}). Aborting remaining districts to fail fast."
+        # Live recovery check: within 60s cooldown, immediately serve static cache without blocking
+        if self._last_live_failure_time is not None:
+            elapsed = now - self._last_live_failure_time
+            if elapsed < WEATHER_LIVE_RECOVERY_SECONDS:
+                logger.info(
+                    f"Live weather in recovery cooldown ({round(WEATHER_LIVE_RECOVERY_SECONDS - elapsed)}s remaining); serving static cache."
                 )
-                break
+                return self.load_static_forecast_cache(days=days)
+            else:
+                # Cooldown expired: reset marker and try live again
+                self._last_live_failure_time = None
 
+        raw_results: Dict[str, Any] = {}
+
+        def _fetch(d: str):
+            return d, self.fetch_district_forecast_weather(d, days=days)
+
+        # Attempt 1: Fetch all 13 districts concurrently with 6 workers (unverified, conservative concurrency of 6)
+        with ThreadPoolExecutor(max_workers=WEATHER_CONCURRENCY) as executor:
+            futures = [executor.submit(_fetch, d) for d in ALL_DISTRICTS]
+            for future in as_completed(futures):
+                try:
+                    d_name, (raw_data, _) = future.result()
+                    if raw_data is not None:
+                        raw_results[d_name] = raw_data
+                except Exception as e:
+                    logger.warning(f"Thread execution error fetching {d_name}: {type(e).__name__}")
+
+        # Attempt 2: If any district failed, retry only the failed districts once
+        failed_districts = [d for d in ALL_DISTRICTS if d not in raw_results]
+        if failed_districts:
+            logger.info(f"Retrying {len(failed_districts)} failed district(s) once: {failed_districts}")
+            with ThreadPoolExecutor(max_workers=min(len(failed_districts), WEATHER_CONCURRENCY)) as executor:
+                retry_futures = [executor.submit(_fetch, d) for d in failed_districts]
+                for future in as_completed(retry_futures):
+                    try:
+                        d_name, (raw_data, _) = future.result()
+                        if raw_data is not None:
+                            raw_results[d_name] = raw_data
+                    except Exception as e:
+                        logger.warning(f"Thread execution error retrying {d_name}: {type(e).__name__}")
+
+        # Check if all 13 districts succeeded
+        still_missing = [d for d in ALL_DISTRICTS if d not in raw_results]
+        if still_missing:
+            logger.warning(
+                f"Live weather incomplete ({len(still_missing)} districts missing after retry: {still_missing}). "
+                "Recording live failure cooldown (60s) and falling back to static cache."
+            )
+            self._last_live_failure_time = time.monotonic()
+            return self.load_static_forecast_cache(days=days)
+
+        # Compute forecast for all 13 districts from live weather
+        district_forecasts: List[DistrictForecast] = []
+        for district in ALL_DISTRICTS:
             try:
-                dist_fc = self.compute_district_daily_forecast(district, raw_data, days=days)
+                dist_fc = self.compute_district_daily_forecast(district, raw_results[district], days=days)
                 district_forecasts.append(dist_fc)
             except Exception as e:
                 logger.error(f"Error computing forecast for {district}: {e}", exc_info=True)
-                any_failed = True
-                break
+                self._last_live_failure_time = time.monotonic()
+                return self.load_static_forecast_cache(days=days)
 
-        # Fall back to static cache if live fetch fails or is incomplete
-        if any_failed or len(district_forecasts) < len(ALL_DISTRICTS):
-            logger.warning("Live weather unavailable or incomplete. Falling back to static cache.")
-            return self.load_static_forecast_cache(days=days)
-
+        # Success: clear failure marker and return live forecast
+        self._last_live_failure_time = None
         static_cache_age = self.get_static_cache_age_hours()
         return ForecastResponse(
             model=model_service.best_model_name,

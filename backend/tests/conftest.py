@@ -59,6 +59,20 @@ def block_unmocked_network_calls(monkeypatch):
     monkeypatch.setattr(socket, "create_connection", guarded_create_connection)
 
 
+@pytest.fixture(autouse=True)
+def reset_in_memory_caches():
+    """Ensure in-memory caches and failure cooldowns are reset between tests."""
+    from backend.weather_service import weather_service, _forecast_memory_cache
+    import backend.main as main_mod
+    weather_service._last_live_failure_time = 0.0
+    _forecast_memory_cache.clear()
+    main_mod._firms_failure_cache = None
+    yield
+    weather_service._last_live_failure_time = 0.0
+    _forecast_memory_cache.clear()
+    main_mod._firms_failure_cache = None
+
+
 @pytest.fixture
 def mock_open_meteo_response():
     """Generate a realistic mock Open-Meteo forecast JSON covering 97 days (90 lookback + 7 forecast)."""

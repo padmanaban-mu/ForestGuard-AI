@@ -28,6 +28,7 @@ export default function DashboardPage() {
     forestStats,
     isStale,
     isExpired,
+    isOfflineWithMemory,
     envelope,
     refresh: refreshForecast,
   } = useRiskForecast();
@@ -43,10 +44,14 @@ export default function DashboardPage() {
     ]);
   };
 
-  const statusLabel = envelope?.status === 'live'
-    ? 'Live'
+  const statusLabel = isOfflineWithMemory
+    ? 'Offline'
+    : isExpired
+    ? 'Expired'
     : (envelope?.stale || isStale)
     ? 'Stale'
+    : envelope?.status === 'live'
+    ? 'Live'
     : 'Cached';
 
   const mapZones = geoFeatures.length ? geoFeatures : fallbackZones;
@@ -146,23 +151,31 @@ export default function DashboardPage() {
         }
       />
 
-      {isExpired && (
+      {isExpired ? (
         <EmptyState
           compact
-          title="Forecast is stale or expired"
-          description="Cached forecast data is older than 24 hours. Connect to the ForestGuard backend or refresh sources to receive an up-to-date ML forecast."
+          title="Forecast has expired"
+          description={
+            isOfflineWithMemory
+              ? `Cannot reach the ForestGuard server. The newest forecast available (generated ${
+                  envelope?.generated_at
+                    ? new Date(envelope.generated_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                    : 'earlier'
+                }) has expired and is not shown.`
+              : 'The server is online but has no recent forecast; its connection to the weather service may be down.'
+          }
           action={
             <button className="btn-primary mt-2" onClick={handleRefresh}>
               <RefreshCw size={14} className="mr-1 inline" /> Refresh now
             </button>
           }
         />
-      )}
-
-      {error && (
-        <DataNote tone="red">
-          <strong>Backend status:</strong> {error}
-        </DataNote>
+      ) : (
+        error && (
+          <DataNote tone="red">
+            <strong>Backend status:</strong> {error}
+          </DataNote>
+        )
       )}
 
       {wakingUp && (
@@ -185,7 +198,7 @@ export default function DashboardPage() {
               : 'Awaiting forecast'
           }
           source="ForestGuard ML forecast"
-          status={statusLabel}
+          status={statusLabel === 'Live' ? 'Live' : null}
           updatedAt={envelope?.generated_at}
         />
 
@@ -197,7 +210,7 @@ export default function DashboardPage() {
           accent={forestStats.highOrExtremeCount > 0 ? 'orange' : 'green'}
           note="Forest districts only (lowlands excluded)"
           source="ForestGuard ML forecast"
-          status={statusLabel}
+          status={statusLabel === 'Live' ? 'Live' : null}
           updatedAt={envelope?.generated_at}
         />
 
@@ -214,7 +227,7 @@ export default function DashboardPage() {
           }
           note="Mean probability of ≥1 fire detection across 11 forest districts"
           source="ForestGuard ML forecast"
-          status={statusLabel}
+          status={statusLabel === 'Live' ? 'Live' : null}
           updatedAt={envelope?.generated_at}
         />
 
@@ -225,7 +238,7 @@ export default function DashboardPage() {
           accent="green"
           note="11 forest districts · 2 mixed agricultural excluded from forest index"
           source="ForestGuard ML forecast"
-          status={statusLabel}
+          status={statusLabel === 'Live' ? 'Live' : null}
           updatedAt={envelope?.generated_at}
         />
 
@@ -241,7 +254,7 @@ export default function DashboardPage() {
               : 'No active early warnings for tomorrow'
           }
           source="ForestGuard ML forecast"
-          status={statusLabel}
+          status={statusLabel === 'Live' ? 'Live' : null}
           updatedAt={envelope?.generated_at}
         />
       </div>

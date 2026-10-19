@@ -109,7 +109,7 @@ function buildEarlyWarnings(forestDistricts, tomorrowDataByDistrict, isStale, wa
 export function AlertsProvider({ children }) {
   const { fires } = useData();
   const { user, role } = useAuth();
-  const { forestDistricts, tomorrowDataByDistrict, isStale, envelope } = useRiskForecast();
+  const { forestDistricts, tomorrowDataByDistrict, isStale, isExpired, isOfflineWithMemory, envelope } = useRiskForecast();
 
   const [thresholds, setThresholdState] = useState(getInitialThresholds);
   const [statuses, setStatuses] = useState(() => readLocal('forestguard:alert-statuses', {}));
@@ -169,8 +169,10 @@ export function AlertsProvider({ children }) {
     acknowledgeWarning: (id) => changeWarningStatus(id, 'Acknowledged'),
     resolveWarning: (id) => changeWarningStatus(id, 'Resolved'),
     isForecastStale: isStale,
+    isForecastExpired: isExpired,
+    isForecastOffline: isOfflineWithMemory,
     forecastEnvelope: envelope,
-  }), [alerts, earlyWarnings, thresholds, user, role, isStale, envelope]);
+  }), [alerts, earlyWarnings, thresholds, user, role, isStale, isExpired, isOfflineWithMemory, envelope]);
 
   return <AlertsContext.Provider value={value}>{children}</AlertsContext.Provider>;
 }

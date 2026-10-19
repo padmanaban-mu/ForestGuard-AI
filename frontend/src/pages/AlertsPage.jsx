@@ -34,6 +34,8 @@ export default function AlertsPage() {
     acknowledgeWarning,
     resolveWarning,
     isForecastStale,
+    isForecastExpired,
+    isForecastOffline,
     forecastEnvelope,
   } = useAlerts();
 
@@ -49,10 +51,14 @@ export default function AlertsPage() {
   const [selectedFire, setSelectedFire] = useState(null);
   const [selectedWarning, setSelectedWarning] = useState(null);
 
-  const forecastStatusLabel = forecastEnvelope?.status === 'live'
-    ? 'Live'
+  const forecastStatusLabel = isForecastOffline
+    ? 'Offline'
+    : isForecastExpired
+    ? 'Expired'
     : (forecastEnvelope?.stale || isForecastStale)
     ? 'Stale'
+    : forecastEnvelope?.status === 'live'
+    ? 'Live'
     : 'Cached';
 
   // Filtered early warnings
@@ -71,7 +77,7 @@ export default function AlertsPage() {
     return alerts.filter((a) => {
       const matchesStatus = a.status === tab;
       const matchesSeverity = severity === 'All' || a.severity === severity;
-      const query = `${a.latitude} ${a.longitude} ${a.acqDate} ${a.satellite} ${a.severity}`.toLowerCase();
+      const query = `${a.latitude} ${a.longitude} ${a.district || ''} ${a.acqDate} ${a.satellite} ${a.severity}`.toLowerCase();
       const matchesSearch = query.includes(search.toLowerCase());
       return matchesStatus && matchesSeverity && matchesSearch;
     });
@@ -297,8 +303,15 @@ export default function AlertsPage() {
                       <AlertTriangle size={17} />
                     </span>
                     <span className="min-w-0">
-                      <span className="block text-sm font-bold text-slate-900 dark:text-white">
-                        Satellite fire detection
+                      <span className="flex flex-wrap items-center gap-2">
+                        <span className="block text-sm font-bold text-slate-900 dark:text-white">
+                          Satellite fire detection{alert.district ? ` · ${alert.district}` : ''}
+                        </span>
+                        {(alert.mixedAgricultural || alert.district === 'Haridwar' || alert.district === 'Udham Singh Nagar') && (
+                          <span className="inline-flex rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-bold text-amber-800 ring-1 ring-inset ring-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:ring-amber-900">
+                            Mixed agricultural
+                          </span>
+                        )}
                       </span>
                       <span className="mt-1 block truncate text-xs text-slate-500">
                         {alert.latitude.toFixed(4)}, {alert.longitude.toFixed(4)} · {fireDateTime(alert)} · {alert.satellite}
@@ -410,11 +423,22 @@ export default function AlertsPage() {
         {selectedFire && (
           <div className="space-y-4">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <SeverityBadge level={selectedFire.severity} />
+              <div className="flex items-center gap-2">
+                <SeverityBadge level={selectedFire.severity} />
+                {(selectedFire.mixedAgricultural || selectedFire.district === 'Haridwar' || selectedFire.district === 'Udham Singh Nagar') && (
+                  <span className="inline-flex rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-bold text-amber-800 ring-1 ring-inset ring-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:ring-amber-900">
+                    Mixed agricultural
+                  </span>
+                )}
+              </div>
               <span className="text-xs text-slate-500">Status: {selectedFire.status}</span>
             </div>
 
             <div className="grid grid-cols-2 gap-3">
+              <div className="rounded-xl bg-slate-50 p-3 dark:bg-slate-800">
+                <p className="text-[10px] text-slate-500">District</p>
+                <p className="mt-1 text-xs font-bold">{selectedFire.district || 'Unassigned / border'}</p>
+              </div>
               <div className="rounded-xl bg-slate-50 p-3 dark:bg-slate-800">
                 <p className="text-[10px] text-slate-500">Acquisition</p>
                 <p className="mt-1 text-xs font-bold">{fireDateTime(selectedFire)}</p>
@@ -432,7 +456,7 @@ export default function AlertsPage() {
                   {['n', 'l', 'h'].includes(String(selectedFire.confidence).toLowerCase()) ? ' · categorical' : ''}
                 </p>
               </div>
-              <div className="rounded-xl bg-slate-50 p-3 dark:bg-slate-800">
+              <div className="col-span-2 rounded-xl bg-slate-50 p-3 dark:bg-slate-800">
                 <p className="text-[10px] text-slate-500">Coordinates</p>
                 <p className="mt-1 text-xs font-bold">
                   {selectedFire.latitude.toFixed(5)}, {selectedFire.longitude.toFixed(5)}

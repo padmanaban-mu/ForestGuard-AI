@@ -372,26 +372,26 @@ def test_no_secret_leaks_in_endpoint_responses(client, mock_open_meteo_response,
 def test_cached_mode_fallback_when_offline(client, monkeypatch):
     """Verify that if live Open-Meteo queries fail, backend falls back gracefully to static cache."""
     import backend.weather_service as ws_mod
-    sleep_calls = []
 
     def mock_failed_get(*args, **kwargs):
         raise requests.RequestException("Simulated external network outage")
 
     monkeypatch.setattr(requests, "get", mock_failed_get)
-    monkeypatch.setattr(ws_mod.time, "sleep", lambda s: sleep_calls.append(s))
     _forecast_memory_cache.clear()
+    ws_mod.weather_service._last_live_failure_time = 0.0
 
     response = client.get("/forecast?days=3")
     assert response.status_code == 200
     data = response.json()
 
-    assert sleep_calls == [1.0, 2.0, 3.0]
     assert data["status"] == "cached"
     assert data["weather_source"] == "cached"
     assert data["count"] == 13
     assert len(data["districts"]) == 13
     for dist in data["districts"]:
         assert len(dist["forecast"]) == 3
+    # Live recovery failure cooldown was recorded in memory
+    assert ws_mod.weather_service._last_live_failure_time > 0.0
 
 
 def test_feature_parity_with_ml_features(client):
@@ -542,26 +542,123 @@ def test_lead_days_kolkata_timezone_crossing(monkeypatch):
     assert fc_item.lead_days == 1  # 2026-05-15 - 2026-05-14 == 1 day lead
 
 
-def test_fail_fast_on_network_connection_error_skips_remaining_districts(client, monkeypatch):
-    """Verify that network connection failure on first district aborts immediately and skips remaining 12 districts."""
-    call_count = 0
+def test_weather_service_concurrent_fetch_and_retry(client, mock_open_meteo_response, monkeypatch):
+    """Verify concurrent fetch across 13 districts, and that only failed districts are retried once."""
+    import backend.weather_service as ws_mod
     _forecast_memory_cache.clear()
+    ws_mod.weather_service._last_live_failure_time = 0.0
 
-    def mock_connection_error(*args, **kwargs):
-        nonlocal call_count
-        call_count += 1
-        raise requests.exceptions.ConnectionError("Network is down")
+    call_counts = {}
 
-    monkeypatch.setattr(requests, "get", mock_connection_error)
+    def mock_concurrent_get(url, params=None, timeout=None):
+        lat = params.get("latitude") if params else None
+        # Identify district from latitude
+        district_name = None
+        for name, meta in ws_mod.DISTRICT_METADATA.items():
+            if abs(meta["latitude"] - lat) < 0.001:
+                district_name = name
+                break
 
-    response = client.get("/forecast?days=3")
+        count = call_counts.get(district_name, 0) + 1
+        call_counts[district_name] = count
+
+        # Simulate Almora failing on first attempt, but succeeding on retry
+        if district_name == "Almora" and count == 1:
+            raise requests.exceptions.Timeout("Almora timed out on attempt 1")
+
+        mock_resp = MagicMock()
+        mock_resp.status_code = 200
+        mock_resp.json.return_value = mock_open_meteo_response
+        return mock_resp
+
+    monkeypatch.setattr(requests, "get", mock_concurrent_get)
+
+    response = client.get("/forecast?days=1")
     assert response.status_code == 200
     data = response.json()
 
-    assert call_count == 1, f"Expected 1 call before failing fast, got {call_count}"
+    assert data["status"] == "live"
+    assert data["weather_source"] in ["forecast", "open-meteo"]
+    assert len(data["districts"]) == 13
+    # Almora was called twice (initial + retry)
+    assert call_counts.get("Almora") == 2
+    # Other 12 districts were called only once
+    for d in ws_mod.ALL_DISTRICTS:
+        if d != "Almora":
+            assert call_counts.get(d) == 1
+
+
+def test_weather_service_live_recovery_cooldown(client, monkeypatch):
+    """Verify 60s in-memory live recovery cooldown: suppresses live requests during cooldown, resets on restart."""
+    import backend.weather_service as ws_mod
+    _forecast_memory_cache.clear()
+
+    network_calls = 0
+
+    def mock_get(*args, **kwargs):
+        nonlocal network_calls
+        network_calls += 1
+        raise requests.exceptions.ConnectionError("Down")
+
+    monkeypatch.setattr(requests, "get", mock_get)
+
+    # State A: Fresh start (cooldown == 0.0)
+    ws_mod.weather_service._last_live_failure_time = 0.0
+    resp1 = client.get("/forecast?days=1")
+    assert resp1.status_code == 200
+    assert resp1.json()["status"] == "cached"
+    assert network_calls > 0
+    # Marker was set
+    assert ws_mod.weather_service._last_live_failure_time > 0.0
+
+    # State B: Within 60s cooldown window, subsequent requests do NOT make any network calls
+    calls_before = network_calls
+    resp2 = client.get("/forecast?days=1")
+    assert resp2.status_code == 200
+    assert resp2.json()["status"] == "cached"
+    assert network_calls == calls_before  # No new network attempts!
+
+    # State C: Simulating server restart (marker reset to 0.0 in server memory)
+    ws_mod.weather_service._last_live_failure_time = 0.0
+    _forecast_memory_cache.clear()
+    resp3 = client.get("/forecast?days=1")
+    assert resp3.status_code == 200
+    assert network_calls > calls_before  # Live attempt made again!
+
+
+def test_weather_service_never_mixes_live_and_cached_districts(client, mock_open_meteo_response, monkeypatch):
+    """Verify that if any district remains missing after retry, the API never returns a hybrid mix of live and cached districts."""
+    import backend.weather_service as ws_mod
+    _forecast_memory_cache.clear()
+    ws_mod.weather_service._last_live_failure_time = 0.0
+
+    def mock_get_with_one_permanently_failing_district(url, params=None, timeout=None):
+        lat = params.get("latitude") if params else None
+        # Fail Tehri Garhwal completely (both initial and retry)
+        tehri_lat = ws_mod.DISTRICT_METADATA["Tehri Garhwal"]["latitude"]
+        if abs(lat - tehri_lat) < 0.001:
+            raise requests.exceptions.Timeout("Tehri Garhwal permanently timed out")
+
+        mock_resp = MagicMock()
+        mock_resp.status_code = 200
+        mock_resp.json.return_value = mock_open_meteo_response
+        return mock_resp
+
+    monkeypatch.setattr(requests, "get", mock_get_with_one_permanently_failing_district)
+
+    response = client.get("/forecast?days=2")
+    assert response.status_code == 200
+    data = response.json()
+
+    # The entire response must be cached (strict all-or-nothing fallback)
     assert data["status"] == "cached"
     assert data["weather_source"] == "cached"
     assert len(data["districts"]) == 13
+
+    # Ensure no district is marked with live weather
+    for d in data["districts"]:
+        for fc in d["forecast"]:
+            assert data["weather_source"] == "cached"
 
 
 def test_http_429_backoff_behavior(monkeypatch):
@@ -702,4 +799,161 @@ def test_fires_recent_normalize_fire_compatibility(client, monkeypatch):
     assert fire["acq_time"] == "0830"
     assert fire["satellite"] == "N"
     assert fire["daynight"] == "D"
+    assert fire["district"] is not None
+    assert fire["mixed_agricultural"] is False
+
+
+def test_firms_key_redaction_and_exception_sanitization(client, monkeypatch, caplog):
+    """Verify that NASA FIRMS key never leaks into client responses or server logs on exceptions."""
+    import backend.main as main_mod
+
+    dummy_key = "dummy_secret_map_key_987654"
+    monkeypatch.setattr(main_mod, "FIRMS_MAP_KEY", dummy_key)
+    monkeypatch.setattr(main_mod.time, "sleep", lambda s: None)
+    main_mod._firms_failure_cache = None
+
+    def mock_leak_prone_get(url, timeout=None):
+        raise requests.exceptions.ConnectTimeout(
+            f"HTTPSConnectionPool(host='firms.modaps.eosdis.nasa.gov', port=443): "
+            f"Max retries exceeded with url: /api/area/csv/{dummy_key}/VIIRS_SNPP_NRT/77.6,28.7,81.1,31.5/2"
+        )
+
+    monkeypatch.setattr(requests, "get", mock_leak_prone_get)
+
+    with caplog.at_level("DEBUG"):
+        response = client.get("/fires/recent?hours=48")
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["status"] == "error"
+    assert data["message"] == "NASA FIRMS unreachable"
+    assert data["fires"] == []
+
+    # The secret key must NEVER appear in the response payload or captured log text
+    assert dummy_key not in response.text
+    assert dummy_key not in caplog.text
+
+
+def test_fires_recent_error_handling_and_no_500(client, monkeypatch):
+    """Verify /fires/recent never returns HTTP 500 across timeouts, HTTP errors, and CSV parse errors."""
+    import backend.main as main_mod
+    monkeypatch.setattr(main_mod, "FIRMS_MAP_KEY", "test_key_dummy_123")
+
+    error_cases = [
+        # HTTP errors
+        (401, "Unauthorized", None),
+        (403, "Forbidden", None),
+        (429, "Too Many Requests", None),
+        (500, "Internal Server Error", None),
+        # Network exceptions
+        (None, None, requests.exceptions.ConnectTimeout("Connect timed out")),
+        (None, None, requests.exceptions.ReadTimeout("Read timed out")),
+        (None, None, requests.exceptions.ConnectionError("Connection refused")),
+        # Malformed CSV payload (e.g. gateway error HTML)
+        (200, "<html><head><title>502 Bad Gateway</title></head><body>502 Bad Gateway</body></html>", None),
+    ]
+
+    # Mock sleep so backoff retries don't slow down the test suite
+    monkeypatch.setattr(main_mod.time, "sleep", lambda s: None)
+
+    for status_code, body_text, exc in error_cases:
+        main_mod._firms_failure_cache = None
+
+        if exc:
+            def mock_exc_get(url, timeout=None):
+                raise exc
+            monkeypatch.setattr(requests, "get", mock_exc_get)
+        else:
+            mock_resp = MagicMock()
+            mock_resp.status_code = status_code
+            mock_resp.text = body_text
+            monkeypatch.setattr(requests, "get", lambda url, timeout=None: mock_resp)
+
+        response = client.get("/fires/recent?hours=48")
+        assert response.status_code == 200, f"Case {status_code or type(exc)} failed with status {response.status_code}"
+        data = response.json()
+        assert data["status"] == "error"
+        assert data["fires"] == []
+        assert data["message"] == "NASA FIRMS unreachable"
+
+
+def test_fires_recent_5min_failure_cache(client, monkeypatch):
+    """Verify that after a failure, subsequent requests within 300s return the cached error without re-querying."""
+    import backend.main as main_mod
+    monkeypatch.setattr(main_mod, "FIRMS_MAP_KEY", "test_key_dummy_123")
+    monkeypatch.setattr(main_mod.time, "sleep", lambda s: None)
+    main_mod._firms_failure_cache = None
+
+    call_count = 0
+
+    def mock_failing_get(url, timeout=None):
+        nonlocal call_count
+        call_count += 1
+        raise requests.exceptions.Timeout("FIRMS Timeout")
+
+    monkeypatch.setattr(requests, "get", mock_failing_get)
+
+    # First request: fails with 1 retry (2 calls total) and records failure cache
+    resp1 = client.get("/fires/recent?hours=48")
+    assert resp1.status_code == 200
+    assert resp1.json()["status"] == "error"
+    assert call_count == 2
+
+    # Second request (immediate): served from 5-minute failure cache (no new network call)
+    resp2 = client.get("/fires/recent?hours=48")
+    assert resp2.status_code == 200
+    assert resp2.json()["status"] == "error"
+    assert call_count == 2
+
+    # Expire failure cache (> 300s)
+    assert main_mod._firms_failure_cache is not None
+    main_mod._firms_failure_cache["failed_at"] -= 305
+
+    # Third request: failure cache expired, network attempted again (2 calls: initial + retry)
+    resp3 = client.get("/fires/recent?hours=48")
+    assert resp3.status_code == 200
+    assert resp3.json()["status"] == "error"
+    assert call_count == 4
+
+
+def test_firms_polygon_filtering(client, monkeypatch):
+    """Verify polygon containment filtering: retains inside detections, tags lowlands, drops outside detections."""
+    import backend.main as main_mod
+    monkeypatch.setattr(main_mod, "FIRMS_MAP_KEY", "test_key_dummy_123")
+    main_mod._firms_failure_cache = {"timestamp": 0.0, "response": None}
+
+    # Three detections:
+    # 1. Chamoli centroid (30.4985, 79.5583) -> inside Chamoli (forest)
+    # 2. Haridwar centroid (29.8773, 77.9887) -> inside Haridwar (mixed agricultural)
+    # 3. Delhi coordinate (28.6139, 77.2090) -> outside Uttarakhand (must be discarded)
+    mock_csv = (
+        "latitude,longitude,bright_ti4,scan,track,acq_date,acq_time,satellite,instrument,confidence,version,bright_t31,frp,daynight\n"
+        "30.4985,79.5583,330.1,0.40,0.36,2026-05-14,0830,N,VIIRS,nominal,2.0NRT,296.0,15.2,D\n"
+        "29.8773,77.9887,322.0,0.39,0.36,2026-05-14,0831,N,VIIRS,nominal,2.0NRT,294.0,9.5,D\n"
+        "28.6139,77.2090,340.5,0.42,0.38,2026-05-14,0832,N,VIIRS,nominal,2.0NRT,299.0,22.0,D\n"
+    )
+
+    def mock_firms_get(url, timeout=None):
+        mock_resp = MagicMock()
+        mock_resp.status_code = 200
+        mock_resp.text = mock_csv
+        return mock_resp
+
+    monkeypatch.setattr(requests, "get", mock_firms_get)
+
+    response = client.get("/fires/recent?hours=48")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["status"] == "live"
+    # Delhi point must be dropped!
+    assert data["count"] == 2
+    assert len(data["fires"]) == 2
+
+    # Map by district
+    fires_by_district = {f["district"]: f for f in data["fires"]}
+    assert "Chamoli" in fires_by_district
+    assert fires_by_district["Chamoli"]["mixed_agricultural"] is False
+
+    assert "Haridwar" in fires_by_district
+    assert fires_by_district["Haridwar"]["mixed_agricultural"] is True
 

@@ -19,6 +19,7 @@ export default function VulnerableAreasPage() {
     forestStats,
     isStale,
     isExpired,
+    isOfflineWithMemory,
     envelope,
   } = useRiskForecast();
 
@@ -26,10 +27,14 @@ export default function VulnerableAreasPage() {
   const [districtFilter, setDistrictFilter] = useState('All');
   const [selectedDistrictName, setSelectedDistrictName] = useState(null);
 
-  const statusLabel = envelope?.status === 'live'
-    ? 'Live'
+  const statusLabel = isOfflineWithMemory
+    ? 'Offline'
+    : isExpired
+    ? 'Expired'
     : (envelope?.stale || isStale)
     ? 'Stale'
+    : envelope?.status === 'live'
+    ? 'Live'
     : 'Cached';
 
   // All tomorrow district items
@@ -137,7 +142,7 @@ export default function VulnerableAreasPage() {
           icon={MapPinned}
           note="11 forest districts · 2 mixed agricultural lowlands"
           source="ForestGuard ML forecast"
-          status={statusLabel}
+          status={statusLabel === 'Live' ? 'Live' : null}
           updatedAt={envelope?.generated_at}
         />
         <StatCard
@@ -147,7 +152,7 @@ export default function VulnerableAreasPage() {
           accent="amber"
           note={`Average detection probability: ${forestStats.averageProbability != null ? formatProbabilityPercent(forestStats.averageProbability) : '—'}`}
           source="ForestGuard ML forecast"
-          status={statusLabel}
+          status={statusLabel === 'Live' ? 'Live' : null}
           updatedAt={envelope?.generated_at}
         />
         <StatCard
@@ -158,7 +163,7 @@ export default function VulnerableAreasPage() {
           accent="red"
           note={forestStats.highestDistrict ? `Risk for ${forestStats.highestDistrict.risk_for_date} (weather on ${forestStats.highestDistrict.weather_date})` : 'Awaiting forecast'}
           source="ForestGuard ML forecast"
-          status={statusLabel}
+          status={statusLabel === 'Live' ? 'Live' : null}
           updatedAt={envelope?.generated_at}
         />
       </div>

@@ -20,7 +20,9 @@ export function normalizeFire(row) {
   const rawConf = get('confidence'); const rawTime = String(get('acq_time', '')).replace(/\D/g, '').padStart(4, '0').slice(-4); const rawFrp = get('frp'); const rawBrightness = get('bright_ti4'); const acqDate = String(get('acq_date', ''));
   const frp = rawFrp == null || rawFrp === '' || !Number.isFinite(Number(rawFrp)) ? null : Number(rawFrp);
   const brightness = rawBrightness == null || rawBrightness === '' || !Number.isFinite(Number(rawBrightness)) ? null : Number(rawBrightness);
-  return { id: `${latitude.toFixed(4)}-${longitude.toFixed(4)}-${acqDate}-${rawTime}-${get('satellite', 'VIIRS')}`, latitude, longitude, brightness, frp, confidence: rawConf === '' ? null : String(rawConf), confidenceRank: confidenceRank(rawConf), satellite: String(get('satellite', 'Unknown')), instrument: String(get('instrument', 'VIIRS')), acqDate: acqDate || null, acqTime: rawTime || null, dayNight: String(get('daynight', 'Unknown')).toUpperCase() };
+  const district = get('district') || null;
+  const mixedAgricultural = Boolean(row.mixed_agricultural ?? row.mixedAgricultural);
+  return { id: `${latitude.toFixed(4)}-${longitude.toFixed(4)}-${acqDate}-${rawTime}-${get('satellite', 'VIIRS')}`, latitude, longitude, brightness, frp, confidence: rawConf === '' ? null : String(rawConf), confidenceRank: confidenceRank(rawConf), satellite: String(get('satellite', 'Unknown')), instrument: String(get('instrument', 'VIIRS')), acqDate: acqDate || null, acqTime: rawTime || null, dayNight: String(get('daynight', 'Unknown')).toUpperCase(), district, mixedAgricultural };
 }
 export function parseFirmsCsv(text) { const parsed = Papa.parse(text, { header: true, skipEmptyLines: 'greedy', dynamicTyping: false }); return (parsed.data || []).map(normalizeFire).filter(Boolean); }
 

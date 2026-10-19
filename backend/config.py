@@ -43,9 +43,17 @@ STATIC_FORECAST_CACHE: Path = CACHE_DIR / "forecast_latest.json"
 CACHE_TTL_SECONDS: int = 1800
 
 # Open-Meteo external request parameters
-WEATHER_REQUEST_TIMEOUT: int = 20
-WEATHER_MAX_RETRIES: int = 3
+WEATHER_CONNECT_TIMEOUT: float = 5.0
+WEATHER_READ_TIMEOUT: float = 15.0
+WEATHER_CONCURRENCY: int = 6  # unverified, conservative concurrency of 6
+WEATHER_MAX_RETRIES: int = 1  # retry only failed districts once
+WEATHER_LIVE_RECOVERY_SECONDS: float = 60.0
 OPEN_METEO_FORECAST_URL: str = "https://api.open-meteo.com/v1/forecast"
+
+# NASA FIRMS external request parameters
+FIRMS_CONNECT_TIMEOUT: float = 5.0
+FIRMS_READ_TIMEOUT: float = 10.0
+FIRMS_FAILURE_CACHE_SECONDS: int = 300  # 5 minutes
 NASA_FIRMS_BASE_URL: str = "https://firms.modaps.eosdis.nasa.gov/api/area/csv"
 
 # Region settings

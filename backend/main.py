@@ -22,11 +22,18 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 import requests
 
+import time
+from shapely.geometry import Point, shape
+from shapely.prepared import prep
+
 from backend.config import (
     BBOX,
     CACHE_TTL_SECONDS,
     CORS_ORIGINS,
+    FIRMS_CONNECT_TIMEOUT,
+    FIRMS_FAILURE_CACHE_SECONDS,
     FIRMS_MAP_KEY,
+    FIRMS_READ_TIMEOUT,
     LOWLAND_CAVEAT_DISTRICTS,
     METRICS_PATH,
     NASA_FIRMS_BASE_URL,
@@ -58,11 +65,58 @@ if str(ML_DIR) not in sys.path:
 
 from ml.features import DISTRICT_METADATA, build_feature_row
 
+class FIRMSKeyRedactionFilter(logging.Filter):
+    """Logging filter that redacts the value of FIRMS_MAP_KEY from every log record."""
+    def filter(self, record: logging.LogRecord) -> bool:
+        if FIRMS_MAP_KEY and isinstance(record.msg, str):
+            record.msg = record.msg.replace(FIRMS_MAP_KEY, "[REDACTED_KEY]")
+        if FIRMS_MAP_KEY and record.args:
+            if isinstance(record.args, dict):
+                record.args = {
+                    k: (v.replace(FIRMS_MAP_KEY, "[REDACTED_KEY]") if isinstance(v, str) else v)
+                    for k, v in record.args.items()
+                }
+            elif isinstance(record.args, tuple):
+                record.args = tuple(
+                    (v.replace(FIRMS_MAP_KEY, "[REDACTED_KEY]") if isinstance(v, str) else v)
+                    for v in record.args
+                )
+        return True
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
 )
 logger = logging.getLogger("forestguard-api")
+_redaction_filter = FIRMSKeyRedactionFilter()
+logging.getLogger().addFilter(_redaction_filter)
+logger.addFilter(_redaction_filter)
+
+# In-memory failure cache for FIRMS: {"failed_at": float, "message": str}
+_firms_failure_cache: Optional[Dict[str, Any]] = None
+_district_polygons: List[tuple] = []
+
+def _get_district_polygons():
+    """Lazily load and prepare district polygons from zones.geojson."""
+    global _district_polygons
+    if _district_polygons:
+        return _district_polygons
+    if ZONES_GEOJSON_PATH.exists():
+        try:
+            with open(ZONES_GEOJSON_PATH, "r", encoding="utf-8") as f:
+                geojson_data = json.load(f)
+            for feat in geojson_data.get("features", []):
+                props = feat.get("properties", {})
+                name = props.get("name") or props.get("district")
+                geom_dict = feat.get("geometry")
+                if name and geom_dict:
+                    poly = shape(geom_dict)
+                    prepared = prep(poly)
+                    is_mixed = name in LOWLAND_CAVEAT_DISTRICTS
+                    _district_polygons.append((name, prepared, is_mixed))
+        except Exception as e:
+            logger.error(f"Error loading district polygons: {type(e).__name__}")
+    return _district_polygons
 
 app = FastAPI(
     title="ForestGuard AI Backend",
@@ -277,16 +331,75 @@ def get_forecast(
     return weather_service.get_forecast(days=days)
 
 
+def fetch_firms_csv_safe(url: str) -> tuple[Optional[str], Optional[str]]:
+    """Safely fetch NASA FIRMS CSV without logging the URL, key, or raw exception strings.
+    Catches timeouts, connection errors, HTTP 401/403/429/5xx, and caches failures for 5 minutes.
+    Returns (csv_text, error_message).
+    """
+    global _firms_failure_cache
+    now = time.monotonic()
+    if _firms_failure_cache:
+        elapsed = now - _firms_failure_cache.get("failed_at", 0)
+        if elapsed < FIRMS_FAILURE_CACHE_SECONDS:
+            return None, _firms_failure_cache.get("message", "NASA FIRMS unreachable")
+        else:
+            _firms_failure_cache = None
+
+    for attempt in range(2):  # at most one retry
+        try:
+            resp = requests.get(url, timeout=(FIRMS_CONNECT_TIMEOUT, FIRMS_READ_TIMEOUT))
+            if resp.status_code == 200:
+                _firms_failure_cache = None
+                return resp.text, None
+            elif resp.status_code in [401, 403]:
+                logger.warning(f"NASA FIRMS API authorization failure HTTP {resp.status_code}")
+                err_msg = "NASA FIRMS unreachable"
+                _firms_failure_cache = {"failed_at": now, "message": err_msg}
+                return None, err_msg
+            elif resp.status_code == 429:
+                logger.warning(f"NASA FIRMS API rate limit HTTP 429 (attempt {attempt + 1})")
+                if attempt == 0:
+                    time.sleep(2.0)
+                    continue
+                err_msg = "NASA FIRMS unreachable"
+                _firms_failure_cache = {"failed_at": now, "message": err_msg}
+                return None, err_msg
+            else:
+                logger.warning(f"NASA FIRMS API returned HTTP {resp.status_code} (attempt {attempt + 1})")
+                if attempt == 0 and resp.status_code >= 500:
+                    time.sleep(1.0)
+                    continue
+                err_msg = "NASA FIRMS unreachable"
+                _firms_failure_cache = {"failed_at": now, "message": err_msg}
+                return None, err_msg
+        except Exception as e:
+            # Critical security rule: log only exception class and host, NEVER the URL or str(e)
+            logger.warning(
+                f"NASA FIRMS request failed with {type(e).__name__} for host firms.modaps.eosdis.nasa.gov (attempt {attempt + 1})"
+            )
+            if attempt == 0:
+                time.sleep(1.0)
+                continue
+            err_msg = "NASA FIRMS unreachable"
+            _firms_failure_cache = {"failed_at": now, "message": err_msg}
+            return None, err_msg
+
+    err_msg = "NASA FIRMS unreachable"
+    _firms_failure_cache = {"failed_at": now, "message": err_msg}
+    return None, err_msg
+
+
 @app.get("/fires/recent", response_model=FiresResponse)
 def get_recent_fires(
     hours: int = Query(default=72, ge=1, le=168, description="Time window in hours (1-168)"),
 ):
-    """Proxy active fires from NASA FIRMS.
-    If FIRMS_MAP_KEY is missing, returns an honest empty list with status 'not_configured'.
+    """Proxy active fires from NASA FIRMS with polygon spatial filtering.
+    Keeps only detections within Uttarakhand's 13 district boundaries.
+    Never returns HTTP 500 on network, authorization, timeout, or parsing failures.
     """
     now_iso = datetime.now(timezone.utc).isoformat()
 
-    # Rule: If key is missing, return empty list with status 'not_configured' (never invent data)
+    # Rule: If key is missing, return honest empty list with status 'not_configured'
     if not FIRMS_MAP_KEY:
         return FiresResponse(
             model=model_service.best_model_name,
@@ -296,6 +409,7 @@ def get_recent_fires(
             hours=hours,
             count=0,
             bbox=BBOX,
+            message="NASA FIRMS key not configured in backend/.env",
             fires=[],
         )
 
@@ -303,10 +417,26 @@ def get_recent_fires(
     bbox_str = f"{BBOX[0]},{BBOX[1]},{BBOX[2]},{BBOX[3]}"
     url = f"{NASA_FIRMS_BASE_URL}/{FIRMS_MAP_KEY}/VIIRS_SNPP_NRT/{bbox_str}/{query_days}"
 
+    csv_text, error_msg = fetch_firms_csv_safe(url)
+    if csv_text is None:
+        return FiresResponse(
+            model=model_service.best_model_name,
+            weather_source="cached",
+            generated_at=now_iso,
+            status="error",
+            hours=hours,
+            count=0,
+            bbox=BBOX,
+            message=error_msg or "NASA FIRMS unreachable",
+            fires=[],
+        )
+
+    fires: List[FireDetection] = []
+    polygons = _get_district_polygons()
     try:
-        resp = requests.get(url, timeout=20)
-        if resp.status_code != 200:
-            logger.warning(f"NASA FIRMS API returned HTTP {resp.status_code}: {resp.text}")
+        reader = csv.DictReader(io.StringIO(csv_text))
+        if not reader.fieldnames or "latitude" not in reader.fieldnames or "longitude" not in reader.fieldnames:
+            logger.warning("NASA FIRMS returned non-CSV or corrupted response body.")
             return FiresResponse(
                 model=model_service.best_model_name,
                 weather_source="cached",
@@ -315,15 +445,28 @@ def get_recent_fires(
                 hours=hours,
                 count=0,
                 bbox=BBOX,
+                message="NASA FIRMS unreachable",
                 fires=[],
             )
-
-        fires: List[FireDetection] = []
-        reader = csv.DictReader(io.StringIO(resp.text))
         for row in reader:
             try:
                 lat = float(row.get("latitude", 0.0))
                 lon = float(row.get("longitude", 0.0))
+
+                # Spatial point-in-polygon filtering for 13 Uttarakhand districts
+                pt = Point(lon, lat)
+                matched_dist = None
+                is_mixed = False
+                for dist_name, prepared_poly, mixed_flag in polygons:
+                    if prepared_poly.contains(pt) or prepared_poly.intersects(pt):
+                        matched_dist = dist_name
+                        is_mixed = mixed_flag
+                        break
+
+                # Discard detections falling outside Uttarakhand's 13 districts
+                if not matched_dist:
+                    continue
+
                 bright_val = float(row["brightness"]) if row.get("brightness") else (float(row["bright_ti4"]) if row.get("bright_ti4") else None)
                 bright_ti4_val = float(row["bright_ti4"]) if row.get("bright_ti4") else bright_val
                 fires.append(
@@ -342,23 +485,14 @@ def get_recent_fires(
                         bright_ti4=bright_ti4_val,
                         frp=float(row["frp"]) if row.get("frp") else None,
                         daynight=row.get("daynight"),
+                        district=matched_dist,
+                        mixed_agricultural=is_mixed,
                     )
                 )
             except Exception:
                 continue
-
-        return FiresResponse(
-            model=model_service.best_model_name,
-            weather_source="cached",
-            generated_at=now_iso,
-            status="live",
-            hours=hours,
-            count=len(fires),
-            bbox=BBOX,
-            fires=fires,
-        )
     except Exception as e:
-        logger.error(f"Error querying NASA FIRMS API: {e}", exc_info=True)
+        logger.warning(f"CSV parse error for NASA FIRMS data: {type(e).__name__}")
         return FiresResponse(
             model=model_service.best_model_name,
             weather_source="cached",
@@ -367,8 +501,20 @@ def get_recent_fires(
             hours=hours,
             count=0,
             bbox=BBOX,
+            message="NASA FIRMS unreachable",
             fires=[],
         )
+
+    return FiresResponse(
+        model=model_service.best_model_name,
+        weather_source="cached",
+        generated_at=now_iso,
+        status="live",
+        hours=hours,
+        count=len(fires),
+        bbox=BBOX,
+        fires=fires,
+    )
 
 
 @app.get("/model/metrics", response_model=ModelMetricsResponse)

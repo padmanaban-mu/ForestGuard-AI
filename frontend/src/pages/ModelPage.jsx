@@ -145,8 +145,7 @@ export default function ModelPage() {
           </div>
           <div className="space-y-3 text-xs leading-5 text-slate-600 dark:text-slate-300">
             <p>
-              <strong className="text-slate-900 dark:text-white">Primary Selection Metric:</strong> {selection_criterion || 'Validation PR-AUC on held-out 2023 validation set'}.
-              PR-AUC was selected prior to model exploration because fire ignition days represent ~15–25% of observations (2024 test prevalence: {prevDisplay}).
+              <strong className="text-slate-900 dark:text-white">Primary Selection Metric:</strong> PR-AUC was the single pre-stated selection metric (see ml/reports/model_selection.md) (2024 held-out test fire prevalence: {prevDisplay}).
               Unlike ROC-AUC, PR-AUC does not reward true negatives from easy winter non-fire days.
             </p>
             <p>
@@ -372,7 +371,7 @@ export default function ModelPage() {
           )}
         </section>
 
-        {/* Scientific Boundary: 4 Honest Limits (E4) */}
+        {/* Scientific Boundary: 8 Honest Limits */}
         <section className="card p-4 sm:p-5">
           <div className="mb-4">
             <p className="eyebrow">Scientific boundary</p>
@@ -401,6 +400,45 @@ export default function ModelPage() {
               <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500" />
               <p>
                 <strong>Vegetation dryness proxy:</strong> Vegetation dryness is represented strictly by topsoil volumetric moisture (0–7 cm) and reference evapotranspiration (ET0). Satellite NDVI is not ingested.
+              </p>
+            </div>
+            <div className="flex items-start gap-2">
+              <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500" />
+              <p>
+                <strong>Single weather centroid per district:</strong> High-relief mountain districts (e.g., Uttarkashi, elevation ~5,023 m; Chamoli, elevation ~3,016 m) span immense vertical gradients from river valleys to glaciated peaks, but are summarized by a single representative centroid. Local terrain microclimates cannot be resolved at this spatial aggregation.
+              </p>
+            </div>
+            <div className="flex items-start gap-2">
+              <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500" />
+              <p>
+                <strong>Seasonal &amp; geographic dominance:</strong> The vast majority of forest fires occur during the pre-monsoon window (March–June). Predictions during monsoon or winter reflect sparse fire activity and wide variance.
+              </p>
+            </div>
+            <div className="flex items-start gap-2">
+              <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500" />
+              <p>
+                <strong>Single test year (2024):</strong> All reported test metrics reflect a single calendar test year (2024). Yearly variations in monsoon onset and pre-monsoon drought can shift absolute model performance.
+              </p>
+            </div>
+            <div className="flex items-start gap-2">
+              <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500" />
+              <p>
+                <strong>Tier calibration divergence:</strong> Calibration divergence between mean predicted probability and observed fire rate across operational tiers (computed at render time from 2024 test data):{' '}
+                {observedLevels.length ? (
+                  observedLevels.map((lvl, idx) => {
+                    const diff = (lvl.mean_predicted_prob != null && lvl.observed_fire_rate != null)
+                      ? ((lvl.mean_predicted_prob - lvl.observed_fire_rate) * 100).toFixed(1)
+                      : null;
+                    return (
+                      <span key={lvl.risk_level}>
+                        {lvl.risk_level} ({diff != null ? `${diff > 0 ? '+' : ''}${diff} pp` : 'unavailable'})
+                        {idx < observedLevels.length - 1 ? ', ' : '.'}
+                      </span>
+                    );
+                  })
+                ) : (
+                  'unavailable'
+                )}
               </p>
             </div>
           </div>

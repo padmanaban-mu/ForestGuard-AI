@@ -135,6 +135,8 @@ class FireDetection(BaseModel):
     bright_ti4: Optional[float] = None
     frp: Optional[float] = None
     daynight: Optional[str] = None
+    district: Optional[str] = Field(default=None, description="Uttarakhand district name if within state boundary")
+    mixed_agricultural: bool = Field(default=False, description="True for detections in Haridwar or Udham Singh Nagar")
 
 
 class FiresResponse(BaseEnvelope):
@@ -142,6 +144,7 @@ class FiresResponse(BaseEnvelope):
     hours: int
     count: int
     bbox: List[float]
+    message: Optional[str] = Field(default=None, description="Informational message or error summary")
     fires: List[FireDetection]
 
 

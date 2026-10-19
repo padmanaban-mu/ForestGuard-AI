@@ -161,7 +161,10 @@ Fetches the Open-Meteo operational forecast (with a 90-day lookback buffer) for 
 > - `lead_days`: computed as days from today in `Asia/Kolkata` (UTC+5:30) to `risk_for_date`. Weather for today = lead 0, risk for tomorrow = lead 1.
 > - **Lower confidence badge (`reliability_note`):** Entries with `lead_days > 2` (days 3–7) carry a reliability note documenting higher numerical forecast uncertainty beyond 48 hours.
 > - `mixed_agricultural`: boolean field (`true` for Haridwar and Udham Singh Nagar, `false` for the 11 forest districts).
-> - **Fail-Fast Resilience:** If network connection fails on the initial district, the backend aborts queries to the remaining 12 districts immediately and serves static cache in < 6 seconds. HTTP 429 rate limits trigger exponential backoff.
+> - **Concurrent Weather Fetching:** District forecasts are fetched concurrently with 6 worker threads (an unverified, conservative concurrency of 6 to respect potential upstream throttling while minimizing latency). Connect timeout: 5 s; read timeout: 15 s.
+> - **Single Retry for Failed Districts:** If any district requests fail or time out on the first pass, only the failed districts are retried once.
+> - **Strict All-Live or All-Cached Fallback:** If any district is still missing after retry, the service falls back completely to the pre-generated static cache. The API never returns a hybrid mix of live and cached districts.
+> - **In-Memory Live Recovery Cooldown:** When a live fetch fails, an in-memory marker pauses outbound live requests for 60 seconds (serving cached forecast) before attempting live fetching again. The marker is stored in server memory only (a server restart resets it immediately).
 
 **cURL:**
 ```bash
@@ -178,6 +181,9 @@ Invoke-RestMethod -Uri "http://localhost:8000/forecast?days=3" -Method Get | Con
 ### 5. `GET /fires/recent?hours=72`
 Proxies NASA FIRMS active fire detections for Uttarakhand (bbox `77.6, 28.7, 81.1, 31.5`).
 - If `FIRMS_MAP_KEY` is not set in `backend/.env`, returns an honest empty list with `"status": "not_configured"`.
+- **Polygon Containment Filtering:** Thermal detections are filtered via `shapely` point-in-polygon containment against the 13 district boundaries from `zones.geojson`. Detections outside Uttarakhand boundaries are discarded. Each detection includes its assigned `district` and `mixed_agricultural` flag.
+- **Robust Error Handling (Never 500):** Network timeouts, connection errors, HTTP errors (401/403/429/5xx), and CSV parse errors return HTTP 200 with `status="error"`, an empty fire list, and `message="NASA FIRMS unreachable"`. Failed lookups are cached for 5 minutes.
+- **Key Redaction Security:** The NASA FIRMS map key is strictly redacted from all server log records, exception messages, and client responses via a dedicated `logging.Filter`. Safe HTTP requests log only exception class and host name.
 
 **cURL:**
 ```bash
