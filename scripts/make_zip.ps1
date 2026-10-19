@@ -1,88 +1,78 @@
-# scripts/make_zip.ps1 — Package ForestGuard AI for teammates.
+# scripts/make_zip.ps1 - Package ForestGuard AI for teammates.
 #
 # Creates ../ForestGuard-AI-share.zip in the repo parent directory.
 # Then extracts it, runs check_setup.py, starts the server, fetches /health
-# and /, verifies no .env and no FIRMS key text, and reports the result.
+# and /, verifies no .env and no FIRMS key text, reports the result.
 #
 # Run from the repo root:
 #   .\scripts\make_zip.ps1
 
 $ErrorActionPreference = "Stop"
 
-# ── Paths ────────────────────────────────────────────────────────────────────
+# ---- Paths ------------------------------------------------------------------
 $RepoRoot  = (Resolve-Path "$PSScriptRoot\..").Path
 $RepoName  = Split-Path $RepoRoot -Leaf
 $ParentDir = Split-Path $RepoRoot -Parent
 $ZipPath   = Join-Path $ParentDir "ForestGuard-AI-share.zip"
-$TempDir   = Join-Path ([System.IO.Path]::GetTempPath()) "forestguard-zip-verify-$([System.Guid]::NewGuid().ToString('N').Substring(0,8))"
+$TempDir   = Join-Path ([System.IO.Path]::GetTempPath()) ("forestguard-zip-verify-" + [System.Guid]::NewGuid().ToString("N").Substring(0,8))
 
 Write-Host ""
-Write-Host "=== ForestGuard AI — make_zip ==="
+Write-Host "=== ForestGuard AI make_zip ==="
 Write-Host "Repo root : $RepoRoot"
 Write-Host "Output    : $ZipPath"
 Write-Host ""
 
-# ── Security check: backend/.env must not have real key values ───────────────
+# ---- Read FIRMS key from backend/.env (for security scan) -------------------
+$firmsKey = ""
 $envFile = Join-Path $RepoRoot "backend\.env"
 if (Test-Path $envFile) {
-    $envContent = Get-Content $envFile -Raw
-    if ($envContent -match "FIRMS_MAP_KEY=.+") {
-        # Extract the actual key value without printing it
-        $keyLine = ($envContent -split "`n") | Where-Object { $_ -match "^FIRMS_MAP_KEY=.+" }
-        if ($keyLine) {
-            $firmsKey = ($keyLine -split "=", 2)[1].Trim()
-        } else {
-            $firmsKey = ""
+    foreach ($line in (Get-Content $envFile)) {
+        if ($line -match "^FIRMS_MAP_KEY=(.+)$") {
+            $firmsKey = $Matches[1].Trim()
+            break
         }
-    } else {
-        $firmsKey = ""
     }
-} else {
-    $firmsKey = ""
 }
 
-# ── Exclusion patterns ───────────────────────────────────────────────────────
-# Items that must never appear in the zip.
-$ExcludeRelPatterns = @(
-    ".env"              # all .env files (but .env.example is allowed)
-    ".git"
-    ".agent"
-    "node_modules"
-    "frontend\dist"
-    ".venv"
-    "__pycache__"
-    ".pytest_cache"
+# ---- Exclusion patterns -----------------------------------------------------
+$ExcludePatterns = @(
+    ".git",
+    ".agent",
+    "node_modules",
+    "frontend\dist",
+    ".venv",
+    "__pycache__",
+    ".pytest_cache",
     "ml\data\raw"
 )
 
 function ShouldExclude($relativePath) {
     $rp = $relativePath.Replace("/", "\")
-    foreach ($pat in $ExcludeRelPatterns) {
-        # Match component-wise to avoid partial matches (e.g. .env inside .env.example)
-        $segments = $rp -split "\\"
-        # .env: only exclude files/dirs named exactly ".env" or "*.env" but NOT ".env.example"
-        if ($pat -eq ".env") {
-            foreach ($seg in $segments) {
-                if ($seg -match "^\.env$" -or ($seg -match "^\.env\." -and $seg -notmatch "example")) {
-                    return $true
-                }
-            }
-        } else {
-            $patSeg = $pat.Replace("/", "\")
-            if ($rp -eq $patSeg -or $rp.StartsWith("$patSeg\") -or $rp.Contains("\$patSeg\") -or $rp.EndsWith("\$patSeg")) {
-                return $true
-            }
+    $segments = $rp -split "\\"
+
+    # .env files: exclude segments named exactly ".env" or ".env.*" but NOT ".env.example"
+    foreach ($seg in $segments) {
+        if ($seg -eq ".env") { return $true }
+        if ($seg -match "^\.env\." -and $seg -ne ".env.example") { return $true }
+    }
+
+    foreach ($pat in $ExcludePatterns) {
+        $p = $pat.Replace("/", "\")
+        if ($rp -eq $p) { return $true }
+        if ($rp.StartsWith($p + "\")) { return $true }
+        foreach ($seg in $segments) {
+            if ($seg -eq $p) { return $true }
         }
     }
     return $false
 }
 
-# ── Collect files ─────────────────────────────────────────────────────────────
+# ---- Collect files ----------------------------------------------------------
 Write-Host "Collecting files ..."
-$MaxFileSizeBytes = 20MB
+$MaxFileSizeBytes = 20 * 1024 * 1024  # 20 MB
 
 $allFiles = Get-ChildItem -Path $RepoRoot -Recurse -File
-$included = @()
+$included = [System.Collections.Generic.List[System.IO.FileInfo]]::new()
 $excludedCount = 0
 
 foreach ($file in $allFiles) {
@@ -93,27 +83,27 @@ foreach ($file in $allFiles) {
         continue
     }
     if ($file.Length -gt $MaxFileSizeBytes) {
-        Write-Host "  SKIP (>20 MB): $rel  ($([Math]::Round($file.Length/1MB,1)) MB)"
+        Write-Host ("  SKIP (>20 MB): " + $rel + "  (" + [Math]::Round($file.Length/1MB,1) + " MB)")
         $excludedCount++
         continue
     }
-    $included += $file
+    $included.Add($file)
 }
 
-Write-Host "  Included : $($included.Count) files"
-Write-Host "  Excluded : $excludedCount items"
+Write-Host ("  Included : " + $included.Count + " files")
+Write-Host ("  Excluded : $excludedCount items")
 
-# ── Build the zip ─────────────────────────────────────────────────────────────
+# ---- Build the zip ----------------------------------------------------------
 if (Test-Path $ZipPath) { Remove-Item $ZipPath -Force }
 
 Write-Host ""
 Write-Host "Building zip ..."
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 
-$zip = [System.IO.Compression.ZipFile]::Open($ZipPath, 'Create')
+$zip = [System.IO.Compression.ZipFile]::Open($ZipPath, "Create")
 try {
     foreach ($file in $included) {
-        $entryName = "$RepoName\" + $file.FullName.Substring($RepoRoot.Length + 1)
+        $entryName = $RepoName + "\" + $file.FullName.Substring($RepoRoot.Length + 1)
         [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile(
             $zip, $file.FullName, $entryName,
             [System.IO.Compression.CompressionLevel]::Optimal
@@ -124,9 +114,9 @@ try {
 }
 
 $zipSizeMB = [Math]::Round((Get-Item $ZipPath).Length / 1MB, 2)
-Write-Host "Zip created: $ZipPath ($zipSizeMB MB)"
+Write-Host ("Zip created: " + $ZipPath + " (" + $zipSizeMB + " MB)")
 
-# ── Top-level entries ──────────────────────────────────────────────────────────
+# ---- Top-level entries ------------------------------------------------------
 Write-Host ""
 Write-Host "Top-level entries in zip:"
 $zipRead = [System.IO.Compression.ZipFile]::OpenRead($ZipPath)
@@ -134,39 +124,38 @@ try {
     $topLevel = $zipRead.Entries |
         ForEach-Object { ($_.FullName -replace "\\", "/").Split("/")[1] } |
         Sort-Object -Unique
-    $topLevel | ForEach-Object { Write-Host "  $_" }
+    foreach ($t in $topLevel) { Write-Host "  $t" }
 } finally {
     $zipRead.Dispose()
 }
 
-# ── Security scan: no .env, no FIRMS key ──────────────────────────────────────
+# ---- Security scan: no .env, no FIRMS key -----------------------------------
 Write-Host ""
 Write-Host "Security scan ..."
 $zipScan = [System.IO.Compression.ZipFile]::OpenRead($ZipPath)
-$envLeaks = @()
-$keyLeaks  = @()
+$envLeaks = [System.Collections.Generic.List[string]]::new()
+$keyLeaks  = [System.Collections.Generic.List[string]]::new()
+$textExts = @(".txt",".py",".js",".ts",".json",".md",".env",".cfg",".ini",".toml",".yaml",".yml",".sh",".bat",".ps1",".html",".css",".jsx",".tsx",".csv")
+
 try {
     foreach ($entry in $zipScan.Entries) {
-        $name = $entry.FullName -replace "\\", "/"
-        # Check entry name for .env files (excluding .env.example)
-        $leaf = Split-Path $name -Leaf
-        if ($leaf -match "^\.env$" -or ($leaf -match "^\.env\." -and $leaf -notmatch "example")) {
-            $envLeaks += $name
+        $ename = $entry.FullName -replace "\\","/"
+        $leaf  = Split-Path $ename -Leaf
+
+        if ($leaf -eq ".env" -or ($leaf -match "^\.env\." -and $leaf -ne ".env.example")) {
+            $envLeaks.Add($ename)
         }
-        # Scan text file contents for FIRMS key (if key is non-empty)
-        if ($firmsKey -and $entry.Length -lt 2MB -and $entry.Length -gt 0) {
-            $ext = [System.IO.Path]::GetExtension($name).ToLower()
-            $textExts = @(".txt",".py",".js",".ts",".json",".md",".env",".cfg",".ini",".toml",".yaml",".yml",".sh",".bat",".ps1",".html",".css",".jsx",".tsx",".csv")
+
+        if ($firmsKey -and $entry.Length -gt 0 -and $entry.Length -lt (2 * 1024 * 1024)) {
+            $ext = [System.IO.Path]::GetExtension($ename).ToLower()
             if ($textExts -contains $ext -or $ext -eq "") {
                 try {
-                    $stream = $entry.Open()
-                    $reader = New-Object System.IO.StreamReader($stream)
+                    $stream  = $entry.Open()
+                    $reader  = New-Object System.IO.StreamReader($stream)
                     $content = $reader.ReadToEnd()
                     $reader.Dispose()
                     $stream.Dispose()
-                    if ($content.Contains($firmsKey)) {
-                        $keyLeaks += $name
-                    }
+                    if ($content.Contains($firmsKey)) { $keyLeaks.Add($ename) }
                 } catch { }
             }
         }
@@ -179,7 +168,7 @@ if ($envLeaks.Count -eq 0) {
     Write-Host "  [OK]  No .env files in zip"
 } else {
     Write-Host "  [FAIL] .env files found in zip:"
-    $envLeaks | ForEach-Object { Write-Host "         $_" }
+    foreach ($e in $envLeaks) { Write-Host "         $e" }
 }
 
 if ($firmsKey) {
@@ -187,13 +176,13 @@ if ($firmsKey) {
         Write-Host "  [OK]  No FIRMS key text found in any zip entry"
     } else {
         Write-Host "  [FAIL] FIRMS key text found in:"
-        $keyLeaks | ForEach-Object { Write-Host "         $_" }
+        foreach ($k in $keyLeaks) { Write-Host "         $k" }
     }
 } else {
-    Write-Host "  [INFO] FIRMS key is empty — skipping content scan"
+    Write-Host "  [INFO] FIRMS key is empty - skipping content scan"
 }
 
-# ── Extract and smoke-test ─────────────────────────────────────────────────────
+# ---- Extract and smoke-test -------------------------------------------------
 Write-Host ""
 Write-Host "Smoke-testing extracted zip in temp folder ..."
 Write-Host "  Temp : $TempDir"
@@ -201,62 +190,55 @@ New-Item -ItemType Directory -Path $TempDir | Out-Null
 
 $serverProc = $null
 try {
-    # Extract
     [System.IO.Compression.ZipFile]::ExtractToDirectory($ZipPath, $TempDir)
     $extractedRepo = Join-Path $TempDir $RepoName
 
-    # run check_setup.py
     Write-Host ""
     Write-Host "  Running check_setup.py ..."
-    $checkOut = py -3.13 "$extractedRepo\scripts\check_setup.py" 2>&1
-    Write-Host ($checkOut | Out-String)
+    $checkOut = & py -3.13 "$extractedRepo\scripts\check_setup.py" 2>&1
+    foreach ($line in $checkOut) { Write-Host "  $line" }
 
-    # Start server in background
-    Write-Host "  Starting server ..."
-    $env:PYTHONPATH = $extractedRepo
-    $serverProc = Start-Process -FilePath "py" `
-        -ArgumentList "-3.13", "-m", "uvicorn", "backend.main:app", "--host", "127.0.0.1", "--port", "8001" `
+    Write-Host ""
+    Write-Host "  Starting server (port 8001) ..."
+    $savedPYTHONPATH = $env:PYTHONPATH
+    $env:PYTHONPATH  = $extractedRepo
+    $pythonExe = (& py -3.13 -c "import sys; print(sys.executable)").Trim()
+    $serverProc = Start-Process -FilePath $pythonExe `
+        -ArgumentList "-m","uvicorn","backend.main:app","--host","127.0.0.1","--port","8001" `
         -WorkingDirectory $extractedRepo `
         -PassThru -WindowStyle Hidden
-    Start-Sleep -Seconds 6
+    Start-Sleep -Seconds 7
 
-    # Fetch /health
-    Write-Host "  GET http://127.0.0.1:8001/health ..."
     try {
-        $healthResp = Invoke-WebRequest -Uri "http://127.0.0.1:8001/health" -TimeoutSec 10 -UseBasicParsing
-        $healthJson = $healthResp.Content | ConvertFrom-Json
-        Write-Host "  [OK]  /health → status=$($healthJson.status)  HTTP $($healthResp.StatusCode)"
-    } catch {
-        Write-Host "  [FAIL] /health failed: $_"
-    }
+        $h = Invoke-WebRequest -Uri "http://127.0.0.1:8001/health" -TimeoutSec 10 -UseBasicParsing
+        $hj = $h.Content | ConvertFrom-Json
+        Write-Host ("  [OK]  /health HTTP " + $h.StatusCode + "  status=" + $hj.status)
+    } catch { Write-Host "  [FAIL] /health: $_" }
 
-    # Fetch /
-    Write-Host "  GET http://127.0.0.1:8001/ ..."
     try {
-        $rootResp = Invoke-WebRequest -Uri "http://127.0.0.1:8001/" -TimeoutSec 10 -UseBasicParsing
-        if ($rootResp.Content -match "<html") {
-            Write-Host "  [OK]  / → HTML  HTTP $($rootResp.StatusCode)"
-        } else {
-            Write-Host "  [FAIL] / did not return HTML"
-        }
-    } catch {
-        Write-Host "  [FAIL] / failed: $_"
-    }
+        $r = Invoke-WebRequest -Uri "http://127.0.0.1:8001/" -TimeoutSec 10 -UseBasicParsing
+        $isHtml = $r.Content -match "<html"
+        Write-Host ("  [OK]  / HTTP " + $r.StatusCode + "  HTML=" + $isHtml)
+    } catch { Write-Host "  [FAIL] /: $_" }
+
+    $env:PYTHONPATH = $savedPYTHONPATH
 } finally {
-    # Stop server
     if ($serverProc -and -not $serverProc.HasExited) {
-        Write-Host "  Stopping server (PID $($serverProc.Id)) ..."
         Stop-Process -Id $serverProc.Id -Force -ErrorAction SilentlyContinue
+        Write-Host ("  Server stopped (PID " + $serverProc.Id + ")")
     }
-    # Clean up temp dir
-    Write-Host "  Cleaning up temp folder ..."
+    $portProcs = Get-NetTCPConnection -LocalPort 8001 -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess -Unique
+    if ($portProcs) {
+        foreach ($p in $portProcs) { Stop-Process -Id $p -Force -ErrorAction SilentlyContinue }
+    }
     Remove-Item -Path $TempDir -Recurse -Force -ErrorAction SilentlyContinue
+    Write-Host "  Temp folder removed."
 }
 
-# ── Final summary ──────────────────────────────────────────────────────────────
+# ---- Final summary ----------------------------------------------------------
 Write-Host ""
 Write-Host "=== Summary ==="
-Write-Host "  Zip size    : $zipSizeMB MB"
-Write-Host "  Files in zip: $($included.Count)"
-Write-Host "  Location    : $ZipPath"
+Write-Host ("  Zip size    : " + $zipSizeMB + " MB")
+Write-Host ("  Files in zip: " + $included.Count)
+Write-Host ("  Location    : " + $ZipPath)
 Write-Host ""
