@@ -1,7 +1,7 @@
 {
   "model": "Gradient Boosting",
   "weather_source": "cached",
-  "generated_at": "2026-10-16T21:43:41.915459+00:00",
+  "generated_at": "2026-10-19T20:26:12.677882+00:00",
   "status": "cached",
   "days": 7,
   "count": 13,
@@ -9,6 +9,7 @@
     {
       "district": "Almora",
       "caveat": null,
+      "mixed_agricultural": false,
       "centroid": [
         29.6952,
         79.489
@@ -16,116 +17,137 @@
       "elevation": 1489.0,
       "forecast": [
         {
-          "weather_date": "2026-10-17",
-          "risk_for_date": "2026-10-18",
-          "probability": 0.039,
-          "risk_level": "Low",
-          "key_inputs": {
-            "temp_max": 22.5,
-            "humidity_mean": 63.0,
-            "wind_speed_max": 11.6,
-            "rain_sum": 0.0,
-            "soil_moisture_mean": 0.428,
-            "days_since_rain": 2.0,
-            "vpd_proxy": 1.01
-          }
-        },
-        {
-          "weather_date": "2026-10-18",
-          "risk_for_date": "2026-10-19",
-          "probability": 0.0498,
-          "risk_level": "Low",
-          "key_inputs": {
-            "temp_max": 23.8,
-            "humidity_mean": 63.0,
-            "wind_speed_max": 11.4,
-            "rain_sum": 0.0,
-            "soil_moisture_mean": 0.419,
-            "days_since_rain": 3.0,
-            "vpd_proxy": 1.09
-          }
-        },
-        {
-          "weather_date": "2026-10-19",
-          "risk_for_date": "2026-10-20",
-          "probability": 0.0484,
-          "risk_level": "Low",
-          "key_inputs": {
-            "temp_max": 24.1,
-            "humidity_mean": 56.0,
-            "wind_speed_max": 10.9,
-            "rain_sum": 0.0,
-            "soil_moisture_mean": 0.411,
-            "days_since_rain": 4.0,
-            "vpd_proxy": 1.32
-          }
-        },
-        {
           "weather_date": "2026-10-20",
           "risk_for_date": "2026-10-21",
-          "probability": 0.0524,
+          "lead_days": 1,
+          "probability": 0.0478,
           "risk_level": "Low",
           "key_inputs": {
-            "temp_max": 24.5,
-            "humidity_mean": 61.0,
-            "wind_speed_max": 11.5,
+            "temp_max": 23.6,
+            "humidity_mean": 69.0,
+            "wind_speed_max": 11.8,
             "rain_sum": 0.0,
-            "soil_moisture_mean": 0.402,
+            "soil_moisture_mean": 0.407,
             "days_since_rain": 5.0,
-            "vpd_proxy": 1.2
-          }
+            "vpd_proxy": 0.9
+          },
+          "reliability_note": null,
+          "expired": false
         },
         {
           "weather_date": "2026-10-21",
           "risk_for_date": "2026-10-22",
-          "probability": 0.058,
+          "lead_days": 2,
+          "probability": 0.0543,
           "risk_level": "Low",
           "key_inputs": {
-            "temp_max": 24.1,
-            "humidity_mean": 71.0,
-            "wind_speed_max": 9.9,
+            "temp_max": 23.5,
+            "humidity_mean": 69.0,
+            "wind_speed_max": 10.7,
             "rain_sum": 0.0,
-            "soil_moisture_mean": 0.395,
+            "soil_moisture_mean": 0.399,
             "days_since_rain": 6.0,
-            "vpd_proxy": 0.87
-          }
+            "vpd_proxy": 0.9
+          },
+          "reliability_note": null,
+          "expired": false
         },
         {
           "weather_date": "2026-10-22",
           "risk_for_date": "2026-10-23",
-          "probability": 0.064,
+          "lead_days": 3,
+          "probability": 0.0633,
           "risk_level": "Low",
           "key_inputs": {
-            "temp_max": 24.0,
-            "humidity_mean": 70.0,
-            "wind_speed_max": 10.4,
+            "temp_max": 23.9,
+            "humidity_mean": 66.0,
+            "wind_speed_max": 11.8,
             "rain_sum": 0.0,
-            "soil_moisture_mean": 0.389,
+            "soil_moisture_mean": 0.393,
             "days_since_rain": 7.0,
-            "vpd_proxy": 0.9
-          }
+            "vpd_proxy": 1.01
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
         },
         {
           "weather_date": "2026-10-23",
           "risk_for_date": "2026-10-24",
-          "probability": 0.0466,
+          "lead_days": 4,
+          "probability": 0.0626,
           "risk_level": "Low",
           "key_inputs": {
-            "temp_max": 23.1,
-            "humidity_mean": 78.0,
-            "wind_speed_max": 6.8,
+            "temp_max": 23.7,
+            "humidity_mean": 70.0,
+            "wind_speed_max": 11.7,
             "rain_sum": 0.0,
-            "soil_moisture_mean": 0.383,
+            "soil_moisture_mean": 0.386,
             "days_since_rain": 8.0,
-            "vpd_proxy": 0.62
-          }
+            "vpd_proxy": 0.88
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
+        },
+        {
+          "weather_date": "2026-10-24",
+          "risk_for_date": "2026-10-25",
+          "lead_days": 5,
+          "probability": 0.0612,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 22.6,
+            "humidity_mean": 74.0,
+            "wind_speed_max": 10.5,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.38,
+            "days_since_rain": 9.0,
+            "vpd_proxy": 0.71
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
+        },
+        {
+          "weather_date": "2026-10-25",
+          "risk_for_date": "2026-10-26",
+          "lead_days": 6,
+          "probability": 0.0616,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 22.7,
+            "humidity_mean": 66.0,
+            "wind_speed_max": 12.3,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.374,
+            "days_since_rain": 10.0,
+            "vpd_proxy": 0.94
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
+        },
+        {
+          "weather_date": "2026-10-26",
+          "risk_for_date": "2026-10-27",
+          "lead_days": 7,
+          "probability": 0.0751,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 24.4,
+            "humidity_mean": 56.0,
+            "wind_speed_max": 5.1,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.368,
+            "days_since_rain": 11.0,
+            "vpd_proxy": 1.34
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
         }
-      ],
-      "mixed_agricultural": false
+      ]
     },
     {
       "district": "Bageshwar",
       "caveat": null,
+      "mixed_agricultural": false,
       "centroid": [
         29.997,
         79.846
@@ -133,116 +155,137 @@
       "elevation": 2448.0,
       "forecast": [
         {
-          "weather_date": "2026-10-17",
-          "risk_for_date": "2026-10-18",
-          "probability": 0.0429,
-          "risk_level": "Low",
-          "key_inputs": {
-            "temp_max": 16.1,
-            "humidity_mean": 48.0,
-            "wind_speed_max": 8.5,
-            "rain_sum": 2.6,
-            "soil_moisture_mean": 0.38,
-            "days_since_rain": 0.0,
-            "vpd_proxy": 0.95
-          }
-        },
-        {
-          "weather_date": "2026-10-18",
-          "risk_for_date": "2026-10-19",
-          "probability": 0.0576,
-          "risk_level": "Low",
-          "key_inputs": {
-            "temp_max": 16.9,
-            "humidity_mean": 42.0,
-            "wind_speed_max": 8.3,
-            "rain_sum": 0.0,
-            "soil_moisture_mean": 0.373,
-            "days_since_rain": 1.0,
-            "vpd_proxy": 1.12
-          }
-        },
-        {
-          "weather_date": "2026-10-19",
-          "risk_for_date": "2026-10-20",
-          "probability": 0.0569,
-          "risk_level": "Low",
-          "key_inputs": {
-            "temp_max": 17.4,
-            "humidity_mean": 42.0,
-            "wind_speed_max": 7.8,
-            "rain_sum": 0.0,
-            "soil_moisture_mean": 0.364,
-            "days_since_rain": 2.0,
-            "vpd_proxy": 1.15
-          }
-        },
-        {
           "weather_date": "2026-10-20",
           "risk_for_date": "2026-10-21",
+          "lead_days": 1,
           "probability": 0.0644,
           "risk_level": "Low",
           "key_inputs": {
-            "temp_max": 17.7,
+            "temp_max": 17.2,
             "humidity_mean": 42.0,
-            "wind_speed_max": 7.1,
-            "rain_sum": 0.0,
-            "soil_moisture_mean": 0.357,
+            "wind_speed_max": 6.7,
+            "rain_sum": 0.3,
+            "soil_moisture_mean": 0.356,
             "days_since_rain": 3.0,
-            "vpd_proxy": 1.18
-          }
+            "vpd_proxy": 1.14
+          },
+          "reliability_note": null,
+          "expired": false
         },
         {
           "weather_date": "2026-10-21",
           "risk_for_date": "2026-10-22",
-          "probability": 0.0629,
+          "lead_days": 2,
+          "probability": 0.063,
           "risk_level": "Low",
           "key_inputs": {
-            "temp_max": 17.4,
-            "humidity_mean": 45.0,
-            "wind_speed_max": 7.4,
-            "rain_sum": 0.3,
+            "temp_max": 17.0,
+            "humidity_mean": 46.0,
+            "wind_speed_max": 8.1,
+            "rain_sum": 0.1,
             "soil_moisture_mean": 0.352,
             "days_since_rain": 4.0,
-            "vpd_proxy": 1.09
-          }
+            "vpd_proxy": 1.05
+          },
+          "reliability_note": null,
+          "expired": false
         },
         {
           "weather_date": "2026-10-22",
           "risk_for_date": "2026-10-23",
-          "probability": 0.0627,
+          "lead_days": 3,
+          "probability": 0.0698,
           "risk_level": "Low",
           "key_inputs": {
-            "temp_max": 17.3,
-            "humidity_mean": 41.0,
-            "wind_speed_max": 7.0,
-            "rain_sum": 0.9,
-            "soil_moisture_mean": 0.35,
+            "temp_max": 17.1,
+            "humidity_mean": 40.0,
+            "wind_speed_max": 8.8,
+            "rain_sum": 0.1,
+            "soil_moisture_mean": 0.347,
             "days_since_rain": 5.0,
             "vpd_proxy": 1.17
-          }
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
         },
         {
           "weather_date": "2026-10-23",
           "risk_for_date": "2026-10-24",
+          "lead_days": 4,
+          "probability": 0.0616,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 16.3,
+            "humidity_mean": 39.0,
+            "wind_speed_max": 6.7,
+            "rain_sum": 1.4,
+            "soil_moisture_mean": 0.346,
+            "days_since_rain": 0.0,
+            "vpd_proxy": 1.13
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
+        },
+        {
+          "weather_date": "2026-10-24",
+          "risk_for_date": "2026-10-25",
+          "lead_days": 5,
+          "probability": 0.064,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 15.5,
+            "humidity_mean": 42.0,
+            "wind_speed_max": 7.8,
+            "rain_sum": 0.3,
+            "soil_moisture_mean": 0.342,
+            "days_since_rain": 1.0,
+            "vpd_proxy": 1.02
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
+        },
+        {
+          "weather_date": "2026-10-25",
+          "risk_for_date": "2026-10-26",
+          "lead_days": 6,
           "probability": 0.0602,
           "risk_level": "Low",
           "key_inputs": {
-            "temp_max": 16.4,
-            "humidity_mean": 46.0,
-            "wind_speed_max": 7.7,
-            "rain_sum": 1.2,
-            "soil_moisture_mean": 0.348,
-            "days_since_rain": 0.0,
-            "vpd_proxy": 1.01
-          }
+            "temp_max": 15.6,
+            "humidity_mean": 40.0,
+            "wind_speed_max": 7.2,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.337,
+            "days_since_rain": 2.0,
+            "vpd_proxy": 1.06
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
+        },
+        {
+          "weather_date": "2026-10-26",
+          "risk_for_date": "2026-10-27",
+          "lead_days": 7,
+          "probability": 0.1089,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 17.3,
+            "humidity_mean": 37.0,
+            "wind_speed_max": 7.3,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.331,
+            "days_since_rain": 3.0,
+            "vpd_proxy": 1.24
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
         }
-      ],
-      "mixed_agricultural": false
+      ]
     },
     {
       "district": "Chamoli",
       "caveat": null,
+      "mixed_agricultural": false,
       "centroid": [
         30.4985,
         79.5583
@@ -250,116 +293,137 @@
       "elevation": 3016.0,
       "forecast": [
         {
-          "weather_date": "2026-10-17",
-          "risk_for_date": "2026-10-18",
-          "probability": 0.062,
+          "weather_date": "2026-10-20",
+          "risk_for_date": "2026-10-21",
+          "lead_days": 1,
+          "probability": 0.0757,
           "risk_level": "Low",
           "key_inputs": {
-            "temp_max": 12.1,
-            "humidity_mean": 46.0,
-            "wind_speed_max": 8.3,
-            "rain_sum": 0.4,
-            "soil_moisture_mean": 0.38,
-            "days_since_rain": 2.0,
-            "vpd_proxy": 0.76
-          }
-        },
-        {
-          "weather_date": "2026-10-18",
-          "risk_for_date": "2026-10-19",
-          "probability": 0.0975,
-          "risk_level": "Low",
-          "key_inputs": {
-            "temp_max": 14.4,
-            "humidity_mean": 31.0,
-            "wind_speed_max": 8.1,
-            "rain_sum": 0.0,
-            "soil_moisture_mean": 0.371,
-            "days_since_rain": 3.0,
-            "vpd_proxy": 1.13
-          }
-        },
-        {
-          "weather_date": "2026-10-19",
-          "risk_for_date": "2026-10-20",
-          "probability": 0.0805,
-          "risk_level": "Low",
-          "key_inputs": {
-            "temp_max": 14.8,
+            "temp_max": 14.5,
             "humidity_mean": 36.0,
             "wind_speed_max": 7.5,
             "rain_sum": 0.0,
-            "soil_moisture_mean": 0.364,
-            "days_since_rain": 4.0,
-            "vpd_proxy": 1.08
-          }
-        },
-        {
-          "weather_date": "2026-10-20",
-          "risk_for_date": "2026-10-21",
-          "probability": 0.0717,
-          "risk_level": "Low",
-          "key_inputs": {
-            "temp_max": 15.1,
-            "humidity_mean": 38.0,
-            "wind_speed_max": 8.2,
-            "rain_sum": 0.0,
-            "soil_moisture_mean": 0.357,
+            "soil_moisture_mean": 0.359,
             "days_since_rain": 5.0,
             "vpd_proxy": 1.06
-          }
+          },
+          "reliability_note": null,
+          "expired": false
         },
         {
           "weather_date": "2026-10-21",
           "risk_for_date": "2026-10-22",
-          "probability": 0.0707,
+          "lead_days": 2,
+          "probability": 0.0689,
           "risk_level": "Low",
           "key_inputs": {
-            "temp_max": 14.8,
-            "humidity_mean": 41.0,
+            "temp_max": 14.3,
+            "humidity_mean": 40.0,
             "wind_speed_max": 8.1,
-            "rain_sum": 0.0,
-            "soil_moisture_mean": 0.351,
+            "rain_sum": 0.1,
+            "soil_moisture_mean": 0.354,
             "days_since_rain": 6.0,
-            "vpd_proxy": 0.99
-          }
+            "vpd_proxy": 0.98
+          },
+          "reliability_note": null,
+          "expired": false
         },
         {
           "weather_date": "2026-10-22",
           "risk_for_date": "2026-10-23",
-          "probability": 0.0724,
+          "lead_days": 3,
+          "probability": 0.0765,
           "risk_level": "Low",
           "key_inputs": {
-            "temp_max": 14.3,
+            "temp_max": 14.0,
             "humidity_mean": 38.0,
-            "wind_speed_max": 8.2,
-            "rain_sum": 0.3,
-            "soil_moisture_mean": 0.347,
+            "wind_speed_max": 8.5,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.348,
             "days_since_rain": 7.0,
-            "vpd_proxy": 1.01
-          }
+            "vpd_proxy": 0.99
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
         },
         {
           "weather_date": "2026-10-23",
           "risk_for_date": "2026-10-24",
-          "probability": 0.0725,
+          "lead_days": 4,
+          "probability": 0.0801,
           "risk_level": "Low",
           "key_inputs": {
-            "temp_max": 12.8,
-            "humidity_mean": 41.0,
-            "wind_speed_max": 7.4,
-            "rain_sum": 0.0,
-            "soil_moisture_mean": 0.343,
+            "temp_max": 13.2,
+            "humidity_mean": 36.0,
+            "wind_speed_max": 7.8,
+            "rain_sum": 0.4,
+            "soil_moisture_mean": 0.344,
             "days_since_rain": 8.0,
-            "vpd_proxy": 0.87
-          }
+            "vpd_proxy": 0.97
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
+        },
+        {
+          "weather_date": "2026-10-24",
+          "risk_for_date": "2026-10-25",
+          "lead_days": 5,
+          "probability": 0.0842,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 12.6,
+            "humidity_mean": 45.0,
+            "wind_speed_max": 7.4,
+            "rain_sum": 2.7,
+            "soil_moisture_mean": 0.348,
+            "days_since_rain": 0.0,
+            "vpd_proxy": 0.8
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
+        },
+        {
+          "weather_date": "2026-10-25",
+          "risk_for_date": "2026-10-26",
+          "lead_days": 6,
+          "probability": 0.0828,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 12.2,
+            "humidity_mean": 42.0,
+            "wind_speed_max": 8.3,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.348,
+            "days_since_rain": 1.0,
+            "vpd_proxy": 0.82
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
+        },
+        {
+          "weather_date": "2026-10-26",
+          "risk_for_date": "2026-10-27",
+          "lead_days": 7,
+          "probability": 0.1865,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 14.0,
+            "humidity_mean": 43.0,
+            "wind_speed_max": 8.3,
+            "rain_sum": 0.6,
+            "soil_moisture_mean": 0.341,
+            "days_since_rain": 2.0,
+            "vpd_proxy": 0.91
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
         }
-      ],
-      "mixed_agricultural": false
+      ]
     },
     {
       "district": "Champawat",
       "caveat": null,
+      "mixed_agricultural": false,
       "centroid": [
         29.3031,
         80.0617
@@ -367,116 +431,137 @@
       "elevation": 1449.0,
       "forecast": [
         {
-          "weather_date": "2026-10-17",
-          "risk_for_date": "2026-10-18",
-          "probability": 0.0129,
+          "weather_date": "2026-10-20",
+          "risk_for_date": "2026-10-21",
+          "lead_days": 1,
+          "probability": 0.0195,
           "risk_level": "Low",
           "key_inputs": {
             "temp_max": 20.8,
-            "humidity_mean": 64.0,
-            "wind_speed_max": 7.3,
-            "rain_sum": 1.2,
-            "soil_moisture_mean": 0.466,
-            "days_since_rain": 0.0,
-            "vpd_proxy": 0.88
-          }
-        },
-        {
-          "weather_date": "2026-10-18",
-          "risk_for_date": "2026-10-19",
-          "probability": 0.0197,
-          "risk_level": "Low",
-          "key_inputs": {
-            "temp_max": 21.8,
-            "humidity_mean": 65.0,
-            "wind_speed_max": 7.4,
+            "humidity_mean": 72.0,
+            "wind_speed_max": 7.8,
             "rain_sum": 0.0,
-            "soil_moisture_mean": 0.456,
-            "days_since_rain": 1.0,
-            "vpd_proxy": 0.91
-          }
-        },
-        {
-          "weather_date": "2026-10-19",
-          "risk_for_date": "2026-10-20",
-          "probability": 0.0192,
-          "risk_level": "Low",
-          "key_inputs": {
-            "temp_max": 22.6,
-            "humidity_mean": 66.0,
-            "wind_speed_max": 7.0,
-            "rain_sum": 0.0,
-            "soil_moisture_mean": 0.445,
-            "days_since_rain": 2.0,
-            "vpd_proxy": 0.93
-          }
-        },
-        {
-          "weather_date": "2026-10-20",
-          "risk_for_date": "2026-10-21",
-          "probability": 0.0177,
-          "risk_level": "Low",
-          "key_inputs": {
-            "temp_max": 21.5,
-            "humidity_mean": 74.0,
-            "wind_speed_max": 8.1,
-            "rain_sum": 0.0,
-            "soil_moisture_mean": 0.436,
-            "days_since_rain": 3.0,
-            "vpd_proxy": 0.67
-          }
+            "soil_moisture_mean": 0.428,
+            "days_since_rain": 5.0,
+            "vpd_proxy": 0.69
+          },
+          "reliability_note": null,
+          "expired": false
         },
         {
           "weather_date": "2026-10-21",
           "risk_for_date": "2026-10-22",
-          "probability": 0.0193,
+          "lead_days": 2,
+          "probability": 0.0202,
           "risk_level": "Low",
           "key_inputs": {
-            "temp_max": 21.1,
-            "humidity_mean": 66.0,
-            "wind_speed_max": 8.2,
+            "temp_max": 20.9,
+            "humidity_mean": 61.0,
+            "wind_speed_max": 8.9,
             "rain_sum": 0.0,
-            "soil_moisture_mean": 0.429,
-            "days_since_rain": 4.0,
-            "vpd_proxy": 0.85
-          }
+            "soil_moisture_mean": 0.421,
+            "days_since_rain": 6.0,
+            "vpd_proxy": 0.96
+          },
+          "reliability_note": null,
+          "expired": false
         },
         {
           "weather_date": "2026-10-22",
           "risk_for_date": "2026-10-23",
-          "probability": 0.0146,
+          "lead_days": 3,
+          "probability": 0.017,
           "risk_level": "Low",
           "key_inputs": {
-            "temp_max": 21.8,
-            "humidity_mean": 61.0,
-            "wind_speed_max": 8.1,
+            "temp_max": 22.0,
+            "humidity_mean": 55.0,
+            "wind_speed_max": 7.9,
             "rain_sum": 0.0,
-            "soil_moisture_mean": 0.421,
-            "days_since_rain": 5.0,
-            "vpd_proxy": 1.02
-          }
+            "soil_moisture_mean": 0.414,
+            "days_since_rain": 7.0,
+            "vpd_proxy": 1.19
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
         },
         {
           "weather_date": "2026-10-23",
           "risk_for_date": "2026-10-24",
-          "probability": 0.0179,
+          "lead_days": 4,
+          "probability": 0.0194,
           "risk_level": "Low",
           "key_inputs": {
-            "temp_max": 20.8,
-            "humidity_mean": 65.0,
-            "wind_speed_max": 7.3,
+            "temp_max": 21.3,
+            "humidity_mean": 67.0,
+            "wind_speed_max": 7.4,
             "rain_sum": 0.0,
-            "soil_moisture_mean": 0.415,
-            "days_since_rain": 6.0,
-            "vpd_proxy": 0.86
-          }
+            "soil_moisture_mean": 0.407,
+            "days_since_rain": 8.0,
+            "vpd_proxy": 0.84
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
+        },
+        {
+          "weather_date": "2026-10-24",
+          "risk_for_date": "2026-10-25",
+          "lead_days": 5,
+          "probability": 0.0189,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 20.9,
+            "humidity_mean": 67.0,
+            "wind_speed_max": 7.4,
+            "rain_sum": 1.8,
+            "soil_moisture_mean": 0.407,
+            "days_since_rain": 0.0,
+            "vpd_proxy": 0.82
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
+        },
+        {
+          "weather_date": "2026-10-25",
+          "risk_for_date": "2026-10-26",
+          "lead_days": 6,
+          "probability": 0.0199,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 21.8,
+            "humidity_mean": 53.0,
+            "wind_speed_max": 5.8,
+            "rain_sum": 0.9,
+            "soil_moisture_mean": 0.408,
+            "days_since_rain": 1.0,
+            "vpd_proxy": 1.23
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
+        },
+        {
+          "weather_date": "2026-10-26",
+          "risk_for_date": "2026-10-27",
+          "lead_days": 7,
+          "probability": 0.0542,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 22.2,
+            "humidity_mean": 50.0,
+            "wind_speed_max": 6.4,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.403,
+            "days_since_rain": 2.0,
+            "vpd_proxy": 1.34
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
         }
-      ],
-      "mixed_agricultural": false
+      ]
     },
     {
       "district": "Dehradun",
       "caveat": null,
+      "mixed_agricultural": false,
       "centroid": [
         30.4686,
         77.9598
@@ -484,116 +569,137 @@
       "elevation": 2040.0,
       "forecast": [
         {
-          "weather_date": "2026-10-17",
-          "risk_for_date": "2026-10-18",
-          "probability": 0.0511,
-          "risk_level": "Low",
-          "key_inputs": {
-            "temp_max": 16.9,
-            "humidity_mean": 66.0,
-            "wind_speed_max": 10.1,
-            "rain_sum": 0.0,
-            "soil_moisture_mean": 0.438,
-            "days_since_rain": 2.0,
-            "vpd_proxy": 0.66
-          }
-        },
-        {
-          "weather_date": "2026-10-18",
-          "risk_for_date": "2026-10-19",
-          "probability": 0.0694,
-          "risk_level": "Low",
-          "key_inputs": {
-            "temp_max": 18.1,
-            "humidity_mean": 60.0,
-            "wind_speed_max": 8.9,
-            "rain_sum": 0.0,
-            "soil_moisture_mean": 0.421,
-            "days_since_rain": 3.0,
-            "vpd_proxy": 0.83
-          }
-        },
-        {
-          "weather_date": "2026-10-19",
-          "risk_for_date": "2026-10-20",
-          "probability": 0.0776,
-          "risk_level": "Low",
-          "key_inputs": {
-            "temp_max": 18.2,
-            "humidity_mean": 63.0,
-            "wind_speed_max": 8.2,
-            "rain_sum": 0.0,
-            "soil_moisture_mean": 0.408,
-            "days_since_rain": 4.0,
-            "vpd_proxy": 0.77
-          }
-        },
-        {
           "weather_date": "2026-10-20",
           "risk_for_date": "2026-10-21",
-          "probability": 0.0669,
+          "lead_days": 1,
+          "probability": 0.0727,
           "risk_level": "Low",
           "key_inputs": {
-            "temp_max": 18.3,
-            "humidity_mean": 65.0,
-            "wind_speed_max": 8.0,
+            "temp_max": 17.6,
+            "humidity_mean": 68.0,
+            "wind_speed_max": 9.3,
             "rain_sum": 0.0,
-            "soil_moisture_mean": 0.397,
+            "soil_moisture_mean": 0.411,
             "days_since_rain": 5.0,
-            "vpd_proxy": 0.74
-          }
+            "vpd_proxy": 0.64
+          },
+          "reliability_note": null,
+          "expired": false
         },
         {
           "weather_date": "2026-10-21",
           "risk_for_date": "2026-10-22",
-          "probability": 0.0843,
+          "lead_days": 2,
+          "probability": 0.0826,
           "risk_level": "Low",
           "key_inputs": {
-            "temp_max": 18.1,
-            "humidity_mean": 74.0,
-            "wind_speed_max": 8.7,
+            "temp_max": 17.8,
+            "humidity_mean": 75.0,
+            "wind_speed_max": 8.8,
             "rain_sum": 0.0,
-            "soil_moisture_mean": 0.388,
+            "soil_moisture_mean": 0.401,
             "days_since_rain": 6.0,
-            "vpd_proxy": 0.54
-          }
+            "vpd_proxy": 0.51
+          },
+          "reliability_note": null,
+          "expired": false
         },
         {
           "weather_date": "2026-10-22",
           "risk_for_date": "2026-10-23",
-          "probability": 0.0895,
+          "lead_days": 3,
+          "probability": 0.087,
           "risk_level": "Low",
           "key_inputs": {
-            "temp_max": 18.2,
-            "humidity_mean": 69.0,
-            "wind_speed_max": 8.8,
+            "temp_max": 18.5,
+            "humidity_mean": 67.0,
+            "wind_speed_max": 10.0,
             "rain_sum": 0.0,
-            "soil_moisture_mean": 0.379,
+            "soil_moisture_mean": 0.393,
             "days_since_rain": 7.0,
-            "vpd_proxy": 0.65
-          }
+            "vpd_proxy": 0.7
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
         },
         {
           "weather_date": "2026-10-23",
           "risk_for_date": "2026-10-24",
-          "probability": 0.0852,
+          "lead_days": 4,
+          "probability": 0.0796,
           "risk_level": "Low",
           "key_inputs": {
-            "temp_max": 17.7,
-            "humidity_mean": 71.0,
-            "wind_speed_max": 7.5,
+            "temp_max": 17.9,
+            "humidity_mean": 63.0,
+            "wind_speed_max": 9.2,
             "rain_sum": 0.0,
-            "soil_moisture_mean": 0.371,
+            "soil_moisture_mean": 0.384,
             "days_since_rain": 8.0,
-            "vpd_proxy": 0.59
-          }
+            "vpd_proxy": 0.76
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
+        },
+        {
+          "weather_date": "2026-10-24",
+          "risk_for_date": "2026-10-25",
+          "lead_days": 5,
+          "probability": 0.1005,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 17.6,
+            "humidity_mean": 69.0,
+            "wind_speed_max": 11.8,
+            "rain_sum": 0.3,
+            "soil_moisture_mean": 0.376,
+            "days_since_rain": 9.0,
+            "vpd_proxy": 0.62
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
+        },
+        {
+          "weather_date": "2026-10-25",
+          "risk_for_date": "2026-10-26",
+          "lead_days": 6,
+          "probability": 0.0928,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 17.4,
+            "humidity_mean": 65.0,
+            "wind_speed_max": 9.7,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.37,
+            "days_since_rain": 10.0,
+            "vpd_proxy": 0.7
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
+        },
+        {
+          "weather_date": "2026-10-26",
+          "risk_for_date": "2026-10-27",
+          "lead_days": 7,
+          "probability": 0.0984,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 18.2,
+            "humidity_mean": 59.0,
+            "wind_speed_max": 9.3,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.361,
+            "days_since_rain": 11.0,
+            "vpd_proxy": 0.86
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
         }
-      ],
-      "mixed_agricultural": false
+      ]
     },
     {
       "district": "Haridwar",
       "caveat": "Mixed agricultural lowlands with seasonal post-harvest crop residue burning; thermal detections lack a forest canopy mask.",
+      "mixed_agricultural": true,
       "centroid": [
         29.8773,
         77.9887
@@ -601,116 +707,137 @@
       "elevation": 256.0,
       "forecast": [
         {
-          "weather_date": "2026-10-17",
-          "risk_for_date": "2026-10-18",
-          "probability": 0.2456,
-          "risk_level": "Low",
-          "key_inputs": {
-            "temp_max": 28.1,
-            "humidity_mean": 73.0,
-            "wind_speed_max": 8.8,
-            "rain_sum": 0.0,
-            "soil_moisture_mean": 0.323,
-            "days_since_rain": 2.0,
-            "vpd_proxy": 1.03
-          }
-        },
-        {
-          "weather_date": "2026-10-18",
-          "risk_for_date": "2026-10-19",
-          "probability": 0.2745,
-          "risk_level": "Medium",
-          "key_inputs": {
-            "temp_max": 27.7,
-            "humidity_mean": 74.0,
-            "wind_speed_max": 9.6,
-            "rain_sum": 0.0,
-            "soil_moisture_mean": 0.309,
-            "days_since_rain": 3.0,
-            "vpd_proxy": 0.97
-          }
-        },
-        {
-          "weather_date": "2026-10-19",
-          "risk_for_date": "2026-10-20",
-          "probability": 0.3597,
-          "risk_level": "Medium",
-          "key_inputs": {
-            "temp_max": 27.6,
-            "humidity_mean": 77.0,
-            "wind_speed_max": 11.4,
-            "rain_sum": 0.0,
-            "soil_moisture_mean": 0.299,
-            "days_since_rain": 4.0,
-            "vpd_proxy": 0.85
-          }
-        },
-        {
           "weather_date": "2026-10-20",
           "risk_for_date": "2026-10-21",
-          "probability": 0.3248,
-          "risk_level": "Medium",
+          "lead_days": 1,
+          "probability": 0.1956,
+          "risk_level": "Low",
           "key_inputs": {
-            "temp_max": 27.5,
-            "humidity_mean": 82.0,
-            "wind_speed_max": 7.1,
+            "temp_max": 27.0,
+            "humidity_mean": 81.0,
+            "wind_speed_max": 5.2,
             "rain_sum": 0.0,
-            "soil_moisture_mean": 0.291,
+            "soil_moisture_mean": 0.289,
             "days_since_rain": 5.0,
-            "vpd_proxy": 0.66
-          }
+            "vpd_proxy": 0.68
+          },
+          "reliability_note": null,
+          "expired": false
         },
         {
           "weather_date": "2026-10-21",
           "risk_for_date": "2026-10-22",
-          "probability": 0.2681,
-          "risk_level": "Medium",
+          "lead_days": 2,
+          "probability": 0.1956,
+          "risk_level": "Low",
           "key_inputs": {
-            "temp_max": 27.5,
+            "temp_max": 27.4,
             "humidity_mean": 84.0,
-            "wind_speed_max": 6.6,
+            "wind_speed_max": 5.2,
             "rain_sum": 0.0,
-            "soil_moisture_mean": 0.284,
+            "soil_moisture_mean": 0.282,
             "days_since_rain": 6.0,
-            "vpd_proxy": 0.59
-          }
+            "vpd_proxy": 0.58
+          },
+          "reliability_note": null,
+          "expired": false
         },
         {
           "weather_date": "2026-10-22",
           "risk_for_date": "2026-10-23",
-          "probability": 0.4155,
+          "lead_days": 3,
+          "probability": 0.359,
           "risk_level": "Medium",
           "key_inputs": {
-            "temp_max": 27.9,
+            "temp_max": 27.8,
             "humidity_mean": 82.0,
-            "wind_speed_max": 7.8,
+            "wind_speed_max": 7.6,
             "rain_sum": 0.0,
-            "soil_moisture_mean": 0.278,
+            "soil_moisture_mean": 0.276,
             "days_since_rain": 7.0,
-            "vpd_proxy": 0.68
-          }
+            "vpd_proxy": 0.67
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
         },
         {
           "weather_date": "2026-10-23",
           "risk_for_date": "2026-10-24",
-          "probability": 0.2207,
+          "lead_days": 4,
+          "probability": 0.2626,
+          "risk_level": "Medium",
+          "key_inputs": {
+            "temp_max": 27.8,
+            "humidity_mean": 83.0,
+            "wind_speed_max": 6.4,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.27,
+            "days_since_rain": 8.0,
+            "vpd_proxy": 0.64
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
+        },
+        {
+          "weather_date": "2026-10-24",
+          "risk_for_date": "2026-10-25",
+          "lead_days": 5,
+          "probability": 0.2428,
           "risk_level": "Low",
           "key_inputs": {
-            "temp_max": 27.9,
-            "humidity_mean": 82.0,
-            "wind_speed_max": 4.9,
+            "temp_max": 27.0,
+            "humidity_mean": 80.0,
+            "wind_speed_max": 6.0,
             "rain_sum": 0.0,
-            "soil_moisture_mean": 0.272,
-            "days_since_rain": 8.0,
-            "vpd_proxy": 0.68
-          }
+            "soil_moisture_mean": 0.265,
+            "days_since_rain": 9.0,
+            "vpd_proxy": 0.71
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
+        },
+        {
+          "weather_date": "2026-10-25",
+          "risk_for_date": "2026-10-26",
+          "lead_days": 6,
+          "probability": 0.3514,
+          "risk_level": "Medium",
+          "key_inputs": {
+            "temp_max": 28.3,
+            "humidity_mean": 70.0,
+            "wind_speed_max": 8.6,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.259,
+            "days_since_rain": 10.0,
+            "vpd_proxy": 1.15
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
+        },
+        {
+          "weather_date": "2026-10-26",
+          "risk_for_date": "2026-10-27",
+          "lead_days": 7,
+          "probability": 0.2699,
+          "risk_level": "Medium",
+          "key_inputs": {
+            "temp_max": 27.4,
+            "humidity_mean": 70.0,
+            "wind_speed_max": 6.6,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.253,
+            "days_since_rain": 11.0,
+            "vpd_proxy": 1.09
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
         }
-      ],
-      "mixed_agricultural": true
+      ]
     },
     {
       "district": "Nainital",
       "caveat": null,
+      "mixed_agricultural": false,
       "centroid": [
         29.3168,
         79.455
@@ -718,116 +845,137 @@
       "elevation": 1271.0,
       "forecast": [
         {
-          "weather_date": "2026-10-17",
-          "risk_for_date": "2026-10-18",
-          "probability": 0.0808,
-          "risk_level": "Low",
-          "key_inputs": {
-            "temp_max": 21.5,
-            "humidity_mean": 65.0,
-            "wind_speed_max": 7.0,
-            "rain_sum": 1.6,
-            "soil_moisture_mean": 0.436,
-            "days_since_rain": 0.0,
-            "vpd_proxy": 0.9
-          }
-        },
-        {
-          "weather_date": "2026-10-18",
-          "risk_for_date": "2026-10-19",
-          "probability": 0.2561,
-          "risk_level": "Medium",
-          "key_inputs": {
-            "temp_max": 22.2,
-            "humidity_mean": 69.0,
-            "wind_speed_max": 7.6,
-            "rain_sum": 0.0,
-            "soil_moisture_mean": 0.432,
-            "days_since_rain": 1.0,
-            "vpd_proxy": 0.83
-          }
-        },
-        {
-          "weather_date": "2026-10-19",
-          "risk_for_date": "2026-10-20",
-          "probability": 0.2106,
-          "risk_level": "Low",
-          "key_inputs": {
-            "temp_max": 22.9,
-            "humidity_mean": 61.0,
-            "wind_speed_max": 7.8,
-            "rain_sum": 0.0,
-            "soil_moisture_mean": 0.421,
-            "days_since_rain": 2.0,
-            "vpd_proxy": 1.09
-          }
-        },
-        {
           "weather_date": "2026-10-20",
           "risk_for_date": "2026-10-21",
-          "probability": 0.2891,
-          "risk_level": "Medium",
+          "lead_days": 1,
+          "probability": 0.1605,
+          "risk_level": "Low",
           "key_inputs": {
-            "temp_max": 22.0,
-            "humidity_mean": 72.0,
-            "wind_speed_max": 7.8,
+            "temp_max": 21.7,
+            "humidity_mean": 76.0,
+            "wind_speed_max": 8.0,
             "rain_sum": 0.0,
             "soil_moisture_mean": 0.412,
-            "days_since_rain": 3.0,
-            "vpd_proxy": 0.74
-          }
+            "days_since_rain": 9.0,
+            "vpd_proxy": 0.62
+          },
+          "reliability_note": null,
+          "expired": false
         },
         {
           "weather_date": "2026-10-21",
           "risk_for_date": "2026-10-22",
-          "probability": 0.1793,
+          "lead_days": 2,
+          "probability": 0.2498,
           "risk_level": "Low",
           "key_inputs": {
             "temp_max": 21.7,
-            "humidity_mean": 81.0,
+            "humidity_mean": 71.0,
             "wind_speed_max": 8.0,
             "rain_sum": 0.0,
-            "soil_moisture_mean": 0.405,
-            "days_since_rain": 4.0,
-            "vpd_proxy": 0.49
-          }
+            "soil_moisture_mean": 0.403,
+            "days_since_rain": 10.0,
+            "vpd_proxy": 0.75
+          },
+          "reliability_note": null,
+          "expired": false
         },
         {
           "weather_date": "2026-10-22",
           "risk_for_date": "2026-10-23",
-          "probability": 0.1831,
+          "lead_days": 3,
+          "probability": 0.1816,
           "risk_level": "Low",
           "key_inputs": {
-            "temp_max": 22.1,
-            "humidity_mean": 82.0,
-            "wind_speed_max": 8.1,
+            "temp_max": 22.3,
+            "humidity_mean": 76.0,
+            "wind_speed_max": 8.2,
             "rain_sum": 0.0,
-            "soil_moisture_mean": 0.398,
-            "days_since_rain": 5.0,
-            "vpd_proxy": 0.48
-          }
+            "soil_moisture_mean": 0.395,
+            "days_since_rain": 11.0,
+            "vpd_proxy": 0.65
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
         },
         {
           "weather_date": "2026-10-23",
           "risk_for_date": "2026-10-24",
-          "probability": 0.1735,
+          "lead_days": 4,
+          "probability": 0.1762,
           "risk_level": "Low",
           "key_inputs": {
-            "temp_max": 21.4,
-            "humidity_mean": 86.0,
-            "wind_speed_max": 7.4,
-            "rain_sum": 0.6,
-            "soil_moisture_mean": 0.393,
-            "days_since_rain": 6.0,
-            "vpd_proxy": 0.36
-          }
+            "temp_max": 21.8,
+            "humidity_mean": 75.0,
+            "wind_speed_max": 7.3,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.387,
+            "days_since_rain": 12.0,
+            "vpd_proxy": 0.65
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
+        },
+        {
+          "weather_date": "2026-10-24",
+          "risk_for_date": "2026-10-25",
+          "lead_days": 5,
+          "probability": 0.2567,
+          "risk_level": "Medium",
+          "key_inputs": {
+            "temp_max": 21.3,
+            "humidity_mean": 73.0,
+            "wind_speed_max": 8.0,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.38,
+            "days_since_rain": 13.0,
+            "vpd_proxy": 0.68
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
+        },
+        {
+          "weather_date": "2026-10-25",
+          "risk_for_date": "2026-10-26",
+          "lead_days": 6,
+          "probability": 0.2182,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 22.4,
+            "humidity_mean": 52.0,
+            "wind_speed_max": 9.9,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.373,
+            "days_since_rain": 14.0,
+            "vpd_proxy": 1.3
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
+        },
+        {
+          "weather_date": "2026-10-26",
+          "risk_for_date": "2026-10-27",
+          "lead_days": 7,
+          "probability": 0.0915,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 22.9,
+            "humidity_mean": 63.0,
+            "wind_speed_max": 6.2,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.364,
+            "days_since_rain": 15.0,
+            "vpd_proxy": 1.03
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
         }
-      ],
-      "mixed_agricultural": false
+      ]
     },
     {
       "district": "Pauri Garhwal",
       "caveat": null,
+      "mixed_agricultural": false,
       "centroid": [
         29.8987,
         78.7567
@@ -835,116 +983,137 @@
       "elevation": 909.0,
       "forecast": [
         {
-          "weather_date": "2026-10-17",
-          "risk_for_date": "2026-10-18",
-          "probability": 0.0549,
-          "risk_level": "Low",
-          "key_inputs": {
-            "temp_max": 25.6,
-            "humidity_mean": 64.0,
-            "wind_speed_max": 7.4,
-            "rain_sum": 0.0,
-            "soil_moisture_mean": 0.425,
-            "days_since_rain": 2.0,
-            "vpd_proxy": 1.18
-          }
-        },
-        {
-          "weather_date": "2026-10-18",
-          "risk_for_date": "2026-10-19",
-          "probability": 0.0513,
-          "risk_level": "Low",
-          "key_inputs": {
-            "temp_max": 26.6,
-            "humidity_mean": 65.0,
-            "wind_speed_max": 6.4,
-            "rain_sum": 0.0,
-            "soil_moisture_mean": 0.41,
-            "days_since_rain": 3.0,
-            "vpd_proxy": 1.22
-          }
-        },
-        {
-          "weather_date": "2026-10-19",
-          "risk_for_date": "2026-10-20",
-          "probability": 0.0706,
-          "risk_level": "Low",
-          "key_inputs": {
-            "temp_max": 27.1,
-            "humidity_mean": 65.0,
-            "wind_speed_max": 6.0,
-            "rain_sum": 0.0,
-            "soil_moisture_mean": 0.397,
-            "days_since_rain": 4.0,
-            "vpd_proxy": 1.25
-          }
-        },
-        {
           "weather_date": "2026-10-20",
           "risk_for_date": "2026-10-21",
-          "probability": 0.0857,
+          "lead_days": 1,
+          "probability": 0.0521,
           "risk_level": "Low",
           "key_inputs": {
-            "temp_max": 26.8,
-            "humidity_mean": 67.0,
-            "wind_speed_max": 6.2,
+            "temp_max": 26.2,
+            "humidity_mean": 71.0,
+            "wind_speed_max": 6.3,
             "rain_sum": 0.0,
-            "soil_moisture_mean": 0.386,
+            "soil_moisture_mean": 0.375,
             "days_since_rain": 5.0,
-            "vpd_proxy": 1.16
-          }
+            "vpd_proxy": 0.99
+          },
+          "reliability_note": null,
+          "expired": false
         },
         {
           "weather_date": "2026-10-21",
           "risk_for_date": "2026-10-22",
-          "probability": 0.075,
+          "lead_days": 2,
+          "probability": 0.083,
           "risk_level": "Low",
           "key_inputs": {
-            "temp_max": 26.3,
-            "humidity_mean": 74.0,
-            "wind_speed_max": 6.8,
+            "temp_max": 25.7,
+            "humidity_mean": 75.0,
+            "wind_speed_max": 7.2,
             "rain_sum": 0.0,
-            "soil_moisture_mean": 0.377,
+            "soil_moisture_mean": 0.366,
             "days_since_rain": 6.0,
-            "vpd_proxy": 0.89
-          }
+            "vpd_proxy": 0.83
+          },
+          "reliability_note": null,
+          "expired": false
         },
         {
           "weather_date": "2026-10-22",
           "risk_for_date": "2026-10-23",
-          "probability": 0.0886,
+          "lead_days": 3,
+          "probability": 0.1251,
           "risk_level": "Low",
           "key_inputs": {
-            "temp_max": 26.6,
-            "humidity_mean": 80.0,
-            "wind_speed_max": 6.7,
+            "temp_max": 26.8,
+            "humidity_mean": 76.0,
+            "wind_speed_max": 6.9,
             "rain_sum": 0.0,
-            "soil_moisture_mean": 0.368,
+            "soil_moisture_mean": 0.357,
             "days_since_rain": 7.0,
-            "vpd_proxy": 0.7
-          }
+            "vpd_proxy": 0.85
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
         },
         {
           "weather_date": "2026-10-23",
           "risk_for_date": "2026-10-24",
-          "probability": 0.0882,
+          "lead_days": 4,
+          "probability": 0.0793,
           "risk_level": "Low",
           "key_inputs": {
-            "temp_max": 26.0,
-            "humidity_mean": 78.0,
+            "temp_max": 26.6,
+            "humidity_mean": 66.0,
+            "wind_speed_max": 6.4,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.348,
+            "days_since_rain": 8.0,
+            "vpd_proxy": 1.18
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
+        },
+        {
+          "weather_date": "2026-10-24",
+          "risk_for_date": "2026-10-25",
+          "lead_days": 5,
+          "probability": 0.0958,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 25.7,
+            "humidity_mean": 65.0,
+            "wind_speed_max": 7.2,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.34,
+            "days_since_rain": 9.0,
+            "vpd_proxy": 1.16
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
+        },
+        {
+          "weather_date": "2026-10-25",
+          "risk_for_date": "2026-10-26",
+          "lead_days": 6,
+          "probability": 0.108,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 25.8,
+            "humidity_mean": 59.0,
             "wind_speed_max": 6.9,
             "rain_sum": 0.0,
-            "soil_moisture_mean": 0.36,
-            "days_since_rain": 8.0,
-            "vpd_proxy": 0.74
-          }
+            "soil_moisture_mean": 0.332,
+            "days_since_rain": 10.0,
+            "vpd_proxy": 1.36
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
+        },
+        {
+          "weather_date": "2026-10-26",
+          "risk_for_date": "2026-10-27",
+          "lead_days": 7,
+          "probability": 0.1372,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 26.8,
+            "humidity_mean": 66.0,
+            "wind_speed_max": 5.0,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.325,
+            "days_since_rain": 11.0,
+            "vpd_proxy": 1.2
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
         }
-      ],
-      "mixed_agricultural": false
+      ]
     },
     {
       "district": "Pithoragarh",
       "caveat": null,
+      "mixed_agricultural": false,
       "centroid": [
         30.1119,
         80.3336
@@ -952,116 +1121,137 @@
       "elevation": 2322.0,
       "forecast": [
         {
-          "weather_date": "2026-10-17",
-          "risk_for_date": "2026-10-18",
-          "probability": 0.0306,
-          "risk_level": "Low",
-          "key_inputs": {
-            "temp_max": 16.2,
-            "humidity_mean": 58.0,
-            "wind_speed_max": 6.3,
-            "rain_sum": 2.1,
-            "soil_moisture_mean": 0.372,
-            "days_since_rain": 0.0,
-            "vpd_proxy": 0.77
-          }
-        },
-        {
-          "weather_date": "2026-10-18",
-          "risk_for_date": "2026-10-19",
-          "probability": 0.0571,
-          "risk_level": "Low",
-          "key_inputs": {
-            "temp_max": 17.3,
-            "humidity_mean": 49.0,
-            "wind_speed_max": 6.5,
-            "rain_sum": 0.0,
-            "soil_moisture_mean": 0.366,
-            "days_since_rain": 1.0,
-            "vpd_proxy": 1.01
-          }
-        },
-        {
-          "weather_date": "2026-10-19",
-          "risk_for_date": "2026-10-20",
-          "probability": 0.08,
-          "risk_level": "Low",
-          "key_inputs": {
-            "temp_max": 18.0,
-            "humidity_mean": 53.0,
-            "wind_speed_max": 6.5,
-            "rain_sum": 0.0,
-            "soil_moisture_mean": 0.358,
-            "days_since_rain": 2.0,
-            "vpd_proxy": 0.97
-          }
-        },
-        {
           "weather_date": "2026-10-20",
           "risk_for_date": "2026-10-21",
-          "probability": 0.082,
+          "lead_days": 1,
+          "probability": 0.0683,
           "risk_level": "Low",
           "key_inputs": {
-            "temp_max": 18.5,
-            "humidity_mean": 51.0,
-            "wind_speed_max": 6.6,
-            "rain_sum": 0.0,
-            "soil_moisture_mean": 0.351,
+            "temp_max": 17.7,
+            "humidity_mean": 53.0,
+            "wind_speed_max": 5.8,
+            "rain_sum": 0.7,
+            "soil_moisture_mean": 0.362,
             "days_since_rain": 3.0,
-            "vpd_proxy": 1.04
-          }
+            "vpd_proxy": 0.95
+          },
+          "reliability_note": null,
+          "expired": false
         },
         {
           "weather_date": "2026-10-21",
           "risk_for_date": "2026-10-22",
-          "probability": 0.0859,
+          "lead_days": 2,
+          "probability": 0.0843,
           "risk_level": "Low",
           "key_inputs": {
-            "temp_max": 18.1,
-            "humidity_mean": 53.0,
-            "wind_speed_max": 6.3,
+            "temp_max": 17.7,
+            "humidity_mean": 50.0,
+            "wind_speed_max": 6.1,
             "rain_sum": 0.0,
-            "soil_moisture_mean": 0.346,
+            "soil_moisture_mean": 0.356,
             "days_since_rain": 4.0,
-            "vpd_proxy": 0.98
-          }
+            "vpd_proxy": 1.01
+          },
+          "reliability_note": null,
+          "expired": false
         },
         {
           "weather_date": "2026-10-22",
           "risk_for_date": "2026-10-23",
-          "probability": 0.0778,
+          "lead_days": 3,
+          "probability": 0.0952,
           "risk_level": "Low",
           "key_inputs": {
-            "temp_max": 17.9,
-            "humidity_mean": 50.0,
-            "wind_speed_max": 6.3,
-            "rain_sum": 0.0,
-            "soil_moisture_mean": 0.342,
+            "temp_max": 17.5,
+            "humidity_mean": 41.0,
+            "wind_speed_max": 6.2,
+            "rain_sum": 0.2,
+            "soil_moisture_mean": 0.351,
             "days_since_rain": 5.0,
-            "vpd_proxy": 1.02
-          }
+            "vpd_proxy": 1.18
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
         },
         {
           "weather_date": "2026-10-23",
           "risk_for_date": "2026-10-24",
-          "probability": 0.0842,
+          "lead_days": 4,
+          "probability": 0.0798,
           "risk_level": "Low",
           "key_inputs": {
-            "temp_max": 16.6,
-            "humidity_mean": 50.0,
-            "wind_speed_max": 5.5,
+            "temp_max": 16.5,
+            "humidity_mean": 41.0,
+            "wind_speed_max": 6.8,
             "rain_sum": 0.0,
-            "soil_moisture_mean": 0.339,
+            "soil_moisture_mean": 0.346,
             "days_since_rain": 6.0,
+            "vpd_proxy": 1.11
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
+        },
+        {
+          "weather_date": "2026-10-24",
+          "risk_for_date": "2026-10-25",
+          "lead_days": 5,
+          "probability": 0.0804,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 15.6,
+            "humidity_mean": 47.0,
+            "wind_speed_max": 5.8,
+            "rain_sum": 0.3,
+            "soil_moisture_mean": 0.341,
+            "days_since_rain": 7.0,
             "vpd_proxy": 0.94
-          }
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
+        },
+        {
+          "weather_date": "2026-10-25",
+          "risk_for_date": "2026-10-26",
+          "lead_days": 6,
+          "probability": 0.0822,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 16.2,
+            "humidity_mean": 47.0,
+            "wind_speed_max": 5.7,
+            "rain_sum": 0.3,
+            "soil_moisture_mean": 0.337,
+            "days_since_rain": 8.0,
+            "vpd_proxy": 0.98
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
+        },
+        {
+          "weather_date": "2026-10-26",
+          "risk_for_date": "2026-10-27",
+          "lead_days": 7,
+          "probability": 0.0898,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 17.7,
+            "humidity_mean": 46.0,
+            "wind_speed_max": 5.6,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.333,
+            "days_since_rain": 9.0,
+            "vpd_proxy": 1.09
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
         }
-      ],
-      "mixed_agricultural": false
+      ]
     },
     {
       "district": "Rudraprayag",
       "caveat": null,
+      "mixed_agricultural": false,
       "centroid": [
         30.5948,
         79.0985
@@ -1069,116 +1259,137 @@
       "elevation": 2262.0,
       "forecast": [
         {
-          "weather_date": "2026-10-17",
-          "risk_for_date": "2026-10-18",
-          "probability": 0.026,
-          "risk_level": "Low",
-          "key_inputs": {
-            "temp_max": 17.1,
-            "humidity_mean": 43.0,
-            "wind_speed_max": 7.3,
-            "rain_sum": 0.5,
-            "soil_moisture_mean": 0.342,
-            "days_since_rain": 2.0,
-            "vpd_proxy": 1.11
-          }
-        },
-        {
-          "weather_date": "2026-10-18",
-          "risk_for_date": "2026-10-19",
-          "probability": 0.0496,
-          "risk_level": "Low",
-          "key_inputs": {
-            "temp_max": 18.9,
-            "humidity_mean": 38.0,
-            "wind_speed_max": 8.5,
-            "rain_sum": 0.0,
-            "soil_moisture_mean": 0.336,
-            "days_since_rain": 3.0,
-            "vpd_proxy": 1.35
-          }
-        },
-        {
-          "weather_date": "2026-10-19",
-          "risk_for_date": "2026-10-20",
-          "probability": 0.0808,
-          "risk_level": "Low",
-          "key_inputs": {
-            "temp_max": 19.5,
-            "humidity_mean": 38.0,
-            "wind_speed_max": 9.2,
-            "rain_sum": 0.0,
-            "soil_moisture_mean": 0.329,
-            "days_since_rain": 4.0,
-            "vpd_proxy": 1.41
-          }
-        },
-        {
           "weather_date": "2026-10-20",
           "risk_for_date": "2026-10-21",
-          "probability": 0.1017,
+          "lead_days": 1,
+          "probability": 0.0868,
           "risk_level": "Low",
           "key_inputs": {
-            "temp_max": 19.8,
-            "humidity_mean": 39.0,
-            "wind_speed_max": 9.0,
+            "temp_max": 19.2,
+            "humidity_mean": 36.0,
+            "wind_speed_max": 8.1,
             "rain_sum": 0.0,
-            "soil_moisture_mean": 0.324,
+            "soil_moisture_mean": 0.325,
             "days_since_rain": 5.0,
-            "vpd_proxy": 1.41
-          }
+            "vpd_proxy": 1.42
+          },
+          "reliability_note": null,
+          "expired": false
         },
         {
           "weather_date": "2026-10-21",
           "risk_for_date": "2026-10-22",
-          "probability": 0.0987,
+          "lead_days": 2,
+          "probability": 0.0923,
           "risk_level": "Low",
           "key_inputs": {
-            "temp_max": 19.5,
-            "humidity_mean": 38.0,
-            "wind_speed_max": 8.8,
-            "rain_sum": 0.0,
-            "soil_moisture_mean": 0.319,
+            "temp_max": 18.9,
+            "humidity_mean": 36.0,
+            "wind_speed_max": 8.7,
+            "rain_sum": 0.2,
+            "soil_moisture_mean": 0.32,
             "days_since_rain": 6.0,
-            "vpd_proxy": 1.41
-          }
+            "vpd_proxy": 1.4
+          },
+          "reliability_note": null,
+          "expired": false
         },
         {
           "weather_date": "2026-10-22",
           "risk_for_date": "2026-10-23",
-          "probability": 0.0698,
+          "lead_days": 3,
+          "probability": 0.0765,
           "risk_level": "Low",
           "key_inputs": {
-            "temp_max": 19.3,
-            "humidity_mean": 38.0,
-            "wind_speed_max": 9.0,
-            "rain_sum": 0.3,
-            "soil_moisture_mean": 0.314,
+            "temp_max": 18.9,
+            "humidity_mean": 36.0,
+            "wind_speed_max": 8.6,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.315,
             "days_since_rain": 7.0,
-            "vpd_proxy": 1.39
-          }
+            "vpd_proxy": 1.4
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
         },
         {
           "weather_date": "2026-10-23",
           "risk_for_date": "2026-10-24",
-          "probability": 0.0366,
+          "lead_days": 4,
+          "probability": 0.0711,
           "risk_level": "Low",
           "key_inputs": {
             "temp_max": 18.0,
-            "humidity_mean": 50.0,
-            "wind_speed_max": 9.5,
-            "rain_sum": 4.8,
-            "soil_moisture_mean": 0.321,
-            "days_since_rain": 0.0,
-            "vpd_proxy": 1.03
-          }
+            "humidity_mean": 35.0,
+            "wind_speed_max": 8.1,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.311,
+            "days_since_rain": 8.0,
+            "vpd_proxy": 1.34
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
+        },
+        {
+          "weather_date": "2026-10-24",
+          "risk_for_date": "2026-10-25",
+          "lead_days": 5,
+          "probability": 0.0873,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 17.1,
+            "humidity_mean": 37.0,
+            "wind_speed_max": 8.4,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.306,
+            "days_since_rain": 9.0,
+            "vpd_proxy": 1.23
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
+        },
+        {
+          "weather_date": "2026-10-25",
+          "risk_for_date": "2026-10-26",
+          "lead_days": 6,
+          "probability": 0.0796,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 17.2,
+            "humidity_mean": 40.0,
+            "wind_speed_max": 8.6,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.303,
+            "days_since_rain": 10.0,
+            "vpd_proxy": 1.18
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
+        },
+        {
+          "weather_date": "2026-10-26",
+          "risk_for_date": "2026-10-27",
+          "lead_days": 7,
+          "probability": 0.2033,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 18.7,
+            "humidity_mean": 36.0,
+            "wind_speed_max": 8.7,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.299,
+            "days_since_rain": 11.0,
+            "vpd_proxy": 1.38
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
         }
-      ],
-      "mixed_agricultural": false
+      ]
     },
     {
       "district": "Tehri Garhwal",
       "caveat": null,
+      "mixed_agricultural": false,
       "centroid": [
         30.4429,
         78.5698
@@ -1186,116 +1397,137 @@
       "elevation": 1368.0,
       "forecast": [
         {
-          "weather_date": "2026-10-17",
-          "risk_for_date": "2026-10-18",
-          "probability": 0.0438,
-          "risk_level": "Low",
-          "key_inputs": {
-            "temp_max": 22.7,
-            "humidity_mean": 62.0,
-            "wind_speed_max": 7.0,
-            "rain_sum": 0.0,
-            "soil_moisture_mean": 0.394,
-            "days_since_rain": 2.0,
-            "vpd_proxy": 1.05
-          }
-        },
-        {
-          "weather_date": "2026-10-18",
-          "risk_for_date": "2026-10-19",
-          "probability": 0.0386,
-          "risk_level": "Low",
-          "key_inputs": {
-            "temp_max": 23.9,
-            "humidity_mean": 60.0,
-            "wind_speed_max": 6.4,
-            "rain_sum": 0.0,
-            "soil_moisture_mean": 0.382,
-            "days_since_rain": 3.0,
-            "vpd_proxy": 1.19
-          }
-        },
-        {
-          "weather_date": "2026-10-19",
-          "risk_for_date": "2026-10-20",
-          "probability": 0.0425,
-          "risk_level": "Low",
-          "key_inputs": {
-            "temp_max": 24.4,
-            "humidity_mean": 61.0,
-            "wind_speed_max": 6.7,
-            "rain_sum": 0.0,
-            "soil_moisture_mean": 0.373,
-            "days_since_rain": 4.0,
-            "vpd_proxy": 1.19
-          }
-        },
-        {
           "weather_date": "2026-10-20",
           "risk_for_date": "2026-10-21",
-          "probability": 0.0656,
+          "lead_days": 1,
+          "probability": 0.0537,
           "risk_level": "Low",
           "key_inputs": {
-            "temp_max": 24.7,
+            "temp_max": 24.2,
             "humidity_mean": 63.0,
-            "wind_speed_max": 7.4,
+            "wind_speed_max": 7.3,
             "rain_sum": 0.0,
-            "soil_moisture_mean": 0.363,
+            "soil_moisture_mean": 0.37,
             "days_since_rain": 5.0,
-            "vpd_proxy": 1.15
-          }
+            "vpd_proxy": 1.12
+          },
+          "reliability_note": null,
+          "expired": false
         },
         {
           "weather_date": "2026-10-21",
           "risk_for_date": "2026-10-22",
-          "probability": 0.0409,
+          "lead_days": 2,
+          "probability": 0.0424,
           "risk_level": "Low",
           "key_inputs": {
-            "temp_max": 24.4,
-            "humidity_mean": 63.0,
-            "wind_speed_max": 6.5,
+            "temp_max": 24.1,
+            "humidity_mean": 64.0,
+            "wind_speed_max": 6.1,
             "rain_sum": 0.0,
-            "soil_moisture_mean": 0.355,
+            "soil_moisture_mean": 0.362,
             "days_since_rain": 6.0,
-            "vpd_proxy": 1.13
-          }
+            "vpd_proxy": 1.08
+          },
+          "reliability_note": null,
+          "expired": false
         },
         {
           "weather_date": "2026-10-22",
           "risk_for_date": "2026-10-23",
-          "probability": 0.0429,
+          "lead_days": 3,
+          "probability": 0.0417,
           "risk_level": "Low",
           "key_inputs": {
             "temp_max": 24.4,
-            "humidity_mean": 61.0,
-            "wind_speed_max": 6.2,
+            "humidity_mean": 58.0,
+            "wind_speed_max": 5.9,
             "rain_sum": 0.0,
-            "soil_moisture_mean": 0.348,
+            "soil_moisture_mean": 0.354,
             "days_since_rain": 7.0,
-            "vpd_proxy": 1.19
-          }
+            "vpd_proxy": 1.28
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
         },
         {
           "weather_date": "2026-10-23",
           "risk_for_date": "2026-10-24",
-          "probability": 0.0373,
+          "lead_days": 4,
+          "probability": 0.0429,
           "risk_level": "Low",
           "key_inputs": {
-            "temp_max": 23.6,
-            "humidity_mean": 63.0,
-            "wind_speed_max": 4.2,
+            "temp_max": 23.9,
+            "humidity_mean": 60.0,
+            "wind_speed_max": 6.3,
             "rain_sum": 0.0,
-            "soil_moisture_mean": 0.341,
+            "soil_moisture_mean": 0.347,
             "days_since_rain": 8.0,
-            "vpd_proxy": 1.08
-          }
+            "vpd_proxy": 1.19
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
+        },
+        {
+          "weather_date": "2026-10-24",
+          "risk_for_date": "2026-10-25",
+          "lead_days": 5,
+          "probability": 0.0658,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 23.2,
+            "humidity_mean": 60.0,
+            "wind_speed_max": 7.9,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.34,
+            "days_since_rain": 9.0,
+            "vpd_proxy": 1.14
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
+        },
+        {
+          "weather_date": "2026-10-25",
+          "risk_for_date": "2026-10-26",
+          "lead_days": 6,
+          "probability": 0.0494,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 23.0,
+            "humidity_mean": 57.0,
+            "wind_speed_max": 5.8,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.334,
+            "days_since_rain": 10.0,
+            "vpd_proxy": 1.21
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
+        },
+        {
+          "weather_date": "2026-10-26",
+          "risk_for_date": "2026-10-27",
+          "lead_days": 7,
+          "probability": 0.0612,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": 24.2,
+            "humidity_mean": 55.0,
+            "wind_speed_max": 3.5,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.327,
+            "days_since_rain": 11.0,
+            "vpd_proxy": 1.36
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
         }
-      ],
-      "mixed_agricultural": false
+      ]
     },
     {
       "district": "Udham Singh Nagar",
       "caveat": "Mixed agricultural lowlands with seasonal post-harvest crop residue burning; thermal detections lack a forest canopy mask.",
+      "mixed_agricultural": true,
       "centroid": [
         29.043,
         79.4992
@@ -1303,116 +1535,137 @@
       "elevation": 246.0,
       "forecast": [
         {
-          "weather_date": "2026-10-17",
-          "risk_for_date": "2026-10-18",
-          "probability": 0.8498,
-          "risk_level": "Extreme",
-          "key_inputs": {
-            "temp_max": 28.1,
-            "humidity_mean": 77.0,
-            "wind_speed_max": 9.7,
-            "rain_sum": 0.0,
-            "soil_moisture_mean": 0.293,
-            "days_since_rain": 6.0,
-            "vpd_proxy": 0.87
-          }
-        },
-        {
-          "weather_date": "2026-10-18",
-          "risk_for_date": "2026-10-19",
-          "probability": 0.8789,
-          "risk_level": "Extreme",
-          "key_inputs": {
-            "temp_max": 27.9,
-            "humidity_mean": 80.0,
-            "wind_speed_max": 11.2,
-            "rain_sum": 0.0,
-            "soil_moisture_mean": 0.282,
-            "days_since_rain": 7.0,
-            "vpd_proxy": 0.75
-          }
-        },
-        {
-          "weather_date": "2026-10-19",
-          "risk_for_date": "2026-10-20",
-          "probability": 0.8765,
-          "risk_level": "Extreme",
-          "key_inputs": {
-            "temp_max": 28.0,
-            "humidity_mean": 81.0,
-            "wind_speed_max": 12.4,
-            "rain_sum": 0.0,
-            "soil_moisture_mean": 0.273,
-            "days_since_rain": 8.0,
-            "vpd_proxy": 0.72
-          }
-        },
-        {
           "weather_date": "2026-10-20",
           "risk_for_date": "2026-10-21",
-          "probability": 0.8299,
+          "lead_days": 1,
+          "probability": 0.8827,
           "risk_level": "Extreme",
           "key_inputs": {
-            "temp_max": 27.3,
-            "humidity_mean": 83.0,
-            "wind_speed_max": 6.1,
+            "temp_max": 27.6,
+            "humidity_mean": 79.0,
+            "wind_speed_max": 8.9,
             "rain_sum": 0.0,
-            "soil_moisture_mean": 0.266,
+            "soil_moisture_mean": 0.252,
             "days_since_rain": 9.0,
-            "vpd_proxy": 0.62
-          }
+            "vpd_proxy": 0.78
+          },
+          "reliability_note": null,
+          "expired": false
         },
         {
           "weather_date": "2026-10-21",
           "risk_for_date": "2026-10-22",
-          "probability": 0.7937,
+          "lead_days": 2,
+          "probability": 0.8828,
           "risk_level": "Extreme",
           "key_inputs": {
-            "temp_max": 27.9,
-            "humidity_mean": 80.0,
-            "wind_speed_max": 5.3,
+            "temp_max": 28.1,
+            "humidity_mean": 77.0,
+            "wind_speed_max": 8.4,
             "rain_sum": 0.0,
-            "soil_moisture_mean": 0.259,
+            "soil_moisture_mean": 0.245,
             "days_since_rain": 10.0,
-            "vpd_proxy": 0.75
-          }
+            "vpd_proxy": 0.87
+          },
+          "reliability_note": null,
+          "expired": false
         },
         {
           "weather_date": "2026-10-22",
           "risk_for_date": "2026-10-23",
-          "probability": 0.8824,
+          "lead_days": 3,
+          "probability": 0.836,
           "risk_level": "Extreme",
           "key_inputs": {
-            "temp_max": 28.0,
-            "humidity_mean": 78.0,
-            "wind_speed_max": 6.7,
+            "temp_max": 28.2,
+            "humidity_mean": 77.0,
+            "wind_speed_max": 6.3,
             "rain_sum": 0.0,
-            "soil_moisture_mean": 0.253,
+            "soil_moisture_mean": 0.239,
             "days_since_rain": 11.0,
-            "vpd_proxy": 0.83
-          }
+            "vpd_proxy": 0.88
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
         },
         {
           "weather_date": "2026-10-23",
           "risk_for_date": "2026-10-24",
-          "probability": 0.731,
+          "lead_days": 4,
+          "probability": 0.8356,
+          "risk_level": "Extreme",
+          "key_inputs": {
+            "temp_max": 27.8,
+            "humidity_mean": 76.0,
+            "wind_speed_max": 6.9,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.233,
+            "days_since_rain": 12.0,
+            "vpd_proxy": 0.9
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
+        },
+        {
+          "weather_date": "2026-10-24",
+          "risk_for_date": "2026-10-25",
+          "lead_days": 5,
+          "probability": 0.8272,
+          "risk_level": "Extreme",
+          "key_inputs": {
+            "temp_max": 27.6,
+            "humidity_mean": 82.0,
+            "wind_speed_max": 14.1,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.228,
+            "days_since_rain": 13.0,
+            "vpd_proxy": 0.67
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
+        },
+        {
+          "weather_date": "2026-10-25",
+          "risk_for_date": "2026-10-26",
+          "lead_days": 6,
+          "probability": 0.8384,
+          "risk_level": "Extreme",
+          "key_inputs": {
+            "temp_max": 28.7,
+            "humidity_mean": 74.0,
+            "wind_speed_max": 15.3,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.222,
+            "days_since_rain": 14.0,
+            "vpd_proxy": 1.02
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
+        },
+        {
+          "weather_date": "2026-10-26",
+          "risk_for_date": "2026-10-27",
+          "lead_days": 7,
+          "probability": 0.6831,
           "risk_level": "High",
           "key_inputs": {
-            "temp_max": 28.0,
-            "humidity_mean": 78.0,
-            "wind_speed_max": 4.2,
+            "temp_max": 28.3,
+            "humidity_mean": 73.0,
+            "wind_speed_max": 7.3,
             "rain_sum": 0.0,
-            "soil_moisture_mean": 0.246,
-            "days_since_rain": 12.0,
-            "vpd_proxy": 0.83
-          }
+            "soil_moisture_mean": 0.215,
+            "days_since_rain": 15.0,
+            "vpd_proxy": 1.04
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
         }
-      ],
-      "mixed_agricultural": true
+      ]
     },
     {
       "district": "Uttarkashi",
       "caveat": null,
+      "mixed_agricultural": false,
       "centroid": [
         30.9782,
         78.5892
@@ -1420,112 +1673,132 @@
       "elevation": 5023.0,
       "forecast": [
         {
-          "weather_date": "2026-10-17",
-          "risk_for_date": "2026-10-18",
-          "probability": 0.0482,
-          "risk_level": "Low",
-          "key_inputs": {
-            "temp_max": -7.9,
-            "humidity_mean": 75.0,
-            "wind_speed_max": 8.3,
-            "rain_sum": 0.5,
-            "soil_moisture_mean": 0.356,
-            "days_since_rain": 2.0,
-            "vpd_proxy": 0.08
-          }
-        },
-        {
-          "weather_date": "2026-10-18",
-          "risk_for_date": "2026-10-19",
-          "probability": 0.0848,
-          "risk_level": "Low",
-          "key_inputs": {
-            "temp_max": -5.6,
-            "humidity_mean": 45.0,
-            "wind_speed_max": 6.7,
-            "rain_sum": 0.0,
-            "soil_moisture_mean": 0.356,
-            "days_since_rain": 3.0,
-            "vpd_proxy": 0.22
-          }
-        },
-        {
-          "weather_date": "2026-10-19",
-          "risk_for_date": "2026-10-20",
-          "probability": 0.0989,
-          "risk_level": "Low",
-          "key_inputs": {
-            "temp_max": -4.9,
-            "humidity_mean": 52.0,
-            "wind_speed_max": 6.0,
-            "rain_sum": 0.0,
-            "soil_moisture_mean": 0.355,
-            "days_since_rain": 4.0,
-            "vpd_proxy": 0.2
-          }
-        },
-        {
           "weather_date": "2026-10-20",
           "risk_for_date": "2026-10-21",
-          "probability": 0.0899,
+          "lead_days": 1,
+          "probability": 0.0929,
           "risk_level": "Low",
           "key_inputs": {
-            "temp_max": -4.5,
-            "humidity_mean": 59.0,
-            "wind_speed_max": 6.1,
-            "rain_sum": 0.3,
+            "temp_max": -5.1,
+            "humidity_mean": 51.0,
+            "wind_speed_max": 5.7,
+            "rain_sum": 0.2,
             "soil_moisture_mean": 0.355,
             "days_since_rain": 5.0,
-            "vpd_proxy": 0.18
-          }
+            "vpd_proxy": 0.2
+          },
+          "reliability_note": null,
+          "expired": false
         },
         {
           "weather_date": "2026-10-21",
           "risk_for_date": "2026-10-22",
-          "probability": 0.0984,
+          "lead_days": 2,
+          "probability": 0.0908,
           "risk_level": "Low",
           "key_inputs": {
-            "temp_max": -5.0,
-            "humidity_mean": 68.0,
-            "wind_speed_max": 6.3,
-            "rain_sum": 0.3,
+            "temp_max": -6.1,
+            "humidity_mean": 72.0,
+            "wind_speed_max": 7.3,
+            "rain_sum": 0.4,
             "soil_moisture_mean": 0.355,
             "days_since_rain": 6.0,
-            "vpd_proxy": 0.14
-          }
+            "vpd_proxy": 0.11
+          },
+          "reliability_note": null,
+          "expired": false
         },
         {
           "weather_date": "2026-10-22",
           "risk_for_date": "2026-10-23",
-          "probability": 0.1218,
+          "lead_days": 3,
+          "probability": 0.125,
           "risk_level": "Low",
           "key_inputs": {
-            "temp_max": -5.2,
-            "humidity_mean": 74.0,
-            "wind_speed_max": 7.3,
-            "rain_sum": 0.0,
+            "temp_max": -5.7,
+            "humidity_mean": 69.0,
+            "wind_speed_max": 7.0,
+            "rain_sum": 0.1,
             "soil_moisture_mean": 0.355,
             "days_since_rain": 7.0,
-            "vpd_proxy": 0.11
-          }
+            "vpd_proxy": 0.12
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
         },
         {
           "weather_date": "2026-10-23",
           "risk_for_date": "2026-10-24",
-          "probability": 0.0967,
+          "lead_days": 4,
+          "probability": 0.1196,
           "risk_level": "Low",
           "key_inputs": {
-            "temp_max": -7.2,
-            "humidity_mean": 76.0,
-            "wind_speed_max": 7.4,
-            "rain_sum": 1.8,
+            "temp_max": -6.8,
+            "humidity_mean": 71.0,
+            "wind_speed_max": 6.9,
+            "rain_sum": 0.0,
             "soil_moisture_mean": 0.355,
-            "days_since_rain": 0.0,
+            "days_since_rain": 8.0,
+            "vpd_proxy": 0.11
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
+        },
+        {
+          "weather_date": "2026-10-24",
+          "risk_for_date": "2026-10-25",
+          "lead_days": 5,
+          "probability": 0.0938,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": -7.8,
+            "humidity_mean": 77.0,
+            "wind_speed_max": 6.8,
+            "rain_sum": 0.7,
+            "soil_moisture_mean": 0.355,
+            "days_since_rain": 9.0,
+            "vpd_proxy": 0.08
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
+        },
+        {
+          "weather_date": "2026-10-25",
+          "risk_for_date": "2026-10-26",
+          "lead_days": 6,
+          "probability": 0.1078,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": -7.0,
+            "humidity_mean": 76.0,
+            "wind_speed_max": 7.3,
+            "rain_sum": 0.2,
+            "soil_moisture_mean": 0.355,
+            "days_since_rain": 10.0,
             "vpd_proxy": 0.09
-          }
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
+        },
+        {
+          "weather_date": "2026-10-26",
+          "risk_for_date": "2026-10-27",
+          "lead_days": 7,
+          "probability": 0.1761,
+          "risk_level": "Low",
+          "key_inputs": {
+            "temp_max": -6.0,
+            "humidity_mean": 70.0,
+            "wind_speed_max": 7.6,
+            "rain_sum": 0.0,
+            "soil_moisture_mean": 0.355,
+            "days_since_rain": 11.0,
+            "vpd_proxy": 0.12
+          },
+          "reliability_note": "Numerical weather forecast uncertainty increases significantly beyond 48 hours (days 3-7). Operational skill is validated primarily for short-lead forecasts (days 1-2).",
+          "expired": false
         }
-      ],
-      "mixed_agricultural": false
+      ]
     }
   ]
 }

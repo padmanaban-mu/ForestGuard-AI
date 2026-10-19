@@ -93,15 +93,10 @@ Verify that the application is operating correctly:
 
 ## 5. Troubleshooting & Common Failures
 
-### 1. Python Version Configuration & Fallback
-- **Exact Syntax:** According to official Render documentation ([Setting Your Python Version](https://render.com/docs/python-version)), specifying a Python version via environment variable requires a fully qualified version (major, minor, and patch, e.g. `3.13.2`):
-  ```yaml
-  envVars:
-    - key: PYTHON_VERSION
-      value: 3.13.2
-  ```
-- **What happens if the version is unavailable:** If a specified `PYTHON_VERSION` is invalid or not yet built in Render's environment, the build will halt with an error indicating the unsupported version.
-- **Fallback (`.python-version`):** The repository includes a [`.python-version`](.python-version) file at the root containing `3.13`. Render reads `.python-version` as a fallback, and allows omitting the patch version; Render will automatically resolve and install the latest available patch release for Python 3.13.
+### 1. Python Version Configuration
+- **Native Detection via `.python-version`:** Render automatically inspects the repository root for a [`.python-version`](.python-version) file (official docs: [Setting Your Python Version](https://render.com/docs/python-version)). Our `.python-version` contains `3.13`. Render reads this file and automatically installs the latest available patch release of Python 3.13 (e.g. `3.13.2`).
+- **No Manual `PYTHON_VERSION` Env Var Required:** Because `.python-version` is present at the repository root, `render.yaml` omits the `PYTHON_VERSION` environment variable key entirely. This ensures Render resolves the latest stable Python 3.13 patch without build errors.
+- **Manual Dashboard Override (Optional):** If needed, you can manually set `PYTHON_VERSION` in your service's **Environment** settings to a fully qualified version (e.g. `3.13.2`).
 
 ### 2. Build Failure on `shapely` or C-extensions
 If a build fails compiling C extensions, verify that `requirements-serve.txt` pins `shapely==2.2.0` and `scikit-learn==1.8.0`. These packages have pre-compiled binary wheels (`manylinux`) on PyPI for Python 3.13, so no native C toolchain or `gcc` is required on the host.
