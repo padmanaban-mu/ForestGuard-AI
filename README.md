@@ -8,34 +8,44 @@
 
 ## Quick start
 
-Requirements: Node.js 22+ and npm 10+.
+**One command, Python 3.13 only — no Node.js required at runtime.**
 
-```bash
-npm install
-cp .env.example .env
-npm run dev
+### Windows
+```bat
+run.bat
 ```
+Double-click `run.bat` or run it in a terminal from the repo root.  
+The script creates `.venv`, installs `requirements-serve.txt`, and opens **http://127.0.0.1:8000** in your browser.
 
-Vite prints a local address (normally `http://localhost:5173`). The server listens on `0.0.0.0` in this project so it works in managed preview environments. Build and serve the static output with:
-
+### macOS / Linux
 ```bash
-npm run build
-npm run preview
+chmod +x run.sh && ./run.sh
 ```
+Same behaviour: creates `.venv`, installs packages, opens the browser, then starts the server in the foreground.  
+Press **Ctrl+C** to stop.
 
-The project uses pinned versions in `package.json` and `package-lock.json`. `npm run check` runs the production build.
+### What you need
+| Requirement | Version |
+|---|---|
+| Python | 3.13 (`py -3.13` on Windows) |
+| Node.js + npm | Only needed to rebuild the frontend (`scripts/build_frontend.ps1`). Not needed to run. |
 
-## Optional environment configuration
+### Optional: Share a zip with teammates
+```powershell
+.\scripts\make_zip.ps1
+```
+Creates `../ForestGuard-AI-share.zip` (no `.env`, no git history, no raw data). Teammates unzip, double-click `run.bat`, done.
 
-| Variable | Default | Purpose |
-| --- | --- | --- |
-| `VITE_FIRMS_KEY` | empty | Optional NASA FIRMS Map Key for `VIIRS_SNPP_NRT` fire observations over the configured bounding box. |
-| `VITE_REGION_NAME` | `Uttarakhand, India` | Display name for the selected study region. |
-| `VITE_FIRMS_BBOX` | `77.6,28.7,81.1,31.5` | FIRMS / Overpass order: west,south,east,north. |
+### Optional environment configuration
 
-**Credential warning:** values prefixed with `VITE_` are compiled into browser code and visible to site visitors. Use only a key intended for public client-side use; never put private credentials in `.env`, source control, or a public deployment. No key was provided for this project, so the bundled FIRMS history is an empty, header-only fallback. Without your own data or key, fire-specific metrics correctly show unavailable/empty states.
+`backend/.env` is created automatically from `backend/.env.example` on first run.  
+All keys live in `backend/.env` only — never in frontend code or `VITE_` variables.
 
-The default region is a provisional choice because the original brief used a `[YOUR STATE / REGION]` placeholder. It is not an official forest boundary. For another study area, change the name and bounding box, replace the supplied zone GeoJSON, and consider provider coverage and tile/API terms.
+| Variable (in `backend/.env`) | Default | Purpose |
+|---|---|---|
+| `FIRMS_MAP_KEY` | empty | Optional NASA FIRMS Map Key for live VIIRS fire detections. Without it the server returns an honest "not_configured" response and the frontend shows historical fallback data. |
+| `CORS_ORIGINS` | localhost variants | Comma-separated origins allowed by the API. Add teammates' LAN IPs here. |
+
 
 ## Pages
 
@@ -114,9 +124,9 @@ The ellipse is oriented downwind; displayed affected settlements are loaded OSM 
 
 ## App behavior and limitations
 
-- The project has **no custom backend or database**. Mock roles, preferences, alert statuses, saved scenarios, and audit records live in this browser only and can be edited by the user; they do not provide access control or cross-device synchronization.
+- The FastAPI backend serves both the REST API and the built React SPA at the same origin (`http://127.0.0.1:8000`). Teammate machines need only Python 3.13 and `run.bat` / `./run.sh`.
+- Mock roles, preferences, alert statuses, saved scenarios, and audit records live in the browser only; they do not provide access control or cross-device synchronization.
 - Actual source records are distinguished from simulated operational values. The audit log writes real app interactions only; it does not fabricate operational events.
-- `VITE_FIRMS_KEY` is browser-visible. A production service should proxy a provider key on a secured server if its terms allow it; this project intentionally remains frontend-only.
 - Live APIs and tile services can be offline, rate-limited, blocked or changed. Tile style/service uptime is best-effort; a missing basemap does not make the fire/health calculations valid. Check each source badge and last-updated time.
 - OpenStreetMap/OpenHikingMap labels, coverage and settlement/station completeness depend on mapping. “Nearest station” uses straight-line distance, not road-network routing. Station availability/crew/water remain simulated.
 - This project is a student demonstration, not an operational wildfire monitoring or dispatch tool.
@@ -146,7 +156,7 @@ app.config.ts           # Manus project logo metadata
 
 ## Viva quick answers
 
-**Why is the app frontend-only?** The brief explicitly asks for a frontend-only project with no sensor/IoT implementation or custom backend; public APIs and local files cover the demonstration.
+**How is the app structured?** A single FastAPI server (`backend/main.py`) runs the ML prediction API and also serves the built React SPA from `backend/static/`. Starting the server with `run.bat` or `./run.sh` gives teammates access to both the API and the full dashboard at `http://127.0.0.1:8000`.
 
 **Where does fire data come from?** NASA FIRMS `VIIRS_SNPP_NRT` for the configured bounding box, if a Map Key is supplied. Otherwise the app reads the bundled/user FIRMS-format history file and shows its true fallback status.
 

@@ -19,6 +19,7 @@ import sys
 from typing import Any, Dict, List, Optional
 from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 import requests
 
@@ -62,6 +63,24 @@ ROOT_DIR = Path(__file__).resolve().parent.parent
 ML_DIR = ROOT_DIR / "ml"
 if str(ML_DIR) not in sys.path:
     sys.path.insert(0, str(ML_DIR))
+
+# Static assets directory (built React frontend)
+STATIC_DIR = Path(__file__).resolve().parent / "static"
+
+# API route prefixes whose paths must never fall back to index.html.
+# Keep this list in sync with the route decorators below.
+_API_PREFIXES = (
+    "/health",
+    "/zones",
+    "/forecast",
+    "/predict",
+    "/fires",
+    "/model",
+    "/reports",
+    "/docs",
+    "/openapi.json",
+    "/redoc",
+)
 
 from ml.features import DISTRICT_METADATA, build_feature_row
 
@@ -574,4 +593,67 @@ def get_model_metrics():
         risk_thresholds=model_service.risk_thresholds,
         metrics_summary=metrics_summary,
         report_urls=report_urls,
+    )
+
+
+# ---------------------------------------------------------------------------
+# SPA static-file serving and fallback.
+# Priority order (enforced by FastAPI route ordering):
+#   1.  API routes above (registered first → win over the catch-all below).
+#   2.  /reports/* mounted StaticFiles (also registered above).
+#   3.  This catch-all: serves static assets or returns index.html for SPA routes.
+# ---------------------------------------------------------------------------
+
+@app.get("/{full_path:path}", include_in_schema=False)
+def serve_spa(full_path: str):
+    """Serve the built React SPA.
+
+    Algorithm
+    ---------
+    1. Reject path-traversal attempts (resolved path escapes STATIC_DIR).
+    2. If the request has a file extension AND the file exists → serve it.
+    3. If the request has a file extension AND the file is MISSING → 404.
+       (Avoids silently serving index.html for a broken /assets/missing.js.)
+    4. If the request has no file extension → serve index.html (SPA route).
+    5. If index.html itself is missing → 404 with a friendly message.
+
+    API routes (/health, /zones, /forecast, /predict, /fires/recent,
+    /model/metrics, /reports, /docs, /openapi.json, /redoc) are registered
+    before this handler and therefore never reach it.
+    """
+    # Step 1: resolve and guard path traversal
+    try:
+        resolved = (STATIC_DIR / full_path).resolve()
+    except Exception:
+        raise HTTPException(status_code=404, detail="Not Found")
+
+    if STATIC_DIR not in resolved.parents and resolved != STATIC_DIR:
+        raise HTTPException(status_code=404, detail="Not Found")
+
+    # Step 1b: guard API-prefixed paths so they never fall back to index.html.
+    # Exact API path matches are handled by the routes registered above this handler.
+    # This guard catches *unknown sub-paths* (e.g. /fires/unknown, /model/missing)
+    # that would otherwise silently return index.html.
+    norm = f"/{full_path.lstrip('/')}"
+    if any(norm.startswith(f"{prefix}/") for prefix in _API_PREFIXES):
+        raise HTTPException(status_code=404, detail="Not Found")
+
+    # Step 2 & 3: path has a file extension
+    if "." in Path(full_path).name:
+        if resolved.is_file():
+            return FileResponse(resolved)
+        raise HTTPException(status_code=404, detail="Not Found")
+
+    # Step 4: no extension → SPA route, return index.html
+    index = STATIC_DIR / "index.html"
+    if index.is_file():
+        return FileResponse(index)
+
+    # Step 5: frontend not built yet
+    raise HTTPException(
+        status_code=404,
+        detail=(
+            "Frontend static build not found. "
+            "Run scripts/build_frontend.ps1 (Windows) or scripts/build_frontend.sh first."
+        ),
     )

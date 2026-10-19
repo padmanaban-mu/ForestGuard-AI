@@ -4,7 +4,11 @@
  * NO API keys or secrets are stored or transmitted from the frontend.
  */
 
-export const API_BASE = (import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000').replace(/\/+$/, '');
+export const API_BASE = (
+  import.meta.env.VITE_API_URL != null && import.meta.env.VITE_API_URL !== ''
+    ? import.meta.env.VITE_API_URL
+    : (import.meta.env.DEV ? 'http://127.0.0.1:8000' : '')
+).replace(/\/+$/, '');
 
 async function request(path, { timeoutMs = 12000, onSlow = null, ...customConfig } = {}) {
   const controller = new AbortController();

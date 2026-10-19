@@ -1,0 +1,14 @@
+# Runtime requirements for ForestGuard AI backend + ml/features.py (Python 3.13).
+# Drop matplotlib, seaborn, imbalanced-learn, pytest (train/dev-only).
+# Versions pinned to match ml/requirements.txt and backend/requirements.txt.
+fastapi==0.115.11
+uvicorn==0.34.0
+pydantic==2.10.6
+requests==2.33.1
+cachetools==5.5.2
+joblib==1.5.3
+scikit-learn==1.8.0
+numpy==2.4.1
+pandas==3.0.2
+shapely==2.2.0
+python-dotenv==1.2.2

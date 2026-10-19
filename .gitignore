@@ -8,6 +8,14 @@ dist/
 build/
 *.local
 
+# Explicitly keep required committed assets (never ignore these)
+!backend/static/
+!ml/models/
+!ml/reports/
+!ml/data/processed/
+!backend/cache/
+!frontend/public/data/
+
 # Python & Virtual Environments
 __pycache__/
 *.py[cod]
