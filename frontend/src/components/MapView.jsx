@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { CircleMarker, GeoJSON, MapContainer, Polygon, Popup, TileLayer, useMap, useMapEvents } from 'react-leaflet';
 import { REGION } from '../data/region.js';
 import { riskColor, riskLabel } from '../utils/formatters.js';
+import { getUttarakhandBounds } from '../utils/geo.js';
 
 function PickHandler({ enabled, onPick }) {
   useMapEvents({ click(e) { if (enabled) onPick?.([e.latlng.lat, e.latlng.lng]); } });
@@ -40,7 +41,7 @@ function MapViewController({ center, zoom, bounds, triggerKey }) {
   const map = useMap();
 
   useEffect(() => {
-    map.invalidateSize();
+    map.invalidateSize({ pan: false });
     if (bounds) {
       map.fitBounds(bounds, { padding: [16, 16], maxZoom: 9 });
     } else if (center) {
@@ -49,7 +50,7 @@ function MapViewController({ center, zoom, bounds, triggerKey }) {
   }, [map, center, zoom, bounds, triggerKey]);
 
   useEffect(() => {
-    const onResize = () => map.invalidateSize();
+    const onResize = () => map.invalidateSize({ pan: false });
     window.addEventListener('resize', onResize);
     return () => window.removeEventListener('resize', onResize);
   }, [map]);
@@ -110,7 +111,8 @@ export default function MapView({
     });
   }, [zones, riskByName]);
 
-  const bounds = useMemo(() => extractBounds(features), [features]);
+  const defaultBounds = useMemo(() => getUttarakhandBounds(REGION.bbox), []);
+  const bounds = useMemo(() => extractBounds(features) || defaultBounds, [features, defaultBounds]);
 
   const styleZone = (feature) => {
     const entry = feature.properties?._riskEntry;

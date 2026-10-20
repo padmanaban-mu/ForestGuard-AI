@@ -1,4 +1,4 @@
-# scripts/build_frontend.ps1 — Build the React frontend and copy output into backend/static/.
+# scripts/build_frontend.ps1 - Build the React frontend and copy output into backend/static/.
 # Run from the repo root:  .\scripts\build_frontend.ps1
 # Requires Node.js 22+ and npm 10+ (not needed at runtime after the build).
 
@@ -8,7 +8,7 @@ $RepoRoot  = (Resolve-Path "$PSScriptRoot\..").Path
 $Frontend  = Join-Path $RepoRoot "frontend"
 $StaticDir = Join-Path $RepoRoot "backend\static"
 
-Write-Host "=== ForestGuard AI — Frontend Build ==="
+Write-Host "=== ForestGuard AI -- Frontend Build ==="
 Write-Host "Frontend : $Frontend"
 Write-Host "Output   : $StaticDir"
 Write-Host ""
@@ -34,7 +34,7 @@ try {
     npm ci
     if ($LASTEXITCODE -ne 0) { throw "npm ci failed" }
 
-    # 3. Production build — VITE_API_URL intentionally left empty → same-origin relative URLs
+    # 3. Production build - VITE_API_URL intentionally left empty -> same-origin relative URLs
     Write-Host ""
     Write-Host "--- npm run build ---"
     npm run build
@@ -58,7 +58,7 @@ if (-not (Test-Path $StaticDir)) {
 Get-ChildItem -Path $StaticDir -Force | Remove-Item -Recurse -Force
 
 Write-Host ""
-Write-Host "--- Copying frontend/dist/ → backend/static/ ---"
+Write-Host "--- Copying frontend/dist/ -> backend/static/ ---"
 $distDir = Join-Path $Frontend "dist"
 Get-ChildItem -Path $distDir | Copy-Item -Destination $StaticDir -Recurse -Force
 
@@ -72,4 +72,4 @@ if (-not (Test-Path $staticIndex)) {
 $fileCount = (Get-ChildItem -Path $StaticDir -Recurse -File).Count
 Write-Host ""
 Write-Host "SUCCESS: $fileCount files copied to backend/static/"
-Write-Host "Teammates and Render need no Node.js — backend/static/ is committed to git."
+Write-Host "Teammates and Render need no Node.js -- backend/static/ is committed to git."

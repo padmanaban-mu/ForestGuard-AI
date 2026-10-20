@@ -39,6 +39,14 @@ export function pointInGeometry(point, geometry) {
   return false;
 }
 
+export function getUttarakhandBounds(bbox = [77.6, 28.7, 81.1, 31.5]) {
+  if (!Array.isArray(bbox) || bbox.length !== 4 || !bbox.every(Number.isFinite)) {
+    return [[28.7, 77.6], [31.5, 81.1]];
+  }
+  const [west, south, east, north] = bbox;
+  return [[south, west], [north, east]];
+}
+
 // Local planar approximation is suitable for demo station ranking, not routing along roads.
 export const straightLineKm = (a, b) => haversineMeters(a, b) / 1000;
 
