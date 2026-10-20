@@ -5,7 +5,7 @@
 [![Framework](https://img.shields.io/badge/FastAPI-0.115.11-009688.svg)](https://fastapi.tiangolo.com)
 [![React](https://img.shields.io/badge/React-18.3-61DAFB.svg)](https://react.dev)
 
-> **Live Demo:** `<PASTE YOUR RENDER URL>`  
+> **Live Demo:** `https://forestguard-ai-n78g.onrender.com`  
 > *(Note: Free-tier instances spin down during inactivity and may require 30–60 seconds to wake up on the first request.)*
 
 ---

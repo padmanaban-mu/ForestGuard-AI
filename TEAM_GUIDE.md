@@ -2,7 +2,7 @@
 
 ## Option A: Use the live link
 
-**Live dashboard:** `<PASTE YOUR RENDER URL>`
+**Live dashboard:** `https://forestguard-ai-n78g.onrender.com`
 
 Open the link in any modern browser. No installation needed.
 

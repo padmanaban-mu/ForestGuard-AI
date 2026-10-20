@@ -31,7 +31,7 @@ function Layout() {
 }
 export default function App() {
   return <ToastProvider><AlertsProvider><Routes><Route element={<Layout />}>
-    <Route path="/" element={<Navigate to="/dashboard" replace />} />
+    <Route path="/" element={<LandingPage />} />
     <Route path="/login" element={<LandingPage />} />
     <Route path="/dashboard" element={<DashboardPage />} />
     <Route path="/fire-engine" element={<FireEnginePage />} />

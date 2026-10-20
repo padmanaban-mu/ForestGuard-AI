@@ -1,6 +1,6 @@
 # ForestGuard AI: Official Report Numbers & Verification Sheet
 
-> **Live demo:** `<PASTE YOUR RENDER URL>`  
+> **Live demo:** `https://forestguard-ai-n78g.onrender.com`  
 > This reference page provides verified numeric figures for project documentation, thesis defense, and academic reports. Every value is cited with its exact source file and JSON/Markdown reference. No numbers are unsourced or approximated.
 
 ---
