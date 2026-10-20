@@ -2,7 +2,7 @@
 
 ## Option A: Use the live link
 
-**Live dashboard:** `<LIVE_URL>`
+**Live dashboard:** `<PASTE YOUR RENDER URL>`
 
 Open the link in any modern browser. No installation needed.
 
