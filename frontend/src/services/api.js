@@ -74,7 +74,7 @@ export async function getZones() {
 
 export async function getForecast(days = 7, { onSlow = null } = {}) {
   const d = Math.max(1, Math.min(7, days));
-  return request(`/forecast?days=${d}`, { timeoutMs: 15000, onSlow });
+  return request(`/forecast?days=${d}`, { timeoutMs: 70000, onSlow });
 }
 
 export async function getRecentFires(hours = 72) {

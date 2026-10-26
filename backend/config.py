@@ -46,7 +46,7 @@ CACHE_TTL_SECONDS: int = 1800
 WEATHER_CONNECT_TIMEOUT: float = 5.0
 WEATHER_READ_TIMEOUT: float = 15.0
 WEATHER_CONCURRENCY: int = 6  # unverified, conservative concurrency of 6
-WEATHER_MAX_RETRIES: int = 1  # retry only failed districts once
+WEATHER_MAX_RETRIES: int = 0  # retry only failed districts once
 WEATHER_LIVE_RECOVERY_SECONDS: float = 3600.0
 OPEN_METEO_FORECAST_URL: str = "https://api.open-meteo.com/v1/forecast"
 
