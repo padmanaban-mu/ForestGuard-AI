@@ -1,7 +1,7 @@
 {
   "model": "Gradient Boosting",
   "weather_source": "cached",
-  "generated_at": "2026-10-26T21:48:36.671813+00:00",
+  "generated_at": "2026-10-26T21:53:02.057302+00:00",
   "status": "cached",
   "days": 7,
   "count": 13,
