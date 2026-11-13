@@ -1,56 +1,49 @@
 # ForestGuard AI — Forest Fire Risk Prediction
 
-ForestGuard AI is a machine-learning-based forest fire risk prediction project focused on district-level risk awareness in Uttarakhand. It combines historical environmental data, weather forecasts, geospatial district information, and a trained model behind a FastAPI service and React interface.
+ForestGuard AI is a project that uses machine learning and environmental data to estimate forest-fire risk across districts in Uttarakhand. A FastAPI backend provides prediction and data endpoints, while a React dashboard presents district-level risk information, forecasts, and map views.
 
-> **Live demo:** https://forestguard-ai-n78g.onrender.com  
-> The free-tier service may take time to wake after inactivity.
+**Live demo:** https://forestguard-ai-n78g.onrender.com  
+The hosted free-tier service may take a short time to wake after inactivity.
 
-## Problem
+## What the system does
 
-Forest fire risk is influenced by interacting environmental conditions such as temperature, humidity, precipitation, vegetation, and recent dry periods. ForestGuard AI explores how historical observations and forecast inputs can support a district-level risk estimate and make the underlying conditions easier to inspect.
+- Estimates next-day fire risk using a trained classification model.
+- Retrieves weather forecast data and prepares the features used for inference.
+- Displays district-level risk information through maps and dashboard views.
+- Includes recent satellite fire detections when the NASA FIRMS integration is configured.
+- Exposes model metrics and methodology so the prediction results can be inspected.
 
-The system is a decision-support prototype, not an official warning service. Predictions should not replace local authorities, field observations, or emergency guidance.
+This is a decision-support prototype, not an official warning system. It should not replace local authorities, field observations, or emergency guidance.
 
-## System overview
+## Architecture
 
 ```text
-Historical & forecast data
-          |
-          v
-Feature preparation and validation
-          |
-          v
-Trained ML model bundle
-          |
-          v
-FastAPI prediction and data endpoints
-          |
-          v
-React dashboard, maps and analytics
+Weather and environmental data
+             |
+             v
+      Feature preparation
+             |
+             v
+       Trained ML model
+             |
+             v
+        FastAPI backend
+             |
+             v
+      React dashboard
 ```
 
-## Key components
-
-- **Risk prediction:** model inference through a dedicated model service.
-- **District context:** district metadata and GeoJSON boundaries.
-- **Weather context:** forecast retrieval, caching, and source status.
-- **Recent fire detections:** NASA FIRMS integration when configured.
-- **Dashboard:** map-based views, risk summaries, historical context, and analytics.
-- **Transparency:** model metrics, thresholds, reliability notes, and documented limitations.
-
-The API includes health, zones, prediction, forecast, recent-fire, and model-metrics routes.
+The backend serves the built React application from `backend/static/`. The frontend source is kept separately in `frontend/`.
 
 ## Technology
 
-| Layer | Technologies |
-| --- | --- |
-| Frontend | React, Vite, Leaflet / React Leaflet, Recharts |
-| Backend | Python, FastAPI |
-| ML/data | scikit-learn ecosystem, NumPy, pandas, joblib |
-| Geospatial | Shapely, GeoJSON |
-| External data | Weather service, NASA FIRMS (optional) |
+- **Frontend:** React, Vite, Leaflet / React Leaflet, Recharts
+- **Backend:** Python, FastAPI
+- **Machine learning:** scikit-learn, NumPy, pandas, joblib
+- **Geospatial data:** GeoJSON, Shapely
+- **External data:** Open-Meteo weather APIs and optional NASA FIRMS integration
 
-## Repository structure
+## Repository layout
 
 ```text
 .
@@ -71,31 +64,39 @@ The API includes health, zones, prediction, forecast, recent-fire, and model-met
 └── README.md
 ```
 
-The deployed backend serves the built frontend from `backend/static`. The frontend source remains in `frontend/`.
-
 ## Run locally
 
-Check `DEPLOY.md`, `backend/README.md`, and the frontend environment example for the current deployment-specific details.
-
-Typical development setup:
+The repository includes helper scripts for starting the application. The tested Python version is specified in `.python-version`. For deployment-specific details, see [DEPLOY.md](DEPLOY.md) and [backend/README.md](backend/README.md).
 
 ### Backend
 
+Create and activate a virtual environment:
+
 ```bash
 python -m venv .venv
-# Windows: .venv\Scripts\activate
-# macOS/Linux:
+
+# Windows PowerShell
+.venv\Scripts\Activate.ps1
+
+# macOS / Linux
 source .venv/bin/activate
+```
+
+Install the backend dependencies:
+
+```bash
 pip install -r backend/requirements.txt
 ```
 
-Configure the required backend environment variables using `backend/.env.example`, then run:
+Configure environment variables using `backend/.env.example`, then start FastAPI:
 
 ```bash
 uvicorn backend.main:app --reload
 ```
 
-### Frontend
+### Frontend development
+
+In another terminal:
 
 ```bash
 cd frontend
@@ -103,22 +104,24 @@ npm install
 npm run dev
 ```
 
-Use the configured API base URL and the local Vite URL shown in the terminal.
+Use the API base URL configured for your local frontend environment. The production backend serves the built frontend from `backend/static/`.
 
-## Model evaluation and responsible interpretation
+## Model evaluation
 
-The project README and methodology documentation describe the dataset splits, model selection, validation metrics, thresholds, and operational caveats. Consult those reports before quoting a performance number. A model score is not a guarantee of real-world fire prediction accuracy.
+The project includes model evaluation and methodology reports. See [docs/METHODOLOGY.md](docs/METHODOLOGY.md) for the data split, feature preparation, leakage checks, model comparisons, and reported metrics. Read the evaluation context before quoting a performance number; test-set results are not a guarantee of real-world performance.
 
-Some displayed condition explanations are explicitly heuristic indicators rather than model feature attribution. Forecast lead time, geographic coverage, data freshness, and missing external credentials can affect the output.
+## Limitations to keep in mind
 
-## Tests and quality checks
+- The primary model is trained for day-ahead prediction. Forecast uncertainty increases for longer forecast horizons.
+- Weather is sampled at district centroids, which cannot represent every local condition in mountainous terrain.
+- Satellite detections can include non-forest sources such as agricultural burning.
+- Some dashboard condition explanations are heuristic indicators, not model feature attribution.
+- External data availability and API configuration affect what the dashboard can display.
 
-The backend includes API, bounds, and single-page-app tests under `backend/tests/`. Run the test commands documented in `backend/README.md` and `DEPLOY.md` after installing the backend requirements.
+## Data sources
 
-## Security and operations
-
-Keep external API keys in environment variables, never in committed files. Review CORS origins, rate limits, input validation, logging, model-artifact provenance, and third-party data availability before production use.
+The project uses weather data from [Open-Meteo](https://open-meteo.com/) and satellite fire information from [NASA FIRMS](https://firms.modaps.eosdis.nasa.gov/). Review the upstream providers' terms and attribution requirements when reusing the data. District boundary and basemap sources are described in the methodology and deployment documentation.
 
 ## License
 
-A license badge is present in the repository README, but verify the actual license file and its terms before redistribution.
+See the repository's [LICENSE](LICENSE) file for the project license. Upstream datasets and services remain subject to their own terms.
