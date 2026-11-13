@@ -139,7 +139,7 @@ Evaluated on the held-out **2024 test year** ($N = 4,745$ district-days across a
 | Climatology (Month Only Lookup) | 0.21 | 65.10% | 46.70% | 87.31% | 0.6085 | 0.5720 | 0.7907 | Pure Calendar Baseline |
 | Rule-Based FWI / Drought Proxy | 0.0017 | 64.62% | 45.98% | 79.44% | 0.5824 | 0.5303 | 0.7225 | Weak Heuristic Baseline |
 
-*Detailed experimental methodology, confusion matrices, rolling-origin walk-forward results, and feature audits are documented in [docs/METHODOLOGY.md](docs/METHODOLOGY.md) and [docs/REPORT_NUMBERS.md](docs/REPORT_NUMBERS.md).*
+*Detailed experimental methodology, confusion matrices, rolling-origin walk-forward results, and feature audits are documented in [docs/METHODOLOGY.md](docs/METHODOLOGY.md).*
 
 ---
 
@@ -159,9 +159,6 @@ To maintain rigorous scientific standards, the limitations of the current implem
 ## 9. Project Navigation & Documentation
 
 - [**docs/METHODOLOGY.md**](docs/METHODOLOGY.md): Comprehensive experimental setup, feature definitions, leakage audit, calibration analysis, and full baseline metrics.
-- [**docs/REPORT_NUMBERS.md**](docs/REPORT_NUMBERS.md): Single-page quick reference sheet containing every exact number and source file path for college project reports and viva defense.
-- [**docs/ABSTRACT_MAPPING.md**](docs/ABSTRACT_MAPPING.md): Traceability matrix connecting each sentence of the project abstract to its concrete codebase implementation.
-- [**TEAM_GUIDE.md**](TEAM_GUIDE.md): Teammate instructions for running the application locally or viewing the live deployment.
 - [**DEPLOY.md**](DEPLOY.md): Step-by-step instructions for deploying to the Render free web service tier.
 
 ---

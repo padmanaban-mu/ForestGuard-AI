@@ -72,4 +72,4 @@ if (-not (Test-Path $staticIndex)) {
 $fileCount = (Get-ChildItem -Path $StaticDir -Recurse -File).Count
 Write-Host ""
 Write-Host "SUCCESS: $fileCount files copied to backend/static/"
-Write-Host "Teammates and Render need no Node.js -- backend/static/ is committed to git."
+Write-Host "Production and Render need no Node.js -- backend/static/ is committed to git."

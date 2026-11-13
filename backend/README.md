@@ -37,8 +37,8 @@ The backend runs **out of the box without any `.env` file**.
 | `FIRMS_MAP_KEY` | *(empty)* | Optional NASA FIRMS map key for active fire proxy |
 | `PORT` | `8000` | Port for the Uvicorn server |
 
-### Adding Custom Teammate Frontend Origins
-To allow teammates on your local network to connect to the backend (e.g., from `http://192.168.1.50:3000`):
+### Adding Custom LAN Frontend Origins
+To allow other devices on your local network to connect to the backend (e.g., from `http://192.168.1.50:3000`):
 1. Copy `backend/.env.example` to `backend/.env`.
 2. Append your IP/port to `CORS_ORIGINS`:
    ```bash

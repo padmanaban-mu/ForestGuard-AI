@@ -43,3 +43,4 @@ ml/data/downloads/
 Thumbs.db
 .vscode/
 .idea/
+.agent/

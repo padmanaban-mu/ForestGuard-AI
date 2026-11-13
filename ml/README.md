@@ -2,7 +2,7 @@
 
 This directory contains the machine learning pipeline for pre-ignition forest fire risk prediction across all 13 districts of Uttarakhand, India.
 
-> **Note for Teammates:** Retraining is completely optional! Pre-trained calibrated model weights (`ml/models/risk_model.joblib`), evaluation reports (`ml/reports/`), authentic boundary files (`ml/zones.json`), and processed datasets (`ml/data/processed/dataset.csv`) are committed to this repository and ready for immediate inference by the backend.
+> **Note:** Retraining is completely optional! Pre-trained calibrated model weights (`ml/models/risk_model.joblib`), evaluation reports (`ml/reports/`), authentic boundary files (`ml/zones.json`), and processed datasets (`ml/data/processed/dataset.csv`) are committed to this repository and ready for immediate inference by the backend.
 
 ---
 

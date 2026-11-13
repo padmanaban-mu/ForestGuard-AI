@@ -61,4 +61,4 @@ fi
 FILE_COUNT=$(find "$STATIC_DIR" -type f | wc -l)
 echo ""
 echo "SUCCESS: $FILE_COUNT files copied to backend/static/"
-echo "Teammates and Render need no Node.js — backend/static/ is committed to git."
+echo "Production and Render need no Node.js — backend/static/ is committed to git."
